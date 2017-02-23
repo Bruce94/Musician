@@ -1,0 +1,87 @@
+{% extends "base_musician.html" %}
+{% block head %}
+    {% if user.is_authenticated %}
+        <meta http-equiv="refresh" content="0; url=/portal/" />
+    {% endif %}
+    <title>Musician | Registration</title>
+{% endblock %}
+
+{% block containerlogin %}
+    <section>
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <p>
+                {{ userform.username.label_tag }}<br>
+                {{ userform.username}}</p>
+            <p class="error">
+                {{ userform.username.errors.as_text }}
+            </p>
+            <p>
+                {{ userform.first_name.label_tag }}<br>
+                {{ userform.first_name }}</p>
+            <p class="error">
+                {{ userform.first_name.errors.as_text }}
+            </p>
+            <p>
+                {{ userform.last_name.label_tag }}<br>
+                {{ userform.last_name }}</p>
+            <p class="error">
+                {{ userform.last_name.errors.as_text }}
+            </p>
+            <p>
+                {{ userform.email.label_tag }}<br>
+                {{ userform.email }}</p>
+            <p class="error">
+                {{ userform.email.errors.as_text }}
+            </p>
+            <p>
+                {{ userform.password1.label_tag }}<br>
+                {{ userform.password1 }}</p>
+            <p class="error">
+                {{ userform.password1.errors.as_text }}
+            </p>
+            <p>
+                {{ userform.password2.label_tag }}<br>
+                {{ userform.password2 }}</p>
+            <p class="error">
+                {{ userform.password2.errors.as_text }}
+            </p>
+            <p>
+                {{ musicianprofileform.bio.label_tag }}<br>
+                {{ musicianprofileform.bio }}</p>
+            <p class="error">
+                {{ musicianprofileform.bio.errors.as_text }}
+            </p>
+            <p>
+                {{ musicianprofileform.data.label_tag }}<br>
+                {{ musicianprofileform.data.as_widget }}</p>
+            <p class="error">
+                {{ musicianprofileform.data.errors.as_text }}
+            </p>
+            <p>
+                {{ musicianprofileform.gender.label_tag }}<br>
+                {{ musicianprofileform.gender }}</p>
+            <p class="error">
+                {{ musicianprofileform.gender.errors.as_text }}
+            </p>
+            <p>
+                Photo: <br>
+                {{ musicianprofileform.img }}</p>
+            <p class="error">
+                {{ musicianprofileform.img.errors.as_text }}
+            </p>
+        <!--
+            <p>
+                Picture: <br>
+                <input type = "file" placeholder = "Picture" name = "picture" />
+            </p>
+            -->
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}"/>
+            {% else %}
+                <input type="hidden" name="next" value="/portal/"/>
+            {% endif %}
+            <input type="submit" value="Register"/>
+        </form>
+    </section>
+{% endblock %}

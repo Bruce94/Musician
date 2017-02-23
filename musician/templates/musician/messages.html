@@ -1,0 +1,36 @@
+{% extends "portal/portal.html" %}
+{% load static %}
+
+
+{% block head %}
+    <title> Musician | Messages</title>
+{% endblock%}
+
+{% block container%}
+
+    <div class="Container-messanger">
+        <div class="title-messanger">
+             {% block chat_title %}<h4 style="margin-left: 20px">Select User</h4>{% endblock %}
+        </div>
+        <div class="Middle-messanger">
+            <!--
+            <h5 style="text-align: center">Select user to chat</h5>
+            -->
+        </div>
+        {% block message-form %} {% endblock %}
+        <!--<input type="text" class="write-messanger">
+        <input type="submit" class="button-messanger", value="Send">-->
+        <div class="Right-messanger">
+            <div class="list-group">
+                {% for friend in friend_user %}
+                    <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item">
+                        <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
+                        <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
+                        <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Musician.com">
+        <meta name="author" content="Bruno Ghion">
+
+        <link href="{% static 'musician/css/bootstrap.css'%}" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'musician/css/style.css' %}">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="{% static 'musician/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'musician/js/main.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% if user.is_authenticated%}
+
+                {% block navigation %}
+                {% endblock %}
+
+
+            <!--
+            <div id="top">
+                <div id="navigation">
+
+                </div>
+
+                <div id="searchbar">
+                    {% load static %}
+                    <form>
+                        <input type="text" class =search
+                               name="search" placeholder="Search..">
+                    </form>
+                </div>
+                <div id="logo">
+                    <p>Musician</p>
+                </div>
+            </div>-->
+            <!--
+            <nav>
+                {% block nav %}
+                {% endblock %}
+            </nav>
+            -->
+            <div id = container>
+                {% block container %}
+                {% endblock %}
+            </div>
+        {% else %}
+            <div id="toplogin">
+                <div id="logologin">
+                    <p class ="title">Musician</p>
+                </div>
+            </div>
+            <div id="leftcontainer">
+                {% block leftcontainer%}
+                {% endblock %}
+            </div>
+            <div id="containerlogin">
+                {% block containerlogin%}
+                {% endblock %}
+            </div>
+        {% endif %}
+    </body>
+</html>

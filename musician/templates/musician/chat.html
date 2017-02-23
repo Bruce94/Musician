@@ -1,0 +1,13 @@
+{% extends "musician/messages.html" %}
+{% load static %}
+
+{% block chat_title %}<h4 style="margin-left: 20px">{{ selected_user.first_name }} {{ selected_user.last_name }}</h4>{% endblock %}
+
+{% block message-form %}
+    <form action="/musician/messages/{{ friend_user.id }}">
+        <input type="text" class="write-messanger">
+        <input type="submit" class="button-messanger", value="Send">
+    </form>
+{% endblock %}
+
+

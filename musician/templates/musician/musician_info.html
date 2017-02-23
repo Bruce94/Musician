@@ -1,0 +1,89 @@
+{% extends "musician/profile.html" %}
+{% load static %}
+
+
+
+{% block nav-profile %}
+    <ul class="nav nav-tabs" xmlns="http://www.w3.org/1999/html">
+        <li role="presentation"><a href="/musician/{{ user.id }}">Post</a></li>
+        <li role="presentation" class="active"><a href="/musician/{{ user.id }}/info">Info</a></li>
+        <li role="presentation"><a href="/musician/{{ user.id }}/friends">Friends</a></li>
+    </ul>
+{% endblock %}
+
+{% block subcontainer %}
+    <section class="profile">
+        <div class="panel panel-default" >
+            <div class="panel-heading">
+                {% if user.id == logguser.id %}
+                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit" onclick="showEditInfo('show_personal_info','edit_personal_info')">
+                {% endif %}
+                <h3 class="panel-title">Personal Information</h3>
+            </div>
+            <div class="panel-body" id="show_personal_info">
+                <p><small><font color="#696969">First Name:</font></small> &nbsp&nbsp {{ user.first_name }}</p>
+                <p><small><font color="#696969">Last Name:</font></small> &nbsp&nbsp {{ user.last_name }}</p>
+                <p><small><font color="#696969">Birthday:</font></small> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{ profile.data }}</p>
+                <p>
+                    <small><font color="#696969">Gender:</font></small> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    {% if profile.gender == 'M'%}
+                        Male
+                    {% elif profile.gender == 'F' %}
+                        Female
+                    {% endif %}
+                </p>
+            </div>
+            {% if user.id == logguser.id %}
+                <div class="panel-body" style="display: none" id="edit_personal_info">
+                    <form>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="sizing-addon3">First Name</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon3" name="first_name" value="{{ user.first_name }}">
+                        </div>
+                        <br>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="sizing-addon3">Last Name</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon3" name="last_name" value="{{ user.last_name }}">
+                        </div>
+                        <br>
+                        <div class="input-group input-group-sm" onclick="showEditInfo('edit_personal_info','show_personal_info')">
+                            <input type="reset" value="cancel">
+                            <input type="submit" value="edit">
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {% if user.id == logguser.id %}
+                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit" onclick="showEditInfo('show_general_info','edit_general_info')">
+                {% endif %}
+                <h3 class="panel-title">General Information</h3>
+            </div>
+            <div class="panel-body" id="show_general_info">
+                <p><small><font color="#696969">Username:</font></small> &nbsp&nbsp {{ user.username }}</p>
+                <p><small><font color="#696969">Email:</font></small> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{ user.email }}</p>
+            </div>
+            {% if user.id == logguser.id %}
+                <div class="panel-body" style="display: none" id="edit_general_info">
+                    <form>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="sizing-addon3">@</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon3" name="email" value="{{ user.email }}">
+                        </div>
+                        <br>
+                        <div class="input-group input-group-sm" onclick="showEditInfo('edit_general_info','show_general_info')">
+                            <input type="reset" value="cancel">
+                            <input type="submit" value="edit">
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+    </section>
+{% endblock %}
+
+

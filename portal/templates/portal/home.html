@@ -1,0 +1,22 @@
+{% extends "portal/portal.html" %}
+{% comment %}
+    Welcome page of the portal
+{% endcomment %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% load static %}
+{% block nav %}
+    <a href="/musician/{{ request.user.id }}/">
+        <img class=home src="{{ profile.img.url }}" alt="{{ user.username }}">
+    </a>
+    <p> Welcome, {{ user.username | capfirst }}</p>
+{% endblock %}
+
+{% block container %}
+    <section>
+    <p> This is the entry page of the web portal. Thanks for the logging in.</p>
+    </section>
+{% endblock %}

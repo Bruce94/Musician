@@ -1,0 +1,295 @@
+/*
+li {
+    float:right;
+    border-right: 1px solid #bbbbbb;
+}
+
+li a{
+    display: block;
+    color: #F23322;
+    text-align: center;
+    padding: 13px 16px;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+li a:hover {
+    background-color: #F23322;
+    color: #000000;
+}*/
+
+#top{
+    width: 100%;
+    height: 45px;
+    top: 0px;
+    left:0px;
+    position: fixed;
+    background-color: #404040;
+    border-bottom: 1px solid #232323;
+}
+
+#toplogin{
+    width: 100%;
+    height: 85px;
+    top: 0px;
+    left:0px;
+    position: fixed;
+    background-color: #404040;
+    border-bottom: 1px solid #232323;
+
+}
+
+#logo{
+    color: #ffffff;
+    font-size: 16px;
+    font-family:sans-serif;
+    margin-left: 15px;
+    float:left;
+    text-align: center;
+    padding: 0px;
+    top: 0px;
+    left:0px;
+}
+
+section.login{
+    margin-left: 100px;
+}
+
+#logologin{
+    color: #ffffff;
+    font-size: 34px;
+    font-family:sans-serif;
+    margin-left: 100px;
+    float:left;
+    text-align: center;
+    padding: 0px;
+    top: 0px;
+    left:0px;
+}
+
+#searchbar{
+    float: right;
+    align-items: center;
+    padding: 8px 180px 5px 5px;
+
+}
+
+#navigation{
+    float: right;
+}
+
+#containerlogin{
+    font-family: sans-serif;
+    width: 50%;
+    margin-top: 90px;
+    float: right;
+    font-size: 15px;
+}
+
+#leftcontainer{
+    font-family: sans-serif;
+    width: 50%;
+    margin-top: 90px;
+    float:left;
+
+}
+
+#container{
+    width: 85%;
+    float: right;
+}
+
+.Container-messanger {
+    display: flex;
+    overflow: hidden;
+    height: 80vh;
+    /*margin-top: -100px;*/
+    /*padding-top: 100px;*/
+    position: relative;
+    width: 100%;
+    backface-visibility: hidden;
+    will-change: overflow;
+}
+
+.Middle-messanger,
+.Right-messanger {
+    overflow: auto;
+    height: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+}
+
+.Middle-messanger::-webkit-scrollbar,
+.Right-messanger::-webkit-scrollbar {
+    display: none;
+}
+
+.Middle-messanger {
+    flex: 1;
+    background: ghostwhite;
+    border-left: 1px solid #bbbbbb;
+    border-bottom: 1px solid #bbbbbb;
+}
+
+.title-messanger{
+    position:absolute;
+    top:0px;
+    left: 0px;
+    width: 68%;
+    border: 1px solid #bbbbbb;
+    background: ghostwhite;
+    margin-right: 2%;
+}
+
+.Right-messanger {
+    width: 30%;
+    margin-right: 2%;
+    border-left: 1px solid #bbbbbb;
+}
+
+.write-messanger{
+    position:absolute;
+    bottom:0px;
+    left: 0px;
+    width: 59%;
+    height: 5vh;
+    border: 1px solid #bbbbbb;
+}
+.button-messanger{
+    position:absolute;
+    bottom:0px;
+    left: 0px;
+    margin-left: 59%;
+    width: 9%;
+    height: 5vh;
+    border: 1px solid #bbbbbb;
+}
+
+/*
+nav{
+    width: 18%;
+    height: 100%;
+    margin-top: 45px;
+    float: left;
+    border-right: 1px solid #404040;
+}*/
+
+li.portal:last-child{
+    border-left: 1px solid #bbbbbb;
+}
+
+ul{
+    font-family: sans-serif;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+section.profile{
+    margin-right: 20%;
+}
+
+section.search-musician{
+    margin-right: 40%;
+}
+
+img.profile{
+    height: 200px;
+    width: 200px;
+    float: left;
+}
+
+img.search-musician{
+    height: 50px;
+    width: 50px;
+    margin-right: 5px;
+    float: left;
+}
+
+.ui-datepicker {
+   background: #333;
+   border: 1px solid #555;
+   color: #EEE;
+ }
+
+img.home{
+    height: 100px;
+    width: 100px;
+}
+img.edit-icon{
+    height: 15px;
+    width: 15px;
+    float: right;
+}
+
+img.varie-icon{
+    height: 17px;
+    width: 17px;
+    float: left;
+}
+
+button.add-friend{
+    margin-top: 5px;
+    height: 30px;
+    width: 200px;
+}
+
+button.cancel-friend{
+    margin-top: 5px;
+    height: 30px;
+    width: 100px;
+}
+h1, h2, h3, p{
+    font-family:sans-serif;
+}
+
+h1.profile{
+    margin-top: 0px;
+}
+
+div.panel-profile-img{
+    margin: 15px;
+    float: left;
+}
+div.panel-search-musician{
+    padding: 15px;
+    border-bottom: 1px solid #232323 ;
+}
+div.panel-search-musician:last-child{
+    border-bottom: none
+}
+input.list-options{
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+/*
+input[type=text].search {
+    width: 30%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    margin: 0;
+    padding: 5px 200px 5px 5px;
+    overflow: hidden;
+
+}*/
+
+p.error{
+    color: #F23322;
+    font-size: small;
+}
+
+p.title{
+    margin-top: 10px;
+    font-size: 50px;
+}
+
+body{
+    background-color: rgba(104, 64, 51, 0.15);
+}

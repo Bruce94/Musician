@@ -1,0 +1,14 @@
+{% extends "base_musician.html" %}
+{% block head %}
+    {% if user.is_authenticated %}
+        <meta http-equiv="refresh" content="0; url=/portal/" />
+    {% endif %}
+    <title>Musician | Registration</title>
+{% endblock %}
+
+{% block containerlogin %}
+    <section>
+        <h1>Congratulations! Registration complete!</h1>
+        <p>Please click <a href="/">here</a> to log in</p>
+    </section>
+{% endblock %}

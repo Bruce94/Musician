@@ -1,0 +1,70 @@
+{% extends "portal/portal.html" %}
+
+{% block head %}
+    <title> Musician | {{ user.username }}</title>
+{% endblock%}
+
+{% block container%}
+    {% load static %}
+
+    <section class="profile">
+        <div class="panel panel-default">
+            <div class="panel-profile-img">
+                <img class="profile" src="{{ profile.img.url }}" alt = "{{ user.username }}"/>
+                <br>
+                {% if user.id != logguser.id %}
+                    <form action="/musician/{{ user.id }}/" method="post">
+                        {% csrf_token %}
+                        {% if  status_friend == 0 %}
+                            <button type="submit" class="add-friend" name="add-friend">
+                                Add friend
+                            </button>
+                        {% elif status_friend == 1 and reciver.id == user.id %}
+                            <button type="submit" class="add-friend" name="cancel-request">
+                                Cancel Request
+                            </button>
+                        {% elif status_friend == 1 and reciver.id == logguser.id %}
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Pending Request <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><input type="submit" class="list-options" name="accept-friend" value="Accept Friend"></li>
+                                  <li><input type="submit" class="list-options" name="cancel-request" value="Ignore Request"></li>
+                              </ul>
+                            </div>
+                        {% elif status_friend == 2 %}
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Friend <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                  <li><input type="submit" class="list-options" name="cancel-request" value="Remove Friend"></li>
+                              </ul>
+                            </div>
+                        {% endif %}
+
+                    </form>
+                {% endif %}
+            </div>
+            <div class="panel-body">
+                <h1 class="profile">{{ user.first_name }} {{ user.last_name }} </h1>
+                <p>
+                    <small><font color="#696969">Biography:</font></small> {{ profile.bio }}
+                </p>
+            </div>
+            {% block nav-profile %}
+                <ul class="nav nav-tabs">
+                    <li role="presentation" class="active"><a href="/musician/{{ user.id }}">Post</a></li>
+                    <li role="presentation"><a href="/musician/{{ user.id }}/info">Info</a></li>
+                    <li role="presentation"><a href="/musician/{{ user.id }}/friends">Friends</a></li>
+                </ul>
+            {% endblock %}
+        </div>
+    </section>
+
+    {% block subcontainer %}
+
+    {% endblock %}
+
+{% endblock %}

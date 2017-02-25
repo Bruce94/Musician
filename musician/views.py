@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from musician.models import MusicianProfile, Friend
+from musician.models import MusicianProfile, Friend, Message
 from django.db.models import Q
 
 
@@ -204,6 +204,7 @@ def messages(request):
 @login_required
 def chat(request, user_id):
     user = get_object_or_404(User, pk=user_id)
+    logguser = request.user
 
     n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
                                             Q(status__icontains=1)))
@@ -219,6 +220,11 @@ def chat(request, user_id):
                 friend_user += list(musicians.filter(Q(user__id__icontains=friendship.sender.id)))
             elif friendship.sender.id == request.user.id:
                 friend_user += list(musicians.filter(Q(user__id__icontains=friendship.reciver.id)))
+
+    if request.POST.get('message'):
+        message = Message.create(sender=logguser, reciver=user, text=request.POST['message'])
+        message.save()
+
     return render(request, 'musician/chat.html', {'n_req': n_req,
                                                   'friend_user': friend_user,
                                                   'selected_user': user})

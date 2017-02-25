@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import MusicianProfile, Friend, Message
-#from .models import Characteristic, Notification
 
 
 class MusicianProfileAdmin(admin.ModelAdmin):
@@ -9,16 +8,17 @@ class MusicianProfileAdmin(admin.ModelAdmin):
     ]
 
 
+class MessageAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['sender_message', 'reciver_message', 'text', 'seen', 'data_request']}),
+    ]
+
+
 class FriendAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['sender', 'reciver', 'status', 'seen', 'data_request']})
     ]
 
-
-class MessageAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['sender', 'reciver', 'text', 'seen', 'data_request']})
-    ]
 
 admin.site.register(MusicianProfile, MusicianProfileAdmin)
 admin.site.register(Friend, FriendAdmin)

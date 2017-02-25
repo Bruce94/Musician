@@ -74,11 +74,11 @@ class Message(models.Model):
     text = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return unicode(self.sender)
+        return unicode(self.sender_message)
 
     @classmethod
     def create(self, sender, reciver, text):
-        message = self(sender=sender, reciver=reciver, text=text)
+        message = self(sender_message=sender, reciver_message=reciver, text=text)
         return message
 
 

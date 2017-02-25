@@ -4,8 +4,9 @@
 {% block chat_title %}<h4 style="margin-left: 20px">{{ selected_user.first_name }} {{ selected_user.last_name }}</h4>{% endblock %}
 
 {% block message-form %}
-    <form action="/musician/messages/{{ friend_user.id }}">
-        <input type="text" class="write-messanger">
+    <form action="/musician/messages/{{ selected_user.id }}/" method="post">
+        {% csrf_token %}
+        <input type="text" class="write-messanger" name="message">
         <input type="submit" class="button-messanger", value="Send">
     </form>
 {% endblock %}

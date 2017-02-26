@@ -13,9 +13,15 @@
              {% block chat_title %}<h4 style="margin-left: 20px">Select User</h4>{% endblock %}
         </div>
         <div class="Middle-messanger">
-            <!--
-            <h5 style="text-align: center">Select user to chat</h5>
-            -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.sender_message == user %}
+                        <div class="sent_message">{{ message.text }}</div>
+                    {% else %}
+                        <div class="recived_message">{{ message.text }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
         {% block message-form %} {% endblock %}
         <!--<input type="text" class="write-messanger">

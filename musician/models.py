@@ -70,7 +70,7 @@ class Message(models.Model):
     sender_message = models.ForeignKey(User, related_name="sender_message")
     reciver_message = models.ForeignKey(User, related_name="reciver_message")
     seen = models.BooleanField(default=False)
-    data_request = models.DateField(default=timezone.now)
+    data_request = models.DateTimeField(default=timezone.now)
     text = models.TextField(null=True, blank=True)
 
     def __unicode__(self):

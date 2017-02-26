@@ -102,7 +102,7 @@ section.login{
 .Container-messanger {
     display: flex;
     overflow: hidden;
-    height: 80vh;
+    height: 85vh;
     /*margin-top: -100px;*/
     /*padding-top: 100px;*/
     position: relative;
@@ -126,6 +126,9 @@ section.login{
 
 .Middle-messanger {
     flex: 1;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    padding-left: 10px ;
     background: ghostwhite;
     border-left: 1px solid #bbbbbb;
     border-bottom: 1px solid #bbbbbb;
@@ -165,6 +168,28 @@ section.login{
     border: 1px solid #bbbbbb;
 }
 
+.sent_message{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border: 1px solid transparent;
+    border-color: #d6e9c6;
+    margin-left: 50vh;
+    margin-right: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.recived_message{
+    color: #31708f;
+    background-color: #d9edf7;
+    border: 1px solid transparent;
+    border-color: #bce8f1;
+    margin-right: 50vh;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
 /*
 nav{
     width: 18%;

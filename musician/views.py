@@ -212,7 +212,10 @@ def chat(request, user_id):
                                                Q(reciver__username__icontains=request.user.username)) &
                                               Q(status__icontains=2))
     musicians = MusicianProfile.objects.all()
-
+    messages_filtered = Message.objects.all().filter((Q(reciver_message__username=logguser.username) &
+                                                      Q(sender_message__username=user.username)) |
+                                                     (Q(reciver_message__username=user.username) &
+                                                      Q(sender_message__username=logguser.username))).order_by('data_request')
     friend_user = []
     if friendships:
         for friendship in friendships:
@@ -227,4 +230,5 @@ def chat(request, user_id):
 
     return render(request, 'musician/chat.html', {'n_req': n_req,
                                                   'friend_user': friend_user,
-                                                  'selected_user': user})
+                                                  'selected_user': user,
+                                                  'messages': messages_filtered})

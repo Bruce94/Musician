@@ -9,7 +9,9 @@ from django.forms import forms
 # Settings root image folder
 
 profile_image = os.path.join(settings.STATIC_URL, 'musician/images/vm.jpg')
+skill_image = os.path.join(settings.STATIC_URL, 'musician/images/question-mark-icon.png')
 profile_url = 'profile/'
+skill_url = 'skill/'
 
 
 class MusicianProfile(models.Model):
@@ -84,6 +86,25 @@ class Message(models.Model):
 
 class Skill(models.Model):
     name_skill = models.CharField(max_length=20, unique=True)
+    image_skill = models.ImageField(null=True, blank=True, default=skill_image, upload_to=skill_url)
 
     def __unicode__(self):
         return unicode(self.name_skill)
+
+
+class HasSkill(models.Model):
+
+    class Meta:
+        unique_together = (('user', 'skill'),)
+
+    user = models.ForeignKey(User, related_name="user_skill")
+    skill = models.ForeignKey(Skill, related_name="skill_user")
+    endorsement = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return unicode(self.user)
+
+    @classmethod
+    def create(self, user, skill):
+        hasSkill = self(user=user, skill=skill)
+        return hasSkill

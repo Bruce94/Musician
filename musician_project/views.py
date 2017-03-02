@@ -3,7 +3,7 @@ from django.contrib.auth import logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from musician.models import MusicianProfile
+from musician.models import MusicianProfile, Skill, HasSkill
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from musician_project.forms import UserForm, MusicianProfileForm
@@ -23,6 +23,7 @@ def reg_view(request):
 
 
 def register(request):
+    skills = Skill.objects.all().order_by('name_skill')
     if request.method == 'POST':
         uf = UserForm(request.POST, prefix='user')
         mpf = MusicianProfileForm(request.POST, request.FILES, prefix='profile')
@@ -32,14 +33,22 @@ def register(request):
             musicianprofile.user = user
             musicianprofile.img = mpf.cleaned_data["img"]
             musicianprofile.save()
+            checked_skills = []
+            if request.POST.getlist('check_skill'):
+                checked_skills = request.POST.getlist('check_skill')
+            for skill in skills:
+                if skill.name_skill in checked_skills:
+                    hs = HasSkill.create(user, skill)
+                    hs.save()
             return HttpResponseRedirect(reverse('register_ok'))
     else:
         uf = UserForm(prefix='user')
         mpf = MusicianProfileForm(prefix='profile')
     return render_to_response('registration/register.html',
                               dict(userform=uf,
-                                   musicianprofileform=mpf),
-                              context_instance=RequestContext(request))
+                                   musicianprofileform=mpf,
+                                   skills=skills,),
+                              context_instance=RequestContext(request),)
 
 
 def register_ok(request):

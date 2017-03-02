@@ -22,9 +22,9 @@ $(function() {
     $("#message_form").submit(function(event) {
         // Stop form from submitting normally
         event.preventDefault();
-        var friendForm = $(this);
+        var messageForm = $(this);
         // Send the data using post
-        var posting = $.post( friendForm.attr('action'), friendForm.serialize() );
+        var posting = $.post( messageForm.attr('action'), messageForm.serialize() );
         // if success:
         posting.done(function(data) {
     	      location.reload();

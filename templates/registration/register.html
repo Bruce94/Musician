@@ -70,18 +70,24 @@
             <p class="error">
                 {{ musicianprofileform.img.errors.as_text }}
             </p>
-        <!--
             <p>
-                Picture: <br>
-                <input type = "file" placeholder = "Picture" name = "picture" />
+                Skills: <br>
+                <ul class="list-group">
+                    {% for skill in skills %}
+                        <li class="list-group-item" style="width: 30vh; padding: 5px;">
+                            <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}" style="margin-right: 10px">
+                            {{ skill.name_skill }}
+                        </li>
+                    {% endfor %}
+                </ul>
             </p>
-            -->
+
             {% if next %}
                 <input type="hidden" name="next" value="{{ next }}"/>
             {% else %}
                 <input type="hidden" name="next" value="/portal/"/>
             {% endif %}
-            <input type="submit" value="Register"/>
+            <input type="submit" value="Sign In"/>
         </form>
     </section>
 {% endblock %}

@@ -49,6 +49,9 @@
                 </a></li>
                 <li><a href="{% url 'musician:messages'%}">
                     <span class="glyphicon glyphicon-comment" aria-hidden="true" title="Messages"></span>
+                    {% if n_mes != 0 %}
+                        <span class="badge">{{ n_mes }}</span>
+                    {% endif %}
                 </a></li>
                 <li><a href="/musician/{{ request.user.id }}/notifications">
                     <span class="glyphicon glyphicon-globe" aria-hidden="true" title="Notifications"></span>

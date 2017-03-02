@@ -12,7 +12,7 @@
         <div class="title-messanger">
              {% block chat_title %}<h4 style="margin-left: 20px">Select User</h4>{% endblock %}
         </div>
-        <div class="Middle-messanger">
+        <div class="Middle-messanger" id="messages_container">
             {% if messages %}
                 {% for message in messages %}
                     {% if message.sender_message == user %}
@@ -28,12 +28,36 @@
         <input type="submit" class="button-messanger", value="Send">-->
         <div class="Right-messanger">
             <div class="list-group">
+
+                <h4>Friends</h4>
                 {% for friend in friend_user %}
-                    <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item">
-                        <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
-                        <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
-                        <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
-                    </a>
+                        {% if selected_user.id == friend.user.id %}
+                            <a href="/musician/messages/{{ friend.user.id }}"
+                               style="background-color:#939393" class="list-group-item">
+                                <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
+                                <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
+                                <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
+                            </a>
+                        {% else %}
+                            <!--
+                            {% for mes in all_mess %}
+                                {% if mes.sender_message.id == friend.user.id %}
+                                    <a href="/musician/messages/{{ friend.user.id }}"
+                                       style="background-color:rgba(211,211,211,0.64)" class="list-group-item">
+                                        <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
+                                        <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
+                                        <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            -->
+                            <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item">
+                                <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
+                                <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
+                                <p  class="list-group-item-text">Username: {{ friend.user.username }}</p><span class="badge">{{ var }}</span>
+                            </a>
+
+                        {% endif %}
                 {% endfor %}
             </div>
         </div>

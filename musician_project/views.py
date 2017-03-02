@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from musician_project.forms import UserForm, MusicianProfileForm
 
+
 def main_page(request):
     return render(request, 'index.html')
 

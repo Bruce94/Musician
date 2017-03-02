@@ -13,26 +13,26 @@ def profile(request, user_id):
     profile = get_object_or_404(MusicianProfile, user=user_id)
     logguser = request.user
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
-
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     #creare un metodo da richiamare per evitare di replicare il codice!!
     status_friend = 0
     f = Friend.objects.all()
     reciver = None
 
-    if(f.filter(Q(sender__username__icontains=logguser.username) &
-                Q(reciver__username__icontains=user.username))):
-        fs = list(f.filter(Q(sender__username__icontains=logguser.username) &
-                           Q(reciver__username__icontains=user.username))).__getitem__(0)
+    if(f.filter(Q(sender__username=logguser.username) &
+                Q(reciver__username=user.username))):
+        fs = list(f.filter(Q(sender__username=logguser.username) &
+                           Q(reciver__username=user.username))).__getitem__(0)
         status_friend = fs.status
         reciver = fs.reciver
 
-    if(f.filter(Q(sender__username__icontains=user.username) &
-                Q(reciver__username__icontains=logguser.username))):
-        fs = list(f.filter(Q(sender__username__icontains=user.username) &
-                           Q(reciver__username__icontains=logguser.username))).__getitem__(0)
+    if(f.filter(Q(sender__username=user.username) &
+                Q(reciver__username=logguser.username))):
+        fs = list(f.filter(Q(sender__username=user.username) &
+                           Q(reciver__username=logguser.username))).__getitem__(0)
         status_friend = fs.status
         reciver = fs.reciver
 
@@ -48,14 +48,16 @@ def profile(request, user_id):
             fs.status = 2
             fs.save()
             status_friend = 2
+        elif "send-message" in request.POST:
+            return HttpResponseRedirect('/musician/messages/'+str(user.id))
 
     return render(request, 'musician/profile.html', {'user': user,
                                                      'profile': profile,
                                                      'logguser': logguser,
                                                      'reciver': reciver,
                                                      'status_friend': status_friend,
-                                                     'n_req': n_req
-                                                     })
+                                                     'n_req': n_req,
+                                                     'n_mes': n_mes})
 
 
 @login_required
@@ -63,8 +65,10 @@ def musician_info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     profile = get_object_or_404(MusicianProfile, user=user_id)
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     if request.GET.get('first_name'):
         user.first_name = request.GET.get('first_name')
@@ -83,17 +87,17 @@ def musician_info(request, user_id):
     f = Friend.objects.all()
     reciver = None
 
-    if(f.filter(Q(sender__username__icontains=logguser.username) &
-                Q(reciver__username__icontains=user.username))):
-        fs = list(f.filter(Q(sender__username__icontains=logguser.username) &
-                           Q(reciver__username__icontains=user.username))).__getitem__(0)
+    if(f.filter(Q(sender__username=logguser.username) &
+                Q(reciver__username=user.username))):
+        fs = list(f.filter(Q(sender__username=logguser.username) &
+                           Q(reciver__username=user.username))).__getitem__(0)
         status_friend = fs.status
         reciver = fs.reciver
 
     if(f.filter(Q(sender__username__icontains=user.username) &
                 Q(reciver__username__icontains=logguser.username))):
-        fs = list(f.filter(Q(sender__username__icontains=user.username) &
-                           Q(reciver__username__icontains=logguser.username))).__getitem__(0)
+        fs = list(f.filter(Q(sender__username=user.username) &
+                           Q(reciver__username=logguser.username))).__getitem__(0)
         status_friend = fs.status
         reciver = fs.reciver
 
@@ -115,7 +119,8 @@ def musician_info(request, user_id):
                                                            'logguser': logguser,
                                                            'reciver': reciver,
                                                            'status_friend': status_friend,
-                                                           'n_req': n_req})
+                                                           'n_req': n_req,
+                                                           'n_mes': n_mes})
 
 
 @login_required
@@ -123,8 +128,9 @@ def musician_friends(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     profile = get_object_or_404(MusicianProfile, user=user_id)
     logguser = request.user
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     musicians = MusicianProfile.objects.all()
 
@@ -133,29 +139,29 @@ def musician_friends(request, user_id):
     reciver = None
     friend_user = []
 
-    if(f.filter(Q(sender__username__icontains=logguser.username) &
-                Q(reciver__username__icontains=user.username))):
-        fs = list(f.filter(Q(sender__username__icontains=logguser.username) &
-                           Q(reciver__username__icontains=user.username))).__getitem__(0)
+    if(f.filter(Q(sender__username=logguser.username) &
+                Q(reciver__username=user.username))):
+        fs = list(f.filter(Q(sender__username=logguser.username) &
+                           Q(reciver__username=user.username))).__getitem__(0)
         status_friend = fs.status
         reciver = fs.reciver
 
-    if(f.filter(Q(sender__username__icontains=user.username) &
-                Q(reciver__username__icontains=logguser.username))):
-        fs = list(f.filter(Q(sender__username__icontains=user.username) &
-                           Q(reciver__username__icontains=logguser.username))).__getitem__(0)
+    if(f.filter(Q(sender__username=user.username) &
+                Q(reciver__username=logguser.username))):
+        fs = list(f.filter(Q(sender__username=user.username) &
+                           Q(reciver__username=logguser.username))).__getitem__(0)
         status_friend = fs.status
         reciver = fs.reciver
 
-    friendships = Friend.objects.all().filter((Q(sender__username__icontains=user.username) |
-                                               Q(reciver__username__icontains=user.username)) &
-                                              Q(status__icontains=2))
+    friendships = Friend.objects.all().filter((Q(sender__username=user.username) |
+                                               Q(reciver__username=user.username)) &
+                                              Q(status=2))
     if friendships:
         for friendship in friendships:
             if friendship.reciver.id == user.id:
-                friend_user += list(musicians.filter(Q(user__id__icontains=friendship.sender.id)))
+                friend_user += list(musicians.filter(Q(user__id=friendship.sender.id)))
             elif friendship.sender.id == user.id:
-                friend_user += list(musicians.filter(Q(user__id__icontains=friendship.reciver.id)))
+                friend_user += list(musicians.filter(Q(user__id=friendship.reciver.id)))
 
     if request.method == 'POST':
         if "add-friend" in request.POST:
@@ -176,29 +182,37 @@ def musician_friends(request, user_id):
                                                               'reciver': reciver,
                                                               'friend_user': friend_user,
                                                               'status_friend': status_friend,
-                                                              'n_req': n_req})
+                                                              'n_req': n_req,
+                                                              'n_mes': n_mes})
 
 
 @login_required
 def messages(request):
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
-    friendships = Friend.objects.all().filter((Q(sender__username__icontains=request.user.username) |
-                                               Q(reciver__username__icontains=request.user.username)) &
-                                              Q(status__icontains=2))
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
+
+    friendships = Friend.objects.all().filter((Q(sender__username=request.user.username) |
+                                               Q(reciver__username=request.user.username)) &
+                                              Q(status=2))
     musicians = MusicianProfile.objects.all()
+
+    all_mess = Message.objects.all().filter(seen=False)
+
 
     friend_user = []
     if friendships:
         for friendship in friendships:
             if friendship.reciver.id == request.user.id:
-                friend_user += list(musicians.filter(Q(user__id__icontains=friendship.sender.id)))
+                friend_user += list(musicians.filter(Q(user__id=friendship.sender.id)))
             elif friendship.sender.id == request.user.id:
-                friend_user += list(musicians.filter(Q(user__id__icontains=friendship.reciver.id)))
+                friend_user += list(musicians.filter(Q(user__id=friendship.reciver.id)))
 
     return render(request, 'musician/messages.html', {'n_req': n_req,
-                                                      'friend_user': friend_user})
+                                                      'n_mes': n_mes,
+                                                      'friend_user': friend_user,
+                                                      })
 
 
 @login_required
@@ -206,23 +220,31 @@ def chat(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     logguser = request.user
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
-    friendships = Friend.objects.all().filter((Q(sender__username__icontains=request.user.username) |
-                                               Q(reciver__username__icontains=request.user.username)) &
-                                              Q(status__icontains=2))
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+
+    friendships = Friend.objects.all().filter((Q(sender__username=request.user.username) |
+                                               Q(reciver__username=request.user.username)) &
+                                              Q(status=2))
     musicians = MusicianProfile.objects.all()
     messages_filtered = Message.objects.all().filter((Q(reciver_message__username=logguser.username) &
                                                       Q(sender_message__username=user.username)) |
                                                      (Q(reciver_message__username=user.username) &
                                                       Q(sender_message__username=logguser.username))).order_by('data_request')
+    for message in messages_filtered:
+        if message.reciver_message.id == logguser.id:
+            message.seen = True
+            message.save()
+
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
+
     friend_user = []
     if friendships:
         for friendship in friendships:
             if friendship.reciver.id == request.user.id:
-                friend_user += list(musicians.filter(Q(user__id__icontains=friendship.sender.id)))
+                friend_user += list(musicians.filter(Q(user__id=friendship.sender.id)))
             elif friendship.sender.id == request.user.id:
-                friend_user += list(musicians.filter(Q(user__id__icontains=friendship.reciver.id)))
+                friend_user += list(musicians.filter(Q(user__id=friendship.reciver.id)))
 
     if request.POST.get('message'):
         message = Message.create(sender=logguser, reciver=user, text=request.POST['message'])
@@ -231,4 +253,5 @@ def chat(request, user_id):
     return render(request, 'musician/chat.html', {'n_req': n_req,
                                                   'friend_user': friend_user,
                                                   'selected_user': user,
-                                                  'messages': messages_filtered})
+                                                  'messages': messages_filtered,
+                                                  'n_mes': n_mes})

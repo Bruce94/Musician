@@ -111,7 +111,7 @@ section.login{
     will-change: overflow;
 }
 
-.Middle-messanger,
+/*.Middle-messanger,*/
 .Right-messanger {
     overflow: auto;
     height: auto;
@@ -119,7 +119,7 @@ section.login{
     -ms-overflow-style: none;
 }
 
-.Middle-messanger::-webkit-scrollbar,
+/*.Middle-messanger::-webkit-scrollbar,*/
 .Right-messanger::-webkit-scrollbar {
     display: none;
 }
@@ -132,6 +132,8 @@ section.login{
     background: ghostwhite;
     border-left: 1px solid #bbbbbb;
     border-bottom: 1px solid #bbbbbb;
+    display: block;
+    overflow: scroll;
 }
 
 .title-messanger{
@@ -153,6 +155,7 @@ section.login{
 .write-messanger{
     position:absolute;
     bottom:0px;
+    padding-left: 10px;
     left: 0px;
     width: 59%;
     height: 5vh;
@@ -178,6 +181,8 @@ section.login{
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
+    display: block;
+
 }
 
 .recived_message{
@@ -189,6 +194,7 @@ section.login{
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 4px;
+    display: block;
 }
 /*
 nav{

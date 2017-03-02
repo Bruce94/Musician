@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from musician.models import MusicianProfile, Friend
+from musician.models import MusicianProfile, Friend, Message
 from django.template import RequestContext
 
 
@@ -10,12 +10,14 @@ from django.template import RequestContext
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
     profile = get_object_or_404(MusicianProfile, user=request.user.id)
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     return render(request, 'portal/home.html', {'user': user,
                                                 'profile': profile,
-                                                'n_req': n_req})
+                                                'n_req': n_req,
+                                                'n_mes': n_mes})
 
 
 @login_required
@@ -25,8 +27,9 @@ def search_musician(request):
     profile_list = []
     qs = MusicianProfile.objects.all()
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     if query:
         for q in query.split():
@@ -42,27 +45,33 @@ def search_musician(request):
 
     return render(request, 'portal/search_musician.html', {'profile_list': profile_list,
                                                            'query': query,
-                                                           'n_req': n_req})
+                                                           'n_req': n_req,
+                                                           'n_mes': n_mes})
 
 
 @login_required
 def friendship_request(request):
 
-    friendships = Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                              Q(status__icontains=1))
+    friendships = Friend.objects.all().filter(Q(reciver__username=request.user.username) &
+                                              Q(status=1))
+    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username__icontains=request.user.username) &
-                                            Q(status__icontains=1)))
     result = False
     musicians = MusicianProfile.objects.all()
     profile_list = []
 
     if friendships:
         for friendship in friendships:
-            if musicians.filter(Q(user__id__icontains=friendship.sender.id)):
-                profile_list += list(musicians.filter(Q(user__id__icontains=friendship.sender.id)))
+            if musicians.filter(Q(user__username=friendship.sender.username)):
+                profile_list += list(musicians.filter(Q(user__username=friendship.sender.username)))
+                friendship.seen = True
+                friendship.save()
                 result = True
+
+    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
+                                            Q(status=1)))
     return render(request, 'portal/friendship_request.html', {'profile_list': profile_list,
                                                               'result': result,
-                                                              'n_req': n_req})
+                                                              'n_req': n_req,
+                                                              'n_mes': n_mes})
 

@@ -196,6 +196,18 @@ section.login{
     border-radius: 4px;
     display: block;
 }
+
+.title-users-message{
+/*    position: relative;
+    display: block;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;*/
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    margin-top: -1px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+}
 /*
 nav{
     width: 18%;

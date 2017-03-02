@@ -39,7 +39,7 @@ def register(request):
     return render_to_response('registration/register.html',
                               dict(userform=uf,
                                    musicianprofileform=mpf),
-                                   context_instance=RequestContext(request))
+                              context_instance=RequestContext(request))
 
 
 def register_ok(request):

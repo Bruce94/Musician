@@ -198,10 +198,11 @@ def messages(request):
                                               Q(status=2))
     musicians = MusicianProfile.objects.all()
 
-    all_mess = Message.objects.all().filter(seen=False)
-
+    new_mes = Message.objects.all().filter(seen=False, reciver_message__username=request.user.username)
 
     friend_user = []
+    new_mes_user = []
+
     if friendships:
         for friendship in friendships:
             if friendship.reciver.id == request.user.id:
@@ -209,9 +210,19 @@ def messages(request):
             elif friendship.sender.id == request.user.id:
                 friend_user += list(musicians.filter(Q(user__id=friendship.reciver.id)))
 
+    friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
+
+    if new_mes:
+        for mes in new_mes:
+            if not (MusicianProfile.objects.all().filter(
+                    Q(user__username=mes.sender_message.username)).__getitem__(0) in new_mes_user):
+                new_mes_user += list(
+                    MusicianProfile.objects.all().filter(Q(user__username=mes.sender_message.username)))
+
     return render(request, 'musician/messages.html', {'n_req': n_req,
                                                       'n_mes': n_mes,
                                                       'friend_user': friend_user,
+                                                      'new_mes_user': new_mes_user
                                                       })
 
 
@@ -227,6 +238,8 @@ def chat(request, user_id):
                                                Q(reciver__username=request.user.username)) &
                                               Q(status=2))
     musicians = MusicianProfile.objects.all()
+    new_mes = Message.objects.all().filter(seen=False, reciver_message__username=request.user.username)
+
     messages_filtered = Message.objects.all().filter((Q(reciver_message__username=logguser.username) &
                                                       Q(sender_message__username=user.username)) |
                                                      (Q(reciver_message__username=user.username) &
@@ -239,12 +252,23 @@ def chat(request, user_id):
     n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     friend_user = []
+    new_mes_user = []
+
     if friendships:
         for friendship in friendships:
             if friendship.reciver.id == request.user.id:
                 friend_user += list(musicians.filter(Q(user__id=friendship.sender.id)))
             elif friendship.sender.id == request.user.id:
                 friend_user += list(musicians.filter(Q(user__id=friendship.reciver.id)))
+
+    friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
+
+    if new_mes:
+        for mes in new_mes:
+            if not (MusicianProfile.objects.all().filter(
+                    Q(user__username=mes.sender_message.username)).__getitem__(0) in new_mes_user):
+                new_mes_user += list(
+                    MusicianProfile.objects.all().filter(Q(user__username=mes.sender_message.username)))
 
     if request.POST.get('message'):
         message = Message.create(sender=logguser, reciver=user, text=request.POST['message'])
@@ -254,4 +278,5 @@ def chat(request, user_id):
                                                   'friend_user': friend_user,
                                                   'selected_user': user,
                                                   'messages': messages_filtered,
-                                                  'n_mes': n_mes})
+                                                  'n_mes': n_mes,
+                                                  'new_mes_user': new_mes_user})

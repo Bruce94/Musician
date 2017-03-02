@@ -28,36 +28,31 @@
         <input type="submit" class="button-messanger", value="Send">-->
         <div class="Right-messanger">
             <div class="list-group">
-
-                <h4>Friends</h4>
+                {% if new_mes_user %}
+                    <h4 class="title-users-message">New Messages</h4>
+                    {% for usr in new_mes_user %}
+                        <a href="/musician/messages/{{ usr.user.id }}" class="list-group-item ">
+                            <img class="search-musician" src="{{ usr.img.url }}" alt = "{{ usr.user.username }}"/>
+                            <h3 class="list-group-item-heading">{{ usr.user.last_name }} {{ usr.user.first_name }}</h3>
+                            <p  class="list-group-item-text">Username: {{ usr.user.username }}</p>
+                        </a>
+                    {% endfor %}
+                {% endif %}
+                <h4 class="title-users-message">Friends</h4>
                 {% for friend in friend_user %}
-                        {% if selected_user.id == friend.user.id %}
-                            <a href="/musician/messages/{{ friend.user.id }}"
-                               style="background-color:#939393" class="list-group-item">
-                                <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
-                                <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
-                                <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
-                            </a>
-                        {% else %}
-                            <!--
-                            {% for mes in all_mess %}
-                                {% if mes.sender_message.id == friend.user.id %}
-                                    <a href="/musician/messages/{{ friend.user.id }}"
-                                       style="background-color:rgba(211,211,211,0.64)" class="list-group-item">
-                                        <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
-                                        <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
-                                        <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-                            -->
-                            <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item">
-                                <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
-                                <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
-                                <p  class="list-group-item-text">Username: {{ friend.user.username }}</p><span class="badge">{{ var }}</span>
-                            </a>
-
-                        {% endif %}
+                    {% if selected_user.id == friend.user.id %}
+                        <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item active">
+                            <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
+                            <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
+                            <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
+                        </a>
+                    {% else %}
+                        <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item">
+                            <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
+                            <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
+                            <p  class="list-group-item-text">Username: {{ friend.user.username }}</p><span class="badge">{{ var }}</span>
+                        </a>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

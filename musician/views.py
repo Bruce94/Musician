@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from musician.models import MusicianProfile, Friend, Message
+from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill
 from django.db.models import Q
 
 
@@ -87,6 +87,8 @@ def musician_info(request, user_id):
     f = Friend.objects.all()
     reciver = None
 
+    user_has_skill = HasSkill.objects.all().filter(user=user)
+
     if(f.filter(Q(sender__username=logguser.username) &
                 Q(reciver__username=user.username))):
         fs = list(f.filter(Q(sender__username=logguser.username) &
@@ -117,6 +119,7 @@ def musician_info(request, user_id):
     return render(request, 'musician/musician_info.html', {'user': user,
                                                            'profile': profile,
                                                            'logguser': logguser,
+                                                           'user_has_skill': user_has_skill,
                                                            'reciver': reciver,
                                                            'status_friend': status_friend,
                                                            'n_req': n_req,

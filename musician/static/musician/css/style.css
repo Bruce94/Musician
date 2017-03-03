@@ -271,6 +271,11 @@ img.varie-icon{
     width: 17px;
     float: left;
 }
+img.skill-icon{
+    height: 35px;
+    width: 35px;
+    margin-right: 20px;
+}
 
 button.add-friend{
     margin-top: 5px;

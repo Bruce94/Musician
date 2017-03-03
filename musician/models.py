@@ -4,6 +4,8 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models import Q
+
 from django.core.validators import RegexValidator
 from django.forms import forms
 # Settings root image folder
@@ -27,12 +29,6 @@ class MusicianProfile(models.Model):
 
     def __unicode__(self):
         return unicode(self.user)
-
-
-#class Characteristic(models.Model):
-#    charact_text = models.CharField(max_length=50)
-#    def __unicode__(self):
-#        return self.charact_text
 
 
 #class Notification(models.Model):
@@ -66,6 +62,39 @@ class Friend(models.Model):
         friend = self(sender=sender, reciver=reciver)
         return friend
 
+    @staticmethod
+    def n_req_friendship(user):
+        return len(Friend.objects.all().filter(Q(reciver__username=user.username) & Q(seen=False) &
+                                               Q(status=1)))
+
+    @staticmethod
+    def get_friendship(user1, user2):
+
+        if Friend.objects.all().filter(Q(sender__username=user1.username) &
+                                       Q(reciver__username=user2.username)):
+            return list(Friend.objects.all().filter(Q(sender__username=user1.username) &
+                                                    Q(reciver__username=user2.username))).__getitem__(0)
+        elif Friend.objects.all().filter(Q(sender__username=user2.username) &
+                                         Q(reciver__username=user1.username)):
+            return list(Friend.objects.all().filter(Q(sender__username=user2.username) &
+                                                    Q(reciver__username=user1.username))).__getitem__(0)
+        return None
+
+    @staticmethod
+    def get_user_friends(user):
+
+        friendships = Friend.objects.all().filter((Q(sender__username=user.username) |
+                                                   Q(reciver__username=user.username)) &
+                                                  Q(status=2))
+        friend_user = []
+        if friendships:
+            for friendship in friendships:
+                if friendship.reciver.id == user.id:
+                    friend_user += list(MusicianProfile.objects.all().filter(Q(user__id=friendship.sender.id)))
+                elif friendship.sender.id == user.id:
+                    friend_user += list(MusicianProfile.objects.all().filter(Q(user__id=friendship.reciver.id)))
+        return friend_user
+
 
 class Message(models.Model):
 
@@ -82,6 +111,28 @@ class Message(models.Model):
     def create(self, sender, reciver, text):
         message = self(sender_message=sender, reciver_message=reciver, text=text)
         return message
+
+    @staticmethod
+    def n_new_messages(user):
+        return len(Message.objects.all().filter(Q(reciver_message__username=user.username) & Q(seen=False)))
+
+    @staticmethod
+    def new_user_message(user):
+        new_mes = Message.objects.all().filter(seen=False, reciver_message__username=user.username)
+        new_mes_user = []
+        for mes in new_mes:
+            if not (MusicianProfile.objects.all().filter(
+                    Q(user__username=mes.sender_message.username)).__getitem__(0) in new_mes_user):
+                new_mes_user += list(
+                    MusicianProfile.objects.all().filter(Q(user__username=mes.sender_message.username)))
+        return new_mes_user
+
+    @staticmethod
+    def messages_of_chat(user1, user2):
+        return Message.objects.all().filter((Q(reciver_message__username=user1.username) &
+                                             Q(sender_message__username=user2.username)) |
+                                            (Q(reciver_message__username=user2.username) &
+                                             Q(sender_message__username=user1.username))).order_by('data_request')
 
 
 class Skill(models.Model):

@@ -8,13 +8,20 @@ class UserForm(forms.ModelForm):
         'password_mismatch': "The two password fields didn't match.",
     }
     password1 = forms.CharField(label="Password",
-                                widget=forms.PasswordInput)
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     password2 = forms.CharField(label="Password confirmation",
-                                widget=forms.PasswordInput,
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}),
                                 help_text="Enter the same password as above, for verification.")
 
     class Meta:
         model = User
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+
+        }
         fields = ['username', 'email', 'first_name', 'last_name']
 
     def clean_password2(self):
@@ -40,7 +47,7 @@ class MusicianProfileForm(forms.ModelForm):
     class Meta:
         model = MusicianProfile
         widgets = {
-            'data': forms.DateInput(attrs={'class': 'datepick'}),
+            'data': forms.DateInput(attrs={'class': 'datepick', 'style': 'width: 100%'}),
         }
         fields = ['bio', 'gender', 'img', 'data']
 

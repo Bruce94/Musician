@@ -10,8 +10,7 @@ from django.template import RequestContext
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
     profile = get_object_or_404(MusicianProfile, user=request.user.id)
-    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
-                                            Q(status=1)))
+    n_req = Friend.n_req_friendship(request.user)
     n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     return render(request, 'portal/home.html', {'user': user,
@@ -27,8 +26,7 @@ def search_musician(request):
     profile_list = []
     qs = MusicianProfile.objects.all()
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
-                                            Q(status=1)))
+    n_req = Friend.n_req_friendship(request.user)
     n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     if query:
@@ -68,8 +66,7 @@ def friendship_request(request):
                 friendship.save()
                 result = True
 
-    n_req = len(Friend.objects.all().filter(Q(reciver__username=request.user.username) & Q(seen=False) &
-                                            Q(status=1)))
+    n_req = Friend.n_req_friendship(request.user)
     return render(request, 'portal/friendship_request.html', {'profile_list': profile_list,
                                                               'result': result,
                                                               'n_req': n_req,

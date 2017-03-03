@@ -12,7 +12,7 @@
             <div class="panel-profile-img">
                 <img class="profile" src="{{ profile.img.url }}" alt = "{{ user.username }}"/>
                 <br>
-                {% if user.id != logguser.id %}
+                {% if user.id != request.user.id %}
                     <form action="/musician/{{ user.id }}/" method="post">
                         {% csrf_token %}
                         {% if  status_friend == 0 %}

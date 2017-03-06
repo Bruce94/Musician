@@ -6,20 +6,50 @@
 
 {% block container %}
     <section class="search-musician">
-        <div class="alert alert-info" role="alert"> Results for {{ query }}</div>
+        <div class="alert alert-info" role="alert"
+             style="padding: 8px; margin-bottom: 0px"> Results for {{ query }}</div>
 
         {% if not profile_list %}
-            <div class="alert alert-warning" role="alert"> Musician not found :( </div>
+            <div class="alert alert-warning" role="alert" style="padding: 8px;"> Musician not found </div>
         {% else %}
             <div class="list-group">
                 {% for profile in profile_list %}
-                    <a href="/musician/{{ profile.user.id }}/" class="list-group-item">
-                        <img class="search-musician" src="{{ profile.img.url }}" alt = "{{ profile.user.username }}"/>
-                        <h3 class="list-group-item-heading">{{ profile.user.last_name }} {{ profile.user.first_name }}</h3>
-                        <p  class="list-group-item-text">Username: {{ profile.user.username }}</p>
+                    <a href="/musician/{{ profile.user.id }}/" class="list-group-item col-md-12">
+                        <div class="col-md-3">
+                            <img class="img-circle" height="90" width="90"
+                                 src="{{ profile.img.url }}" alt = "{{ profile.user.username }}"/>
+                        </div>
+                        <div class="col-md-9">
+                            <h2 class="list-group-item-heading">{{ profile.user.last_name }} {{ profile.user.first_name }}</h2>
+                            <p  class="list-group-item-text">Username: {{ profile.user.username }}</p>
+                        </div>
                     </a>
                 {% endfor %}
             </div>
         {% endif %}
+    </section>
+    <section class="filter-search">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Filter Search</h3>
+            </div>
+            <div class="panel-body">
+                <form>
+                    <h5>Skills:</h5>
+                    {% for skill in skills %}
+                        <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}" style="margin-right: 10px">
+                        {{ skill.name_skill }} <br>
+                    {% endfor %}
+                    <hr>
+                    <h5>Country:</h5>
+                    {{ musicianprofileform.country }}
+                    <hr>
+                    <h5>Gender:</h5>
+                    {{ musicianprofileform.gender }}
+                    <br><br>
+                    <input type="submit" value="Apply">
+                </form>
+            </div>
+        </div>
     </section>
 {% endblock %}

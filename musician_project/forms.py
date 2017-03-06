@@ -48,8 +48,11 @@ class MusicianProfileForm(forms.ModelForm):
         model = MusicianProfile
         widgets = {
             'data': forms.DateInput(attrs={'class': 'datepick', 'style': 'width: 100%'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+
         }
-        fields = ['bio', 'gender', 'img', 'data']
+        fields = ['bio', 'gender', 'img', 'data', 'phone_number', 'country', 'city']
 
 
 #class UpdateUser(forms.ModelForm):

@@ -11,53 +11,67 @@
         <form enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 17vh">Username</span>
+                <span class="input-group-addon" style="width: 120px">Username</span>
                 {{ userform.username}}
             </div>
             <p class="error">
                 {{ userform.username.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 17vh">First Name</span>
+                <span class="input-group-addon" style="width: 120px">First Name</span>
                 {{ userform.first_name }}
             </div>
             <p class="error">
                 {{ userform.first_name.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 17vh">Last Name</span>
+                <span class="input-group-addon" style="width: 120px">Last Name</span>
                 {{ userform.last_name }}
             </div>
             <p class="error">
                 {{ userform.last_name.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 17vh">Email</span>
+                <span class="input-group-addon" style="width: 120px">Email</span>
                 {{ userform.email }}
             </div>
             <p class="error">
                 {{ userform.email.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 17vh">Password</span>
+                <span class="input-group-addon" style="width: 120px">Password</span>
                 {{ userform.password1 }}
             </div>
             <p class="error">
                 {{ userform.password1.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 15vh">Password conf</span>
+                <span class="input-group-addon" style="width: 120px">Password conf</span>
                 {{ userform.password2 }}
             </div>
             <p class="error">
                 {{ userform.password2.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
-                <span class="input-group-addon" style="width: 17vh">Birth day</span>
-                {{ musicianprofileform.data.as_widget }}
-             </div>
+                <span class="input-group-addon" style="width: 120px">Phone Number</span>
+                {{ musicianprofileform.phone_number }}
+            </div>
             <p class="error">
-                {{ musicianprofileform.data.errors.as_text }}
+                {{ musicianprofileform.phone_number.errors.as_text }}
+            </p>
+            <div class="input-group" style="width: 60vh">
+                <span class="input-group-addon" style="width: 120px">City</span>
+                {{ musicianprofileform.city }}
+            </div>
+            <p class="error">
+                {{ musicianprofileform.city.errors.as_text }}
+            </p>
+            <div class="input-group" style="width: 60vh">
+                Country:
+                {{ musicianprofileform.country }}
+            </div>
+            <p class="error">
+                {{ musicianprofileform.country.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
                 Biography:<br>
@@ -65,6 +79,13 @@
             </div>
             <p class="error">
                 {{ musicianprofileform.bio.errors.as_text }}
+            </p>
+            <div class="input-group" style="width: 60vh">
+                <span class="input-group-addon" style="width: 17vh">Birth day</span>
+                {{ musicianprofileform.data.as_widget }}
+             </div>
+            <p class="error">
+                {{ musicianprofileform.data.errors.as_text }}
             </p>
             <div class="input-group" style="width: 60vh">
                 Gender:
@@ -82,9 +103,9 @@
             </p>
             <p>
                 Skills:
-                <ul class="list-group">
+                <ul class="list-group" style="width: 60vh">
                     {% for skill in skills %}
-                        <li class="list-group-item" style="width: 30vh; padding: 5px;">
+                        <li class="list-group-item" style="padding: 5px;">
                             <img class="skill-icon" src="{{skill.image_skill.url }}" alt = "{{skill.name_skill }}"/>
                             <input type="checkbox" name="check_skill"
                                    value="{{ skill.name_skill }}" style="margin-right: 10px">
@@ -93,12 +114,6 @@
                     {% endfor %}
                 </ul>
             </p>
-
-            {% if next %}
-                <input type="hidden" name="next" value="{{ next }}"/>
-            {% else %}
-                <input type="hidden" name="next" value="/portal/"/>
-            {% endif %}
             <input type="submit" class="btn btn-default" value="Sign In"/>
         </form>
     </section>

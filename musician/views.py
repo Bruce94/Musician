@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from musician_project.forms import UserForm, MusicianProfileForm
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill
 
 
@@ -53,22 +54,63 @@ def musician_info(request, user_id):
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
 
-    if request.GET.get('first_name'):
-        user.first_name = request.GET.get('first_name')
-        user.save()
+    mpf = MusicianProfileForm(prefix='profile')
+    uf = UserForm(prefix='user')
 
-    if request.GET.get('first_name'):
-        user.last_name = request.GET.get('last_name')
-        user.save()
+    skills = Skill.objects.all()
+    user_skills = HasSkill.get_skill(user)
 
-    if request.GET.get('email'):
-        user.email = request.GET.get('email')
-        user.save()
+    if request.method == 'GET':
+
+        uf = UserForm(request.POST, prefix='user')
+        mpf = MusicianProfileForm(request.GET, request.FILES, prefix='profile')
+
+        if request.GET.get('first_name'):
+            user.first_name = request.GET.get('first_name')
+            user.save()
+
+        if request.GET.get('first_name'):
+            user.last_name = request.GET.get('last_name')
+            user.save()
+
+        if request.GET.get('city'):
+            profile.city = request.GET.get('city')
+            profile.save()
+
+        if request.GET.get('bio'):
+            profile.bio = request.GET.get('bio')
+            profile.save()
+
+        if request.GET.getlist('check_skill'):
+            checked_skills = request.GET.getlist('check_skill')
+            for user_skill in user_skills:
+                if not(user_skill.name_skill in checked_skills):
+                    hs = HasSkill.objects.all().filter(user=user, skill=user_skill).__getitem__(0)
+                    hs.delete()
+            for skill in skills:
+                if skill.name_skill in checked_skills:
+                    HasSkill.create(user, skill)
+                    user_skills = HasSkill.get_skill(user)
+
+        if mpf.is_valid() * uf.is_valid():
+            if mpf.cleaned_data['data']:
+                profile.data = mpf.cleaned_data['data']
+                profile.save()
+            if mpf.cleaned_data['gender']:
+                profile.gender = mpf.cleaned_data['gender']
+                profile.save()
+            if mpf.cleaned_data['country']:
+                profile.country = mpf.cleaned_data['country']
+                profile.save()
+            if mpf.cleaned_data['phone_number']:
+                profile.phone_number = mpf.cleaned_data['phone_number']
+                profile.save()
+            if uf.cleaned_data['email']:
+                user.email = uf.cleaned_data['email']
+                user.save()
 
     status_friend = 0
     reciver = None
-
-    user_has_skill = HasSkill.objects.all().filter(user=user)
 
     if Friend.get_friendship(request.user, user):
         fs = Friend.get_friendship(request.user, user)
@@ -90,8 +132,11 @@ def musician_info(request, user_id):
 
     return render(request, 'musician/musician_info.html', {'user': user,
                                                            'profile': profile,
-                                                           'user_has_skill': user_has_skill,
+                                                           'user_skills': user_skills,
                                                            'reciver': reciver,
+                                                           'musicianprofileform': mpf,
+                                                           'userform': uf,
+                                                           'skills': skills,
                                                            'status_friend': status_friend,
                                                            'n_req': n_req,
                                                            'n_mes': n_mes})

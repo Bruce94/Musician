@@ -29,11 +29,13 @@ rm init.sql
 
 echo "Database Successfully created"
 echo "Database name: dbMusician;"
-echo "Database user: usermusician, pwd: bd344mx"
+†echo "Database user: usermusician, pwd: bd344mx"
 
 echo "install dependencies"
 pip install -U pip
 pip install -r requirements.txt
+pip install django-countries
+
 
 echo "make migrations"
 python manage.py makemigrations

@@ -23,7 +23,7 @@
                             <button type="submit" class="add-friend" name="cancel-request">
                                 Cancel Request
                             </button>
-                        {% elif status_friend == 1 and reciver.id == logguser.id %}
+                        {% elif status_friend == 1 and reciver.id == request.user.id %}
                             <div class="btn-group">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Pending Request <span class="caret"></span>
@@ -44,7 +44,6 @@
                               </ul>
                             </div>
                         {% endif %}
-
                     </form>
                 {% endif %}
             </div>

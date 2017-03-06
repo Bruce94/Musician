@@ -27,33 +27,8 @@
     <body>
         {% if user.is_authenticated%}
 
-                {% block navigation %}
-                {% endblock %}
-
-
-            <!--
-            <div id="top">
-                <div id="navigation">
-
-                </div>
-
-                <div id="searchbar">
-                    {% load static %}
-                    <form>
-                        <input type="text" class =search
-                               name="search" placeholder="Search..">
-                    </form>
-                </div>
-                <div id="logo">
-                    <p>Musician</p>
-                </div>
-            </div>-->
-            <!--
-            <nav>
-                {% block nav %}
-                {% endblock %}
-            </nav>
-            -->
+            {% block navigation %}
+            {% endblock %}
             <div id = container>
                 {% block container %}
                 {% endblock %}

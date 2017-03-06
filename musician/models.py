@@ -5,11 +5,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Q
-
 from django.core.validators import RegexValidator
-from django.forms import forms
-# Settings root image folder
+from django_countries.fields import CountryField
 
+# Settings root image folder
 profile_image = os.path.join(settings.STATIC_URL, 'musician/images/vm.jpg')
 skill_image = os.path.join(settings.STATIC_URL, 'musician/images/question-mark-icon.png')
 profile_url = 'profile/'
@@ -26,16 +25,20 @@ class MusicianProfile(models.Model):
     img = models.ImageField(null=True, blank=True, default=profile_image, upload_to=profile_url)
     data = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must be"
+                                         " entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], null=True, blank=True, max_length=15)
+    city = models.CharField(null=True, blank=True, max_length=50)
+    country = CountryField(blank=True)
 
     def __unicode__(self):
         return unicode(self.user)
 
+    @staticmethod
+    def get_musician(**kwargs):
+        return MusicianProfile.objects.filter(**kwargs)
 
-#class Notification(models.Model):
-#    note_title = models.CharField(max_length=20)
-#    note_desc = models.CharField(max_length=50)
-#    def __unicode__(self):
-#        return self.note_title
 
 class Friend(models.Model):
 
@@ -95,6 +98,11 @@ class Friend(models.Model):
                     friend_user += list(MusicianProfile.objects.all().filter(Q(user__id=friendship.reciver.id)))
         return friend_user
 
+    @staticmethod
+    def get_pending_request(user):
+        return Friend.objects.all().filter(Q(reciver__username=user.username) &
+                                           Q(status=1))
+
 
 class Message(models.Model):
 
@@ -150,12 +158,34 @@ class HasSkill(models.Model):
 
     user = models.ForeignKey(User, related_name="user_skill")
     skill = models.ForeignKey(Skill, related_name="skill_user")
-    endorsement = models.IntegerField(default=0)
 
     def __unicode__(self):
         return unicode(self.user)
 
     @classmethod
     def create(self, user, skill):
-        hasSkill = self(user=user, skill=skill)
-        return hasSkill
+        if not HasSkill.objects.all().filter(user=user, skill=skill):
+            hasSkill = self(user=user, skill=skill)
+            hasSkill.save()
+
+    @staticmethod
+    def get_skill(user):
+        has_skills = HasSkill.objects.all().filter(user=user)
+        skills = []
+        for hs in has_skills:
+            skills += [hs.skill]
+        return skills
+
+    @staticmethod
+    def get_users(skill):
+        has_skills = HasSkill.objects.filter(skill=skill)
+        users = []
+        for hs in has_skills:
+            users += [hs.user]
+        return users
+
+#class Notification(models.Model):
+#    note_title = models.CharField(max_length=20)
+#    note_desc = models.CharField(max_length=50)
+#    def __unicode__(self):
+#        return self.note_title

@@ -16,37 +16,97 @@
         <div class="panel panel-default" >
             <div class="panel-heading">
                 {% if user.id == request.user.id %}
-                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit" onclick="showEditInfo('show_personal_info','edit_personal_info')">
+                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit"
+                         onclick="showEditInfo('show_personal_info','edit_personal_info')">
                 {% endif %}
                 <h3 class="panel-title">Personal Information</h3>
             </div>
             <div class="panel-body" id="show_personal_info">
-                <p><small><font color="#696969">First Name:</font></small> &nbsp&nbsp {{ user.first_name }}</p>
-                <p><small><font color="#696969">Last Name:</font></small> &nbsp&nbsp {{ user.last_name }}</p>
-                <p><small><font color="#696969">Birthday:</font></small> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{ profile.data }}</p>
-                <p>
-                    <small><font color="#696969">Gender:</font></small> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                    {% if profile.gender == 'M'%}
-                        Male
-                    {% elif profile.gender == 'F' %}
-                        Female
+                <table>
+                    {% if user.last_name %}
+                    <tr>
+                        <td class="info-profile-title">First Name:</td>
+                        <td> {{ user.first_name }} </td>
+                    </tr>
                     {% endif %}
-                </p>
+                    {% if user.last_name %}
+                    <tr>
+                        <td class="info-profile-title">Last Name:</td>
+                        <td> {{ user.last_name }} </td>
+                    </tr>
+                    {% endif %}
+                    {% if profile.data %}
+                    <tr>
+                        <td class="info-profile-title">Birthday:</td>
+                        <td> {{ profile.data }} </td>
+                    </tr>
+                    {% endif %}
+                    {% if profile.gender %}
+                    <tr>
+                        <td class="info-profile-title">Gender:</td>
+                        <td>
+                            {% if profile.gender == 'M'%}
+                                Male
+                            {% elif profile.gender == 'F' %}
+                                Female
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% if profile.country %}
+                        <tr>
+                            <td class="info-profile-title">Country:</td>
+                            <td> {{ profile.country }} </td>
+                        </tr>
+                    {% endif %}
+                    {% if profile.city %}
+                        <tr>
+                            <td class="info-profile-title">City:</td>
+                            <td> {{ profile.city }} </td>
+                        </tr>
+                    {% endif %}
+                </table>
             </div>
             {% if user.id == request.user.id %}
                 <div class="panel-body" style="display: none" id="edit_personal_info">
                     <form>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="sizing-addon3">First Name</span>
-                            <input type="text" class="form-control" aria-describedby="sizing-addon3" name="first_name" value="{{ user.first_name }}">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="width: 120px">First Name</span>
+                            <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
                         </div>
                         <br>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="sizing-addon3">Last Name</span>
-                            <input type="text" class="form-control" aria-describedby="sizing-addon3" name="last_name" value="{{ user.last_name }}">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="width: 120px">Last Name</span>
+                            <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
                         </div>
                         <br>
-                        <div class="input-group input-group-sm" onclick="showEditInfo('edit_personal_info','show_personal_info')">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="width: 120px">City</span>
+                            <input type="text" class="form-control" name="city" value="{{ profile.city }}">
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            Country:
+                            {{ musicianprofileform.country }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            Gender:
+                            {{ musicianprofileform.gender }}
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            Biography:<br>
+                            <textarea name="bio" rows="10" cols="50">{{ profile.bio }}</textarea>
+                        </div>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon" style="width: 120px">Birthday</span>
+                            {{ musicianprofileform.data }}
+                        </div>
+                        <br>
+                        <div class="input-group input-group-sm"
+                             onclick="showEditInfo('edit_personal_info','show_personal_info')">
                             <input type="reset" value="cancel">
                             <input type="submit" value="edit">
                         </div>
@@ -58,23 +118,50 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {% if user.id == request.user.id %}
-                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit" onclick="showEditInfo('show_general_info','edit_general_info')">
+                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit"
+                         onclick="showEditInfo('show_general_info','edit_general_info')">
                 {% endif %}
                 <h3 class="panel-title">General Information</h3>
             </div>
             <div class="panel-body" id="show_general_info">
-                <p><small><font color="#696969">Username:</font></small> &nbsp&nbsp {{ user.username }}</p>
-                <p><small><font color="#696969">Email:</font></small> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{ user.email }}</p>
+                <table>
+                    <tr>
+                        <td class="info-profile-title">Username:</td>
+                        <td> {{ user.username }} </td>
+                    </tr>
+                    <tr>
+                        <td class="info-profile-title">Email:</td>
+                        <td> {{ user.email }} </td>
+                    </tr>
+                    {% if profile.phone_number %}
+                    <tr>
+                        <td class="info-profile-title">Phone number:</td>
+                        <td> {{ profile.phone_number }} </td>
+                    </tr>
+                    {% endif %}
+                </table>
+                <p class="error">
+                    {{ musicianprofileform.phone_number.errors.as_text }}
+                    {{ userform.email.errors.as_text }}
+                </p>
             </div>
             {% if user.id == request.user.id %}
                 <div class="panel-body" style="display: none" id="edit_general_info">
                     <form>
                         <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="sizing-addon3">@</span>
-                            <input type="text" class="form-control" aria-describedby="sizing-addon3" name="email" value="{{ user.email }}">
+                            <span class="input-group-addon" id="sizing-addon3" style="width: 120px">Email: </span>
+                            {{ userform.email }}
                         </div>
                         <br>
-                        <div class="input-group input-group-sm" onclick="showEditInfo('edit_general_info','show_general_info')">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" id="sizing-addon3" style="width: 120px">
+                                Phone number:
+                            </span>
+                            {{ musicianprofileform.phone_number }}
+                        </div>
+                        <br>
+                        <div class="input-group input-group-sm"
+                             onclick="showEditInfo('edit_general_info','show_general_info')">
                             <input type="reset" value="cancel">
                             <input type="submit" value="edit">
                         </div>
@@ -85,19 +172,41 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {% if user.id == request.user.id %}
-                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit" onclick="showEditInfo('show_general_info','edit_general_info')">
+                    <img class="edit-icon" src="{% static 'musician/images/edit-icon.png' %}" alt="edit" title="edit"
+                         onclick="showEditInfo('show_skills','edit_skills')">
                 {% endif %}
                 <h3 class="panel-title">Musician Skills</h3>
             </div>
             <div class="panel-body" id="show_skills">
-                {% for has_skill in user_has_skill %}
+                {% for user_skill in user_skills %}
                     <p>
-                        <img class="skill-icon" src="{{ has_skill.skill.image_skill.url }}" alt = "{{ has_skill.skill.name_skill }}"/>
-                        {{ has_skill.skill.name_skill }}
+                        <img class="skill-icon" src="{{ user_skill.image_skill.url }}"
+                             alt = "{{ user_skill.name_skill }}"/>
+                        {{ user_skill.name_skill }}
                     </p>
                 {% endfor %}
             </div>
+            {% if user.id == request.user.id %}
+                <div class="panel-body" style="display: none" id="edit_skills">
+                    <form>
+                        {% for skill in skills %}
+                            <img class="skill-icon" src="{{skill.image_skill.url }}" alt = "{{skill.name_skill }}"/>
+                            <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}" style="margin-right: 10px"
+                                    {% if skill in user_skills%} checked {% endif %}>
+                            {{ skill.name_skill }} <br><br>
+                        {% endfor %}
+                        <div class="input-group input-group-sm"
+                             onclick="showEditInfo('edit_skills','show_skills')">
+                            <input type="reset" value="cancel">
+                            <input type="submit" value="edit">
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
         </div>
+
+
+
 
     </section>
 {% endblock %}

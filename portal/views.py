@@ -24,7 +24,6 @@ def portal_welcome(request):
 @login_required
 def search_musician(request):
 
-    query = request.GET.get('search_musician') or None
     profile_list = []
 
     n_req = Friend.n_req_friendship(request.user)
@@ -33,22 +32,43 @@ def search_musician(request):
 
     skills = Skill.objects.all()
 
-    if query:
-        for q in query.split():
-            profile_list = set(chain(MusicianProfile.get_musician(user__username__icontains=q),
-                                     MusicianProfile.get_musician(user__first_name__icontains=q),
-                                     MusicianProfile.get_musician(user__last_name__icontains=q)))
-
     if request.method == 'GET':
-        b = []
+        mpf = MusicianProfileForm(request.GET, request.FILES, prefix='profile')
+
+        query = request.GET.get('search_musician') or None
+        if query:
+            for q in query.split():
+                profile_list = set(chain(MusicianProfile.get_musician(user__username__icontains=q),
+                                         MusicianProfile.get_musician(user__first_name__icontains=q),
+                                         MusicianProfile.get_musician(user__last_name__icontains=q)))
+
         if request.GET.getlist('check_skill'):
             checked_skills = request.GET.getlist('check_skill')
+            profiles = []
             for skill in checked_skills:
-                users = HasSkill.get_users(Skill.objects.filter(name_skill=skill).__getitem__(0))
-                for user in users:
-                    b = chain(b, MusicianProfile.get_musician(user=user))
-                    print(b)
-            profile_list = set(b)
+                has_skills = HasSkill.objects.filter(skill__name_skill=skill)
+                for hs in has_skills:
+                    profiles += [hs.musicianprofile]
+                if profile_list:
+                    profile_list = set(profiles).intersection(profile_list)
+                else:
+                    profile_list = profiles
+
+        if mpf.is_valid():
+            if mpf.cleaned_data['country']:
+                profiles = set(MusicianProfile.objects.filter(country=mpf.cleaned_data['country']))
+                if profile_list:
+                    profile_list = profiles.intersection(profile_list)
+                else:
+                    profile_list = profiles
+
+            if mpf.cleaned_data['gender']:
+                profiles = set(MusicianProfile.objects.filter(gender=mpf.cleaned_data['gender']))
+                if profile_list:
+                    profile_list = profiles.intersection(profile_list)
+                else:
+                    profile_list = profiles
+
     return render(request, 'portal/search_musician.html', {'profile_list': profile_list,
                                                            'query': query,
                                                            'skills': skills,

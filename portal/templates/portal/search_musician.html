@@ -21,7 +21,12 @@
                         </div>
                         <div class="col-md-9">
                             <h2 class="list-group-item-heading">{{ profile.user.last_name }} {{ profile.user.first_name }}</h2>
-                            <p  class="list-group-item-text">Username: {{ profile.user.username }}</p>
+                            <h5 class="list-group-item-text">Username: {{ profile.user.username }}</h5>
+                            <p class="list-group-item-text" style="color: #868686">
+                                {% for skill in profile.skills.all %}
+                                    {{ skill.name_skill }},
+                                {% endfor %}
+                            </p>
                         </div>
                     </a>
                 {% endfor %}
@@ -47,6 +52,7 @@
                     <h5>Gender:</h5>
                     {{ musicianprofileform.gender }}
                     <br><br>
+                    <input type="hidden" value="{{ query }}" name="search_musician">
                     <input type="submit" value="Apply">
                 </form>
             </div>

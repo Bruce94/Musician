@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MusicianProfile, Friend, Message, Skill, HasSkill
+from .models import MusicianProfile, Friend, Message, Skill
 
 
 class MusicianProfileAdmin(admin.ModelAdmin):
@@ -26,14 +26,14 @@ class SkillAdmin(admin.ModelAdmin):
     ]
 
 
-class HasSkillAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['user', 'skill', 'endorsement']})
-    ]
+#class HasSkillAdmin(admin.ModelAdmin):
+#    fieldsets = [
+#        (None, {'fields': ['user', 'skill', 'endorsement']})
+#    ]
 
 admin.site.register(MusicianProfile, MusicianProfileAdmin)
 admin.site.register(Friend, FriendAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Skill, SkillAdmin)
-admin.site.register(HasSkill, HasSkillAdmin)
+#admin.site.register(HasSkill, HasSkillAdmin)
 

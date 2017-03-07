@@ -15,6 +15,14 @@ profile_url = 'profile/'
 skill_url = 'skill/'
 
 
+class Skill(models.Model):
+    name_skill = models.CharField(max_length=20, unique=True)
+    image_skill = models.ImageField(null=True, blank=True, default=skill_image, upload_to=skill_url)
+
+    def __unicode__(self):
+        return unicode(self.name_skill)
+
+
 class MusicianProfile(models.Model):
     GENDER_CHOICES = (
         ('M', 'Male'),
@@ -31,6 +39,8 @@ class MusicianProfile(models.Model):
     phone_number = models.CharField(validators=[phone_regex], null=True, blank=True, max_length=15)
     city = models.CharField(null=True, blank=True, max_length=50)
     country = CountryField(blank=True)
+    skills = models.ManyToManyField(Skill, through='HasSkill')
+    #endorsement = models.ManyToManyField("HasSkill")
 
     def __unicode__(self):
         return unicode(self.user)
@@ -143,31 +153,22 @@ class Message(models.Model):
                                              Q(sender_message__username=user1.username))).order_by('data_request')
 
 
-class Skill(models.Model):
-    name_skill = models.CharField(max_length=20, unique=True)
-    image_skill = models.ImageField(null=True, blank=True, default=skill_image, upload_to=skill_url)
-
-    def __unicode__(self):
-        return unicode(self.name_skill)
-
-
 class HasSkill(models.Model):
-
     class Meta:
-        unique_together = (('user', 'skill'),)
+        unique_together = (('musicianprofile', 'skill'),)
 
-    user = models.ForeignKey(User, related_name="user_skill")
-    skill = models.ForeignKey(Skill, related_name="skill_user")
+    musicianprofile = models.ForeignKey(MusicianProfile)
+    skill = models.ForeignKey(Skill)
 
     def __unicode__(self):
-        return unicode(self.user)
+        return unicode(self.musicianprofile)
 
     @classmethod
-    def create(self, user, skill):
-        if not HasSkill.objects.all().filter(user=user, skill=skill):
-            hasSkill = self(user=user, skill=skill)
+    def create(self, musicianprofile, skill):
+        if not HasSkill.objects.filter(musicianprofile=musicianprofile, skill=skill):
+            hasSkill = self(musicianprofile=musicianprofile, skill=skill)
             hasSkill.save()
-
+'''
     @staticmethod
     def get_skill(user):
         has_skills = HasSkill.objects.all().filter(user=user)
@@ -183,7 +184,7 @@ class HasSkill(models.Model):
         for hs in has_skills:
             users += [hs.user]
         return users
-
+'''
 #class Notification(models.Model):
 #    note_title = models.CharField(max_length=20)
 #    note_desc = models.CharField(max_length=50)

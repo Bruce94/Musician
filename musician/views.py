@@ -58,7 +58,7 @@ def musician_info(request, user_id):
     uf = UserForm(prefix='user')
 
     skills = Skill.objects.all()
-    user_skills = HasSkill.get_skill(user)
+    #user_skills = HasSkill.get_skill(user)
 
     if request.method == 'GET':
 
@@ -83,16 +83,16 @@ def musician_info(request, user_id):
 
         if request.GET.getlist('check_skill'):
             checked_skills = request.GET.getlist('check_skill')
-            for user_skill in user_skills:
+            for user_skill in profile.skills.all():
                 if not(user_skill.name_skill in checked_skills):
-                    hs = HasSkill.objects.all().filter(user=user, skill=user_skill).__getitem__(0)
+                    hs = HasSkill.objects.all().filter(musicianprofile=profile, skill=user_skill).__getitem__(0)
                     hs.delete()
             for skill in skills:
                 if skill.name_skill in checked_skills:
-                    HasSkill.create(user, skill)
-                    user_skills = HasSkill.get_skill(user)
-
-        if mpf.is_valid() * uf.is_valid():
+                    HasSkill.create(musicianprofile=profile, skill=skill)
+        print(mpf.is_valid())
+        print(uf.is_valid())
+        if mpf.is_valid():
             if mpf.cleaned_data['data']:
                 profile.data = mpf.cleaned_data['data']
                 profile.save()
@@ -102,6 +102,7 @@ def musician_info(request, user_id):
             if mpf.cleaned_data['country']:
                 profile.country = mpf.cleaned_data['country']
                 profile.save()
+        #if uf.is_valid():
             if mpf.cleaned_data['phone_number']:
                 profile.phone_number = mpf.cleaned_data['phone_number']
                 profile.save()
@@ -132,7 +133,7 @@ def musician_info(request, user_id):
 
     return render(request, 'musician/musician_info.html', {'user': user,
                                                            'profile': profile,
-                                                           'user_skills': user_skills,
+                                                           #'user_skills': user_skills,
                                                            'reciver': reciver,
                                                            'musicianprofileform': mpf,
                                                            'userform': uf,

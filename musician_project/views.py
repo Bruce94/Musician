@@ -38,7 +38,7 @@ def register(request):
                 checked_skills = request.POST.getlist('check_skill')
             for skill in skills:
                 if skill.name_skill in checked_skills:
-                    HasSkill.create(user, skill)
+                    HasSkill.create(musicianprofile=musicianprofile, skill=skill)
             return HttpResponseRedirect(reverse('register_ok'))
     else:
         uf = UserForm(prefix='user')

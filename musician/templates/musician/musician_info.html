@@ -143,6 +143,7 @@
                 <p class="error">
                     {{ musicianprofileform.phone_number.errors.as_text }}
                     {{ userform.email.errors.as_text }}
+
                 </p>
             </div>
             {% if user.id == request.user.id %}
@@ -178,11 +179,11 @@
                 <h3 class="panel-title">Musician Skills</h3>
             </div>
             <div class="panel-body" id="show_skills">
-                {% for user_skill in user_skills %}
+                {% for skill in profile.skills.all %}
                     <p>
-                        <img class="skill-icon" src="{{ user_skill.image_skill.url }}"
-                             alt = "{{ user_skill.name_skill }}"/>
-                        {{ user_skill.name_skill }}
+                        <img class="skill-icon" src="{{ skill.image_skill.url }}"
+                             alt = "{{ skill.name_skill }}"/>
+                        {{ skill.name_skill }}
                     </p>
                 {% endfor %}
             </div>
@@ -192,7 +193,7 @@
                         {% for skill in skills %}
                             <img class="skill-icon" src="{{skill.image_skill.url }}" alt = "{{skill.name_skill }}"/>
                             <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}" style="margin-right: 10px"
-                                    {% if skill in user_skills%} checked {% endif %}>
+                                    {% if skill in profile.skills.all%} checked {% endif %}>
                             {{ skill.name_skill }} <br><br>
                         {% endfor %}
                         <div class="input-group input-group-sm"

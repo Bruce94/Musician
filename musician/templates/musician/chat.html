@@ -6,7 +6,7 @@
 {% block message-form %}
     <form action="/musician/messages/{{ selected_user.id }}/" method="post" id="message_form" autocomplete="off">
         {% csrf_token %}
-            <input type="text" class="write-messanger" name="message">
+        <input type="text" class="write-messanger" name="message">
         <input type="submit" class="button-messanger", value="Send">
     </form>
 {% endblock %}

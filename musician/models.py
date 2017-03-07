@@ -157,8 +157,9 @@ class HasSkill(models.Model):
     class Meta:
         unique_together = (('musicianprofile', 'skill'),)
 
-    musicianprofile = models.ForeignKey(MusicianProfile)
+    musicianprofile = models.ForeignKey(MusicianProfile, related_name="user_skill")
     skill = models.ForeignKey(Skill)
+    endorse_user = models.ManyToManyField(MusicianProfile)
 
     def __unicode__(self):
         return unicode(self.musicianprofile)
@@ -166,8 +167,8 @@ class HasSkill(models.Model):
     @classmethod
     def create(self, musicianprofile, skill):
         if not HasSkill.objects.filter(musicianprofile=musicianprofile, skill=skill):
-            hasSkill = self(musicianprofile=musicianprofile, skill=skill)
-            hasSkill.save()
+            has_skill = self(musicianprofile=musicianprofile, skill=skill)
+            has_skill.save()
 '''
     @staticmethod
     def get_skill(user):
@@ -185,6 +186,28 @@ class HasSkill(models.Model):
             users += [hs.user]
         return users
 '''
+
+
+class Post(models.Model):
+
+    musician_profile = models.ForeignKey(MusicianProfile, on_delete=models.CASCADE, related_name="user_post")
+    post_text = models.CharField(max_length=255, blank=False)
+    pub_date = models.DateField()
+    user_comments = models.ManyToManyField(MusicianProfile, through='Comment')
+
+    def __unicode__(self):
+        return unicode(self.musician_profile)
+
+
+class Comment(models.Model):
+    musician_profile = models.ForeignKey(MusicianProfile)
+    post = models.ForeignKey(Post)
+    pub_date = models.DateField()
+    comment_text = models.CharField(max_length=255, blank=False)
+
+    def __unicode__(self):
+        return unicode(self.musician_profile)
+
 #class Notification(models.Model):
 #    note_title = models.CharField(max_length=20)
 #    note_desc = models.CharField(max_length=50)

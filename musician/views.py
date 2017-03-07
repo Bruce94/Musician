@@ -55,14 +55,11 @@ def musician_info(request, user_id):
     n_mes = Message.n_new_messages(request.user)
 
     mpf = MusicianProfileForm(prefix='profile')
-    uf = UserForm(prefix='user')
 
     skills = Skill.objects.all()
-    #user_skills = HasSkill.get_skill(user)
 
     if request.method == 'GET':
 
-        uf = UserForm(request.POST, prefix='user')
         mpf = MusicianProfileForm(request.GET, request.FILES, prefix='profile')
 
         if request.GET.get('first_name'):
@@ -90,8 +87,6 @@ def musician_info(request, user_id):
             for skill in skills:
                 if skill.name_skill in checked_skills:
                     HasSkill.create(musicianprofile=profile, skill=skill)
-        print(mpf.is_valid())
-        print(uf.is_valid())
         if mpf.is_valid():
             if mpf.cleaned_data['data']:
                 profile.data = mpf.cleaned_data['data']
@@ -102,14 +97,9 @@ def musician_info(request, user_id):
             if mpf.cleaned_data['country']:
                 profile.country = mpf.cleaned_data['country']
                 profile.save()
-        #if uf.is_valid():
             if mpf.cleaned_data['phone_number']:
                 profile.phone_number = mpf.cleaned_data['phone_number']
                 profile.save()
-            if uf.cleaned_data['email']:
-                user.email = uf.cleaned_data['email']
-                user.save()
-
     status_friend = 0
     reciver = None
 
@@ -131,12 +121,23 @@ def musician_info(request, user_id):
             fs.save()
             status_friend = 2
 
+        # handle the endorsements of users on skills
+        for skill in skills:
+            if ("btn_"+skill.name_skill) in request.POST:
+                has_skill = HasSkill.objects.filter(musicianprofile=user.musicianprofile, skill=skill)
+                for hs in has_skill:
+                    hs.endorse_user.add(request.user.musicianprofile)
+            elif ("btn_"+skill.name_skill+"_rem") in request.POST:
+                has_skill = HasSkill.objects.filter(musicianprofile=user.musicianprofile, skill=skill)
+                for hs in has_skill:
+                    hs.endorse_user.remove(request.user.musicianprofile)
+
+    user_has_skill = HasSkill.objects.filter(musicianprofile=user.musicianprofile)
     return render(request, 'musician/musician_info.html', {'user': user,
                                                            'profile': profile,
-                                                           #'user_skills': user_skills,
                                                            'reciver': reciver,
+                                                           'user_has_skill': user_has_skill,
                                                            'musicianprofileform': mpf,
-                                                           'userform': uf,
                                                            'skills': skills,
                                                            'status_friend': status_friend,
                                                            'n_req': n_req,

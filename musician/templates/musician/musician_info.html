@@ -123,6 +123,7 @@
                 {% endif %}
                 <h3 class="panel-title">General Information</h3>
             </div>
+
             <div class="panel-body" id="show_general_info">
                 <table>
                     <tr>
@@ -142,18 +143,12 @@
                 </table>
                 <p class="error">
                     {{ musicianprofileform.phone_number.errors.as_text }}
-                    {{ userform.email.errors.as_text }}
-
                 </p>
             </div>
+
             {% if user.id == request.user.id %}
                 <div class="panel-body" style="display: none" id="edit_general_info">
                     <form>
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-addon" id="sizing-addon3" style="width: 120px">Email: </span>
-                            {{ userform.email }}
-                        </div>
-                        <br>
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon" id="sizing-addon3" style="width: 120px">
                                 Phone number:
@@ -170,6 +165,7 @@
                 </div>
             {% endif %}
         </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 {% if user.id == request.user.id %}
@@ -181,19 +177,45 @@
             <div class="panel-body" id="show_skills">
                 {% for skill in profile.skills.all %}
                     <p>
+                    <form method="post" id="form_endorsement">
+                        {% csrf_token %}
                         <img class="skill-icon" src="{{ skill.image_skill.url }}"
                              alt = "{{ skill.name_skill }}"/>
                         {{ skill.name_skill }}
+                        {% if user.id != request.user.id %}
+                            {% for uhs in user_has_skill %}
+                                {% if uhs.skill == skill %}
+                                    {% if request.user.musicianprofile not in uhs.endorse_user.all and status_friend == 2 %}
+                                        <button type="submit" name="btn_{{ skill.name_skill }}">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                    {% elif request.user.musicianprofile in uhs.endorse_user.all and status_friend == 2%}
+                                        <button type="submit" name="btn_{{ skill.name_skill }}_rem">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% for uhs in user_has_skill %}
+                            {% if uhs.skill == skill %}
+                                <span class="badge">
+                                    {{ uhs.endorse_user.count }}
+                                </span>
+                            {% endif %}
+                        {% endfor %}
+                     </form>
                     </p>
                 {% endfor %}
             </div>
+
             {% if user.id == request.user.id %}
-                <div class="panel-body" style="display: none" id="edit_skills">
+                <div class="panel-body " style="display: none" id="edit_skills">
                     <form>
                         {% for skill in skills %}
-                            <img class="skill-icon" src="{{skill.image_skill.url }}" alt = "{{skill.name_skill }}"/>
-                            <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}" style="margin-right: 10px"
-                                    {% if skill in profile.skills.all%} checked {% endif %}>
+                            <img class="skill-icon " src="{{skill.image_skill.url }}" alt = "{{skill.name_skill }}"/>
+                            <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}"
+                                   style="margin-right: 10px"{% if skill in profile.skills.all%} checked {% endif %}>
                             {{ skill.name_skill }} <br><br>
                         {% endfor %}
                         <div class="input-group input-group-sm"
@@ -205,9 +227,6 @@
                 </div>
             {% endif %}
         </div>
-
-
-
 
     </section>
 {% endblock %}

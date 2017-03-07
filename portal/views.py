@@ -25,6 +25,7 @@ def portal_welcome(request):
 def search_musician(request):
 
     profile_list = []
+    checked_skills = []
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
@@ -49,10 +50,11 @@ def search_musician(request):
                 has_skills = HasSkill.objects.filter(skill__name_skill=skill)
                 for hs in has_skills:
                     profiles += [hs.musicianprofile]
-                if profile_list:
-                    profile_list = set(profiles).intersection(profile_list)
-                else:
-                    profile_list = profiles
+            profiles = set(profiles)
+            if profile_list:
+                profile_list = profiles.intersection(profile_list)
+            else:
+                profile_list = profiles
 
         if mpf.is_valid():
             if mpf.cleaned_data['country']:
@@ -72,6 +74,7 @@ def search_musician(request):
     return render(request, 'portal/search_musician.html', {'profile_list': profile_list,
                                                            'query': query,
                                                            'skills': skills,
+                                                           'checked_skills': checked_skills,
                                                            'musicianprofileform': mpf,
                                                            'n_req': n_req,
                                                            'n_mes': n_mes})

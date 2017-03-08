@@ -55,13 +55,30 @@
                                      <img src="{{ post.musician_profile.img.url }}"
                                          class="img-circle align-right" height="60" width="60" alt="Musician_image">
                                 </div>
-                                <div class="col-sm-10">
+                                <div class="col-sm-9">
                                     <a href="/musician/{{ post.musician_profile.user.id }}"
                                        style="font-size: 20px;">
                                         {{ post.musician_profile.user.first_name }}
                                         {{ post.musician_profile.user.last_name }}
                                     </a>
                                     <p style="font-size: 13px;">{{ post.pub_date }}</p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <form action="/portal/" method="post" id="message_form" autocomplete="off">
+                                        {% csrf_token %}
+                                        {% if post.musician_profile == request.user.musicianprofile %}
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <input type="submit" class="list-options" name="del_{{ post.id }}"
+                                                           value="Delete Post">
+                                                </li>
+                                            </ul>
+                                        {% endif %}
+                                    </form>
                                 </div>
                             </div>
                             <div class="col-sm-12 text-left">

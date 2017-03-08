@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
 from musician_project.forms import UserForm, MusicianProfileForm
 from itertools import chain
@@ -23,6 +25,10 @@ def portal_welcome(request):
         print('post')
         user.musicianprofile.user_post.create(post_text=request.POST['post'])
 
+    for post in user.musicianprofile.user_post.all():
+        if request.POST.get('del_'+str(post.id)):
+            post.delete()
+            return HttpResponseRedirect('/portal/')
     return render(request, 'portal/home.html', {'user': user,
                                                 'home_posts': home_posts,
                                                 'n_req': n_req,

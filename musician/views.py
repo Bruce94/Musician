@@ -37,6 +37,11 @@ def profile(request, user_id):
         elif "send-message" in request.POST:
             return HttpResponseRedirect('/musician/messages/'+str(user.id))
 
+        for post in user.musicianprofile.user_post.all():
+            if request.POST.get('del_' + str(post.id)):
+                post.delete()
+                return HttpResponseRedirect('/musician/'+str(user.id))
+
     return render(request, 'musician/profile.html', {'user': user,
                                                      'reciver': reciver,
                                                      'status_friend': status_friend,

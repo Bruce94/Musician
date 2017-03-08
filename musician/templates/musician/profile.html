@@ -75,8 +75,35 @@
                 {% endblock %}
             </div>
         </section>
-     {% block subcontainer %}
-
-    {% endblock %}
+        {% block subcontainer %}
+            <section class="profile">
+                {% for post in user.musicianprofile.user_post.all %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="well text-left col-sm-12">
+                            <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                     <img src="{{ post.musician_profile.img.url }}"
+                                         class="img-circle align-right" height="60" width="60" alt="Musician_image">
+                                </div>
+                                <div class="col-sm-10">
+                                    <a href="/musician/{{ post.musician_profile.user.id }}"
+                                       style="font-size: 20px;">
+                                        {{ post.musician_profile.user.first_name }}
+                                        {{ post.musician_profile.user.last_name }}
+                                    </a>
+                                    <p style="font-size: 13px;">{{ post.pub_date }}</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 text-left">
+                                <p style="font-size: 25px;">{{ post.post_text }}</p>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+        {% endblock %}
 
 {% endblock %}

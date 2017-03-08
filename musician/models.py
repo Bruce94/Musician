@@ -169,47 +169,26 @@ class HasSkill(models.Model):
         if not HasSkill.objects.filter(musicianprofile=musicianprofile, skill=skill):
             has_skill = self(musicianprofile=musicianprofile, skill=skill)
             has_skill.save()
-'''
-    @staticmethod
-    def get_skill(user):
-        has_skills = HasSkill.objects.all().filter(user=user)
-        skills = []
-        for hs in has_skills:
-            skills += [hs.skill]
-        return skills
-
-    @staticmethod
-    def get_users(skill):
-        has_skills = HasSkill.objects.filter(skill=skill)
-        users = []
-        for hs in has_skills:
-            users += [hs.user]
-        return users
-'''
 
 
 class Post(models.Model):
 
     musician_profile = models.ForeignKey(MusicianProfile, on_delete=models.CASCADE, related_name="user_post")
     post_text = models.CharField(max_length=255, blank=False)
-    pub_date = models.DateField()
+    pub_date = models.DateTimeField(default=timezone.now)
     user_comments = models.ManyToManyField(MusicianProfile, through='Comment')
 
     def __unicode__(self):
         return unicode(self.musician_profile)
 
+    class Meta:
+        ordering = ['-pub_date']
 
 class Comment(models.Model):
     musician_profile = models.ForeignKey(MusicianProfile)
     post = models.ForeignKey(Post)
-    pub_date = models.DateField()
+    pub_date = models.DateTimeField(default=timezone.now)
     comment_text = models.CharField(max_length=255, blank=False)
 
     def __unicode__(self):
         return unicode(self.musician_profile)
-
-#class Notification(models.Model):
-#    note_title = models.CharField(max_length=20)
-#    note_desc = models.CharField(max_length=50)
-#    def __unicode__(self):
-#        return self.note_title

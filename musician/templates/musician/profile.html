@@ -10,7 +10,7 @@
     <section class="profile">
         <div class="panel panel-default">
             <div class="panel-profile-img">
-                <img class="profile" src="{{ profile.img.url }}" alt = "{{ user.username }}"/>
+                <img class="profile" src="{{ user.musicianprofile.img.url }}" alt = "{{ user.username }}"/>
                 <br>
                 {% if user.id != request.user.id %}
                     <form action="/musician/{{ user.id }}/" method="post">
@@ -25,22 +25,36 @@
                             </button>
                         {% elif status_friend == 1 and reciver.id == request.user.id %}
                             <div class="btn-group">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                      aria-haspopup="true" aria-expanded="false">
                                 Pending Request <span class="caret"></span>
                               </button>
                               <ul class="dropdown-menu">
-                                  <li><input type="submit" class="list-options" name="accept-friend" value="Accept Friend"></li>
-                                  <li><input type="submit" class="list-options" name="cancel-request" value="Ignore Request"></li>
+                                  <li>
+                                      <input type="submit" class="list-options" name="accept-friend"
+                                             value="Accept Friend">
+                                  </li>
+                                  <li>
+                                      <input type="submit" class="list-options" name="cancel-request"
+                                             value="Ignore Request">
+                                  </li>
                               </ul>
                             </div>
                         {% elif status_friend == 2 %}
                             <div class="btn-group">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                      aria-haspopup="true" aria-expanded="false">
                                 Friend <span class="caret"></span>
                               </button>
                               <ul class="dropdown-menu">
-                                  <li><input type="submit" class="list-options" name="send-message" value="Send Message"></li>
-                                  <li><input type="submit" class="list-options" name="cancel-request" value="Remove Friend"></li>
+                                  <li>
+                                      <input type="submit" class="list-options" name="send-message"
+                                             value="Send Message">
+                                  </li>
+                                  <li>
+                                      <input type="submit" class="list-options" name="cancel-request"
+                                             value="Remove Friend">
+                                  </li>
                               </ul>
                             </div>
                         {% endif %}
@@ -50,7 +64,7 @@
             <div class="panel-body">
                 <h1 class="profile">{{ user.first_name }} {{ user.last_name }} </h1>
                 <p>
-                    <small><font color="#696969">Biography:</font></small> {{ profile.bio }}
+                    <small><font color="#696969">Biography:</font></small> {{ user.musicianprofile.bio }}
                 </p>
             </div>
             {% block nav-profile %}

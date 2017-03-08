@@ -10,7 +10,7 @@
 {% load static %}
 {% block nav %}
     <a href="/musician/{{ request.user.id }}/">
-        <img class=home src="{{ profile.img.url }}" alt="{{ user.username }}">
+        <img class=home src="{{ user.musicianprofile.img.url }}" alt="{{ user.username }}">
     </a>
     <p> Welcome, {{ user.username | capfirst }}</p>
 {% endblock %}

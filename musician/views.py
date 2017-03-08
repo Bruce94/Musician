@@ -10,7 +10,6 @@ from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill
 @login_required
 def profile(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    profile = get_object_or_404(MusicianProfile, user=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
@@ -39,7 +38,6 @@ def profile(request, user_id):
             return HttpResponseRedirect('/musician/messages/'+str(user.id))
 
     return render(request, 'musician/profile.html', {'user': user,
-                                                     'profile': profile,
                                                      'reciver': reciver,
                                                      'status_friend': status_friend,
                                                      'n_req': n_req,
@@ -49,7 +47,6 @@ def profile(request, user_id):
 @login_required
 def musician_info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    profile = get_object_or_404(MusicianProfile, user=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
@@ -58,48 +55,6 @@ def musician_info(request, user_id):
 
     skills = Skill.objects.all()
 
-    if request.method == 'GET':
-
-        mpf = MusicianProfileForm(request.GET, request.FILES, prefix='profile')
-
-        if request.GET.get('first_name'):
-            user.first_name = request.GET.get('first_name')
-            user.save()
-
-        if request.GET.get('first_name'):
-            user.last_name = request.GET.get('last_name')
-            user.save()
-
-        if request.GET.get('city'):
-            profile.city = request.GET.get('city')
-            profile.save()
-
-        if request.GET.get('bio'):
-            profile.bio = request.GET.get('bio')
-            profile.save()
-
-        if request.GET.getlist('check_skill'):
-            checked_skills = request.GET.getlist('check_skill')
-            for user_skill in profile.skills.all():
-                if not(user_skill.name_skill in checked_skills):
-                    hs = HasSkill.objects.all().filter(musicianprofile=profile, skill=user_skill).__getitem__(0)
-                    hs.delete()
-            for skill in skills:
-                if skill.name_skill in checked_skills:
-                    HasSkill.create(musicianprofile=profile, skill=skill)
-        if mpf.is_valid():
-            if mpf.cleaned_data['data']:
-                profile.data = mpf.cleaned_data['data']
-                profile.save()
-            if mpf.cleaned_data['gender']:
-                profile.gender = mpf.cleaned_data['gender']
-                profile.save()
-            if mpf.cleaned_data['country']:
-                profile.country = mpf.cleaned_data['country']
-                profile.save()
-            if mpf.cleaned_data['phone_number']:
-                profile.phone_number = mpf.cleaned_data['phone_number']
-                profile.save()
     status_friend = 0
     reciver = None
 
@@ -109,6 +64,10 @@ def musician_info(request, user_id):
         status_friend = fs.status
 
     if request.method == 'POST':
+
+        mpf = MusicianProfileForm(request.POST, request.FILES, prefix='profile')
+
+        # Friendscip post
         if "add-friend" in request.POST:
             friend = Friend.create(sender=request.user, reciver=user)
             friend.save()
@@ -120,6 +79,47 @@ def musician_info(request, user_id):
             fs.status = 2
             fs.save()
             status_friend = 2
+
+        # Personal Info edit post
+        if "first_name" in request.POST:
+            user.first_name = request.POST['first_name']
+            user.save()
+        if "last_name" in request.POST:
+            user.last_name = request.POST['last_name']
+            user.save()
+        if "city" in request.POST:
+            user.musicianprofile.city = request.POST['city']
+            user.musicianprofile.save()
+        if "bio" in request.POST:
+            user.musicianprofile.bio = request.POST['bio']
+            user.musicianprofile.save()
+
+        # skill list post
+        if request.POST.getlist('check_skill'):
+            checked_skills = request.POST.getlist('check_skill')
+            for user_skill in user.musicianprofile.skills.all():
+                if not(user_skill.name_skill in checked_skills):
+                    hs = HasSkill.objects.all().filter(musicianprofile=user.musicianprofile, skill=user_skill).__getitem__(0)
+                    hs.delete()
+            for skill in skills:
+                if skill.name_skill in checked_skills:
+                    HasSkill.create(musicianprofile=user.musicianprofile, skill=skill)
+
+        if mpf.is_valid():
+            if mpf.cleaned_data['gender']:
+                user.musicianprofile.gender = mpf.cleaned_data['gender']
+                user.musicianprofile.save()
+            if mpf.cleaned_data['country']:
+                user.musicianprofile.country = mpf.cleaned_data['country']
+                user.musicianprofile.save()
+            if mpf.cleaned_data['data']:
+                print(mpf.cleaned_data['data'])
+                user.musicianprofile.data = mpf.cleaned_data['data']
+                user.musicianprofile.save()
+            # General Info edit post
+            if mpf.cleaned_data['phone_number']:
+                user.musicianprofile.phone_number = mpf.cleaned_data['phone_number']
+                user.musicianprofile.save()
 
         # handle the endorsements of users on skills
         for skill in skills:
@@ -134,7 +134,6 @@ def musician_info(request, user_id):
 
     user_has_skill = HasSkill.objects.filter(musicianprofile=user.musicianprofile)
     return render(request, 'musician/musician_info.html', {'user': user,
-                                                           'profile': profile,
                                                            'reciver': reciver,
                                                            'user_has_skill': user_has_skill,
                                                            'musicianprofileform': mpf,
@@ -147,7 +146,6 @@ def musician_info(request, user_id):
 @login_required
 def musician_friends(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    profile = get_object_or_404(MusicianProfile, user=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
@@ -175,7 +173,6 @@ def musician_friends(request, user_id):
             status_friend = 2
 
     return render(request, 'musician/musician_friends.html', {'user': user,
-                                                              'profile': profile,
                                                               'reciver': reciver,
                                                               'friend_user': friend_user,
                                                               'status_friend': status_friend,

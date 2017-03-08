@@ -35,41 +35,43 @@
                         <td> {{ user.last_name }} </td>
                     </tr>
                     {% endif %}
-                    {% if profile.data %}
+                    {% if user.musicianprofile.data %}
                     <tr>
                         <td class="info-profile-title">Birthday:</td>
-                        <td> {{ profile.data }} </td>
+                        <td> {{ user.musicianprofile.data }} </td>
                     </tr>
                     {% endif %}
-                    {% if profile.gender %}
+                    {% if user.musicianprofile.gender %}
                     <tr>
                         <td class="info-profile-title">Gender:</td>
                         <td>
-                            {% if profile.gender == 'M'%}
+                            {% if user.musicianprofile.gender == 'M'%}
                                 Male
-                            {% elif profile.gender == 'F' %}
+                            {% elif user.musicianprofile.gender == 'F' %}
                                 Female
                             {% endif %}
                         </td>
                     </tr>
                     {% endif %}
-                    {% if profile.country %}
+                    {% if user.musicianprofile.country %}
                         <tr>
                             <td class="info-profile-title">Country:</td>
-                            <td> {{ profile.country }} </td>
+                            <td> {{ user.musicianprofile.country }} </td>
                         </tr>
                     {% endif %}
-                    {% if profile.city %}
+                    {% if user.musicianprofile.city %}
                         <tr>
                             <td class="info-profile-title">City:</td>
-                            <td> {{ profile.city }} </td>
+                            <td> {{ user.musicianprofile.city }} </td>
                         </tr>
                     {% endif %}
                 </table>
+                {{ musicianprofileform.errors }}
             </div>
             {% if user.id == request.user.id %}
                 <div class="panel-body" style="display: none" id="edit_personal_info">
-                    <form>
+                    <form method="post">
+                        {% csrf_token %}
                         <div class="input-group">
                             <span class="input-group-addon" style="width: 120px">First Name</span>
                             <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
@@ -82,7 +84,7 @@
                         <br>
                         <div class="input-group">
                             <span class="input-group-addon" style="width: 120px">City</span>
-                            <input type="text" class="form-control" name="city" value="{{ profile.city }}">
+                            <input type="text" class="form-control" name="city" value="{{ user.musicianprofile.city }}">
                         </div>
                         <br>
                         <div class="input-group">
@@ -97,7 +99,7 @@
                         <br>
                         <div class="input-group">
                             Biography:<br>
-                            <textarea name="bio" rows="10" cols="50">{{ profile.bio }}</textarea>
+                            <textarea name="bio" rows="10" cols="50">{{ user.musicianprofile.bio }}</textarea>
                         </div>
                         <br>
                         <div class="input-group">
@@ -134,10 +136,10 @@
                         <td class="info-profile-title">Email:</td>
                         <td> {{ user.email }} </td>
                     </tr>
-                    {% if profile.phone_number %}
+                    {% if user.musicianprofile.phone_number %}
                     <tr>
                         <td class="info-profile-title">Phone number:</td>
-                        <td> {{ profile.phone_number }} </td>
+                        <td> {{ user.musicianprofile.phone_number }} </td>
                     </tr>
                     {% endif %}
                 </table>
@@ -148,7 +150,8 @@
 
             {% if user.id == request.user.id %}
                 <div class="panel-body" style="display: none" id="edit_general_info">
-                    <form>
+                    <form method="post">
+                        {% csrf_token %}
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon" id="sizing-addon3" style="width: 120px">
                                 Phone number:
@@ -175,7 +178,7 @@
                 <h3 class="panel-title">Musician Skills</h3>
             </div>
             <div class="panel-body" id="show_skills">
-                {% for skill in profile.skills.all %}
+                {% for skill in user.musicianprofile.skills.all %}
                     <p>
                     <form method="post" id="form_endorsement">
                         {% csrf_token %}
@@ -211,11 +214,12 @@
 
             {% if user.id == request.user.id %}
                 <div class="panel-body " style="display: none" id="edit_skills">
-                    <form>
+                    <form method="post">
+                    {% csrf_token %}
                         {% for skill in skills %}
                             <img class="skill-icon " src="{{skill.image_skill.url }}" alt = "{{skill.name_skill }}"/>
                             <input type="checkbox" name="check_skill" value="{{ skill.name_skill }}"
-                                   style="margin-right: 10px"{% if skill in profile.skills.all%} checked {% endif %}>
+                                   style="margin-right: 10px"{% if skill in user.musicianprofile.skills.all%} checked {% endif %}>
                             {{ skill.name_skill }} <br><br>
                         {% endfor %}
                         <div class="input-group input-group-sm"

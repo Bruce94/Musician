@@ -11,12 +11,10 @@ from django.template import RequestContext
 @login_required
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
-    profile = get_object_or_404(MusicianProfile, user=request.user.id)
     n_req = Friend.n_req_friendship(request.user)
     n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
 
     return render(request, 'portal/home.html', {'user': user,
-                                                'profile': profile,
                                                 'n_req': n_req,
                                                 'n_mes': n_mes})
 

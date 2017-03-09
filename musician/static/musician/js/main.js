@@ -21,7 +21,7 @@ jQuery(function ($) {
 });
 
 $(function() {
-    $("#message_form").submit(function(event) {
+    $(".message_form").submit(function(event) {
         // Stop form from submitting normally
         event.preventDefault();
         var messageForm = $(this);

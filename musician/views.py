@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from musician_project.forms import UserForm, MusicianProfileForm
-from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill
+from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
 
 
 @login_required
@@ -13,6 +13,7 @@ def profile(request, user_id):
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     status_friend = 0
     reciver = None
@@ -42,11 +43,18 @@ def profile(request, user_id):
                 post.delete()
                 return HttpResponseRedirect('/musician/'+str(user.id))
 
+            if request.POST.get('comment_' + str(post.id)):
+                print(request.POST['comment_' + str(post.id)])
+
+                post.comment_set.create(comment_text=request.POST['comment_' + str(post.id)],
+                                        musician_profile=request.user.musicianprofile)
+
     return render(request, 'musician/profile.html', {'user': user,
                                                      'reciver': reciver,
                                                      'status_friend': status_friend,
                                                      'n_req': n_req,
-                                                     'n_mes': n_mes})
+                                                     'n_mes': n_mes,
+                                                     'n_comm': n_comm})
 
 
 @login_required
@@ -55,6 +63,7 @@ def musician_info(request, user_id):
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     mpf = MusicianProfileForm(prefix='profile')
 
@@ -145,7 +154,8 @@ def musician_info(request, user_id):
                                                            'skills': skills,
                                                            'status_friend': status_friend,
                                                            'n_req': n_req,
-                                                           'n_mes': n_mes})
+                                                           'n_mes': n_mes,
+                                                           'n_comm': n_comm})
 
 
 @login_required
@@ -154,6 +164,7 @@ def musician_friends(request, user_id):
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     status_friend = 0
     reciver = None
@@ -182,7 +193,8 @@ def musician_friends(request, user_id):
                                                               'friend_user': friend_user,
                                                               'status_friend': status_friend,
                                                               'n_req': n_req,
-                                                              'n_mes': n_mes})
+                                                              'n_mes': n_mes,
+                                                              'n_comm': n_comm})
 
 
 @login_required
@@ -190,6 +202,7 @@ def messages(request):
 
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     friend_user = Friend.get_user_friends(request.user)
     friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
@@ -197,6 +210,7 @@ def messages(request):
     new_mes_user = Message.new_user_message(request.user)
     return render(request, 'musician/messages.html', {'n_req': n_req,
                                                       'n_mes': n_mes,
+                                                      'n_comm': n_comm,
                                                       'friend_user': friend_user,
                                                       'new_mes_user': new_mes_user
                                                       })
@@ -207,6 +221,7 @@ def chat(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     messages_of_chat = Message.messages_of_chat(request.user, user)
 
@@ -230,4 +245,5 @@ def chat(request, user_id):
                                                   'selected_user': user,
                                                   'messages': messages_of_chat,
                                                   'n_mes': n_mes,
-                                                  'new_mes_user': new_mes_user})
+                                                  'new_mes_user': new_mes_user,
+                                                  'n_comm': n_comm})

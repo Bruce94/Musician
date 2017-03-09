@@ -51,8 +51,11 @@
                         <span class="badge">{{ n_mes }}</span>
                     {% endif %}
                 </a></li>
-                <li><a href="/musician/{{ request.user.id }}/notifications">
+                <li><a href="{% url 'portal:comment_notifications'%}">
                     <span class="glyphicon glyphicon-globe" aria-hidden="true" title="Notifications"></span>
+                    {% if n_comm != 0 %}
+                        <span class="badge">{{ n_comm }}</span>
+                    {% endif %}
                 </a></li>
                 <li class="portal"><a href="{% url 'logout_view' %}">Logout</a></li>
             </ul>

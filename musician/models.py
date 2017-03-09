@@ -181,6 +181,13 @@ class Post(models.Model):
     def __unicode__(self):
         return unicode(self.musician_profile)
 
+    @staticmethod
+    def n_new_comments(musician_profile):
+        n = 0
+        for post in Post.objects.filter(musician_profile=musician_profile):
+            n += post.comment_set.filter(seen=False).count()
+        return n
+
     class Meta:
         ordering = ['-pub_date']
 
@@ -190,6 +197,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post)
     pub_date = models.DateTimeField(default=timezone.now)
     comment_text = models.CharField(max_length=255, blank=False)
+    seen = models.BooleanField(default=False)
 
     def __unicode__(self):
         return unicode(self.musician_profile)

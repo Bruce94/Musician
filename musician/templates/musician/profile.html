@@ -114,7 +114,50 @@
                             </div>
                             <div class="col-sm-12 text-left">
                                 <p style="font-size: 25px;">{{ post.post_text }}</p>
-                                <hr>
+                            </div>
+                            <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
+                                <button type="button" class="btn btn-default btn-sm"
+                                        onclick="showCommentArea('comment_div_{{ post.id }}')">
+                                    <span class="glyphicon glyphicon-comment" ></span> Comment
+                                </button>
+                                {% if post.comment_set.all.count %}
+                                    <a style="float: right" onclick="showCommentArea('comment_div_{{ post.id }}')">
+                                        {{ post.comment_set.all.count }} comments
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="panel-footer col-sm-12 text-left" hidden="true" id="comment_div_{{ post.id }}">
+                                <div class="col-sm-12" style="margin-bottom: 20px">
+                                    {% for comment in post.comment_set.all %}
+                                        <div class="col-sm-1">
+                                             <img src="{{ comment.musician_profile.img.url }}"
+                                                 class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                        </div>
+                                        <div class="col-sm-11">
+                                            <div class="col-sm-12">
+                                                <a href="/musician/{{ comment.musician_profile.user.id }}">
+                                                    <b>{{ comment.musician_profile.user.first_name }}
+                                                    {{ comment.musician_profile.user.last_name }}</b>
+                                                </a>
+                                                <small style="font-size: 10px">{{ comment.pub_date }}</small>
+                                            </div>
+                                            <div class="col-sm-12">{{ comment.comment_text }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <form form action="/musician/{{ user.id }}/" method="post"
+                                      class="message_form" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="col-sm-1">
+                                         <img src="{{ request.user.musicianprofile.img.url }}"
+                                             class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                    </div>
+                                    <div class="col-sm-11">
+                                         <input type="text" class="form-control"  name="comment_{{ post.id }}">
+                                    </div>
+                                </form>
+
                             </div>
                         </div>
                     </div>

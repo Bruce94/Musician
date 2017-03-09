@@ -36,7 +36,7 @@
                     <div class="col-sm-12">
                         <div class="panel panel-default text-left">
                             <div class="panel-body">
-                                <form action="/portal/" method="post" id="message_form" autocomplete="off">
+                                <form action="/portal/" method="post" class="message_form" autocomplete="off">
                                     {% csrf_token %}
                                     <p>What do you think:</p>
                                     <textarea class="form-control" rows="2" name="post"> </textarea><br>
@@ -64,6 +64,7 @@
                                     <p style="font-size: 13px;">{{ post.pub_date }}</p>
                                 </div>
                                 <div class="col-sm-1">
+
                                     <form action="/portal/" method="post" id="message_form" autocomplete="off">
                                         {% csrf_token %}
                                         {% if post.musician_profile == request.user.musicianprofile %}
@@ -79,13 +80,14 @@
                                             </ul>
                                         {% endif %}
                                     </form>
+
                                 </div>
                             </div>
                             <div class="col-sm-12 text-left">
                                 <p style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                                <button type="button" class="btn btn-default btn-sm" name="btn_{{ skill.name_skill }}"
+                                <button type="button" class="btn btn-default btn-sm"
                                         onclick="showCommentArea('comment_div_{{ post.id }}')">
                                     <span class="glyphicon glyphicon-comment" ></span> Comment
                                 </button>
@@ -104,22 +106,26 @@
                                         </div>
                                         <div class="col-sm-11">
                                             <div class="col-sm-12">
-                                                <b>{{ comment.musician_profile.user.first_name }}
-                                                {{ comment.musician_profile.user.last_name }}</b>
-                                                <small>{{ comment.pub_date }}</small>
+                                                <a href="/musician/{{ comment.musician_profile.user.id }}">
+                                                    <b>{{ comment.musician_profile.user.first_name }}
+                                                    {{ comment.musician_profile.user.last_name }}</b>
+                                                </a>
+                                                <small style="font-size: 10px">{{ comment.pub_date }}</small>
                                             </div>
                                             <div class="col-sm-12">{{ comment.comment_text }}</div>
                                         </div>
                                     {% endfor %}
                                 </div>
-
-                                <div class="col-sm-1">
-                                     <img src="{{ request.user.musicianprofile.img.url }}"
-                                         class="img-circle align-right" height="35" width="35" alt="Musician_image">
-                                </div>
-                                <div class="col-sm-11">
-                                     <textarea class="form-control" rows="1" name="post"> </textarea>
-                                </div>
+                                <form form action="/portal/" method="post" class="message_form" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="col-sm-1">
+                                         <img src="{{ request.user.musicianprofile.img.url }}"
+                                             class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                    </div>
+                                    <div class="col-sm-11">
+                                         <input type="text" class="form-control"  name="comment_{{ post.id }}">
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

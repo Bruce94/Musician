@@ -21,7 +21,7 @@
             <div class="col-sm-3 well">
                 <img src="{{ user.musicianprofile.img.url }}" class="img-rounded"
                      height="150" width="150" alt="Avatar">
-                <p><a href="/musician/{{ user.id }}">Welcome {{ user.username }}</a></p>
+                <p><a href="/musician/{{ user.id }}" style="font-size: 20px;">Welcome {{ user.username }}</a></p>
                 <div class="well">
                     <p>Your Skills:</p>
                     <p>
@@ -83,7 +83,43 @@
                             </div>
                             <div class="col-sm-12 text-left">
                                 <p style="font-size: 25px;">{{ post.post_text }}</p>
-                                <hr>
+                            </div>
+                            <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
+                                <button type="button" class="btn btn-default btn-sm" name="btn_{{ skill.name_skill }}"
+                                        onclick="showCommentArea('comment_div_{{ post.id }}')">
+                                    <span class="glyphicon glyphicon-comment" ></span> Comment
+                                </button>
+                                {% if post.comment_set.all.count %}
+                                    <a style="float: right" onclick="showCommentArea('comment_div_{{ post.id }}')">
+                                        {{ post.comment_set.all.count }} comments
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="panel-footer col-sm-12 text-left" hidden="true" id="comment_div_{{ post.id }}">
+                                <div class="col-sm-12" style="margin-bottom: 20px">
+                                    {% for comment in post.comment_set.all %}
+                                        <div class="col-sm-1">
+                                             <img src="{{ comment.musician_profile.img.url }}"
+                                                 class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                        </div>
+                                        <div class="col-sm-11">
+                                            <div class="col-sm-12">
+                                                <b>{{ comment.musician_profile.user.first_name }}
+                                                {{ comment.musician_profile.user.last_name }}</b>
+                                                <small>{{ comment.pub_date }}</small>
+                                            </div>
+                                            <div class="col-sm-12">{{ comment.comment_text }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-sm-1">
+                                     <img src="{{ request.user.musicianprofile.img.url }}"
+                                         class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                </div>
+                                <div class="col-sm-11">
+                                     <textarea class="form-control" rows="1" name="post"> </textarea>
+                                </div>
                             </div>
                         </div>
                     </div>

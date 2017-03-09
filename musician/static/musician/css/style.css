@@ -109,6 +109,7 @@ section.login{
     padding-left: 10px ;
     background: ghostwhite;
     border-left: 1px solid #bbbbbb;
+    border-right: 1px solid #bbbbbb;
     border-bottom: 1px solid #bbbbbb;
     display: block;
     overflow: scroll;
@@ -118,7 +119,7 @@ section.login{
     position:absolute;
     top:0px;
     left: 0px;
-    width: 68%;
+    width: 67.85%;
     border: 1px solid #bbbbbb;
     background: ghostwhite;
     margin-right: 2%;
@@ -127,7 +128,8 @@ section.login{
 .Right-messanger {
     width: 30%;
     margin-right: 2%;
-    border-left: 1px solid #bbbbbb;
+    margin-left: 2px;
+    /*border-left: 1px solid #bbbbbb;*/
 }
 
 .write-messanger{
@@ -144,7 +146,7 @@ section.login{
     bottom:0px;
     left: 0px;
     margin-left: 59%;
-    width: 9%;
+    width: 8.81%;
     height: 5vh;
     border: 1px solid #bbbbbb;
 }

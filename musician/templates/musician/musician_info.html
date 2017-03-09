@@ -202,11 +202,50 @@
                         {% endif %}
                         {% for uhs in user_has_skill %}
                             {% if uhs.skill == skill %}
-                                <span class="badge">
+                                <span class="badge" data-toggle="modal" data-target="#modal_skill_conf_{{ uhs.id }}">
                                     {{ uhs.endorse_user.count }}
                                 </span>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="modal_skill_conf_{{ uhs.id }}" role="dialog">
+                                    <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                        <div class="modal-content col-sm-12">
+                                            <div class="modal-header col-sm-12">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">{{ uhs.skill.name_skill }}</h4>
+                                            </div>
+                                            <div class="modal-body text-left col-sm-12">
+                                                <p style="font-size: 13px">People who have confirmed the skills</p>
+                                                {% for mp in uhs.endorse_user.all %}
+                                                    <div class="modal-body text-left col-sm-12">
+                                                        <div class="col-sm-2">
+                                                             <img class="img-circle" height="50" width="50"
+                                                                 src="{{ mp.img.url }}" alt = "{{ mp.user.username }}"/>
+                                                        </div>
+                                                        <div class="col-sm-10 text-left">
+                                                            <a href="/musician/{{ mp.user.id }}"
+                                                               style="font-size: 25px;">
+                                                                {{ mp.user.first_name }} {{ mp.user.last_name }}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="modal-footer col-sm-12">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             {% endif %}
                         {% endfor %}
+                        <hr>
                      </form>
                     </p>
                 {% endfor %}
@@ -231,8 +270,8 @@
                 </div>
             {% endif %}
         </div>
-
     </section>
+
 {% endblock %}
 
 

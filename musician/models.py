@@ -184,6 +184,7 @@ class Post(models.Model):
     class Meta:
         ordering = ['-pub_date']
 
+
 class Comment(models.Model):
     musician_profile = models.ForeignKey(MusicianProfile)
     post = models.ForeignKey(Post)
@@ -192,3 +193,6 @@ class Comment(models.Model):
 
     def __unicode__(self):
         return unicode(self.musician_profile)
+
+    class Meta:
+        ordering = ['pub_date']

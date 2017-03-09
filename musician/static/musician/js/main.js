@@ -6,6 +6,10 @@ function showEditInfo(elemToHidden, elemToShow) {
     document.getElementById(elemToShow).style.display = "inherit";
 }
 
+function showCommentArea(elemToShow){
+    document.getElementById(elemToShow).style.display = "inherit";
+}
+
 jQuery(function ($) {
     $('.datepick').each(function() {
         $(this).datepicker({dateFormat: 'yy-mm-dd'}).datepicker("option", {

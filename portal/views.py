@@ -22,7 +22,6 @@ def portal_welcome(request):
             home_posts += [post]
 
     if request.POST.get('post'):
-        print('post')
         user.musicianprofile.user_post.create(post_text=request.POST['post'])
 
     for post in user.musicianprofile.user_post.all():

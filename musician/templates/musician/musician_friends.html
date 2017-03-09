@@ -19,8 +19,7 @@
                 <div class="list-group">
                     {% for friend in friend_user %}
                     <a href="/musician/{{ friend.user.id }}/" class="list-group-item">
-                        <img class="img-circle"
-                             style="height: 50px; width: 50px; float: left; margin-right: 15px;"
+                        <img class="img-circle" style="height: 50px; width: 50px; float: left; margin-right: 15px;"
                              src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
                         <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
                         <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>

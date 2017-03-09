@@ -1,0 +1,94 @@
+{% extends "portal/portal.html" %}
+
+{% block head %}
+    <title> Musician | Notifications</title>
+{% endblock%}
+
+{% block container%}
+    <section class="search-musician">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="well text-left col-sm-12">
+                    <div class="col-sm-12">
+                        <div class="col-sm-2">
+                             <img src="{{ p.musician_profile.img.url }}"
+                                 class="img-circle align-right" height="60" width="60" alt="Musician_image">
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="/musician/{{ p.musician_profile.user.id }}"
+                               style="font-size: 20px;">
+                                {{ p.musician_profile.user.first_name }}
+                                {{ p.musician_profile.user.last_name }}
+                            </a>
+                            <p style="font-size: 13px;">{{ post.pub_date }}</p>
+                        </div>
+                        <div class="col-sm-1">
+
+                            <form action="/portal/" method="post" id="message_form" autocomplete="off">
+                                {% csrf_token %}
+                                {% if p.musician_profile == request.user.musicianprofile %}
+                                    <button type="button" class="btn btn-default dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <input type="submit" class="list-options" name="del_{{ p.id }}"
+                                                   value="Delete Post">
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12 text-left">
+                        <p style="font-size: 25px;">{{ p.post_text }}</p>
+                    </div>
+                    <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
+                        <button type="button" class="btn btn-default btn-sm"
+                                onclick="showCommentArea('comment_div_{{ p.id }}')">
+                            <span class="glyphicon glyphicon-comment" ></span> Comment
+                        </button>
+                        {% if p.comment_set.all.count %}
+                            <a style="float: right" onclick="showCommentArea('comment_div_{{ p.id }}')">
+                                {{ p.comment_set.all.count }} comments
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="panel-footer col-sm-12 text-left" hidden="true" id="comment_div_{{ p.id }}">
+                        <div class="col-sm-12" style="margin-bottom: 20px">
+                            {% for comment in p.comment_set.all %}
+                                <div class="col-sm-1">
+                                     <img src="{{ comment.musician_profile.img.url }}"
+                                         class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                </div>
+                                <div class="col-sm-11">
+                                    <div class="col-sm-12">
+                                        <a href="/musician/{{ comment.musician_profile.user.id }}">
+                                            <b>{{ comment.musician_profile.user.first_name }}
+                                            {{ comment.musician_profile.user.last_name }}</b>
+                                        </a>
+                                        <small style="font-size: 10px">{{ comment.pub_date }}</small>
+                                    </div>
+                                    <div class="col-sm-12">{{ comment.comment_text }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <form form action="/portal/post/{{ p.id }}/" method="post"
+                              class="message_form" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="col-sm-1">
+                                 <img src="{{ request.user.musicianprofile.img.url }}"
+                                     class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                            </div>
+                            <div class="col-sm-11">
+                                 <input type="text" class="form-control"  name="comment_{{ p.id }}">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

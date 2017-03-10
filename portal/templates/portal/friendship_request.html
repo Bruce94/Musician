@@ -6,9 +6,9 @@
 
 {% block container%}
     <section class="search-musician">
-        {% if result == False %}
+        {% if not profile_list %}
             <div class="alert alert-warning" role="alert">There are no pending requests</div>
-        {% elif result == True%}
+        {% else %}
             <div class="list-group">
                 {% for profile in profile_list %}
                     <a href="/musician/{{ profile.user.id }}/" class="list-group-item">

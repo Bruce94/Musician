@@ -22,6 +22,22 @@ class Skill(models.Model):
     def __unicode__(self):
         return unicode(self.name_skill)
 
+    @staticmethod
+    def init_skills():
+        if Skill.objects.count() == 11:
+            return
+        Skill.objects.update_or_create(name_skill="Acoustic Guitar", image_skill="skill/acoustic-guitar-icon.png")
+        Skill.objects.update_or_create(name_skill="Electric Guitar", image_skill="skill/guitar-icon.png")
+        Skill.objects.update_or_create(name_skill="Bass Guitar", image_skill="skill/bass-guitar-icon.png")
+        Skill.objects.update_or_create(name_skill="Percussion", image_skill="skill/conga-icon.png")
+        Skill.objects.update_or_create(name_skill="DJ", image_skill="sskill/dj-icon.png")
+        Skill.objects.update_or_create(name_skill="Drum", image_skill="skill/drum-set-icon.png")
+        Skill.objects.update_or_create(name_skill="Harp", image_skill="skill/harp-icon.png")
+        Skill.objects.update_or_create(name_skill="Voice", image_skill="skill/microphone-icon.png")
+        Skill.objects.update_or_create(name_skill="Piano", image_skill="skill/piano-icon.png")
+        Skill.objects.update_or_create(name_skill="Saxophone", image_skill="skill/saxophone-icon.png")
+        Skill.objects.update_or_create(name_skill="Violin", image_skill="skill/violin-icon.png")
+
 
 class MusicianProfile(models.Model):
     GENDER_CHOICES = (
@@ -68,7 +84,6 @@ class MusicianProfile(models.Model):
             for fof in Friend.get_user_friends(friend.user):
                 if not (fof in Friend.get_user_friends(self.user)) and fof != self:
                     neighbor += [fof]
-        print(set(neighbor))
         return len(set(neighbor))
 
     def get_n_friend(self):
@@ -79,7 +94,6 @@ class MusicianProfile(models.Model):
         for friend in Friend.get_user_friends(self.user):
             if friend in Friend.get_user_friends(user):
                 c_friends += [friend]
-
         return len(set(c_friends))
 
     def get_suggested_musicians(self):
@@ -112,7 +126,6 @@ class Friend(models.Model):
     STATUS_CHOICES = (
         (1, 'Waiting'),
         (2, 'Confirmed'),
-        (3, 'Stuck'),
     )
 
     class Meta:

@@ -116,9 +116,6 @@ def friendship_request(request):
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
 
-
-    # se possibile togliere questa variabile result
-    result = False
     musicians = MusicianProfile.objects.all()
     profile_list = []
 
@@ -128,11 +125,9 @@ def friendship_request(request):
                 profile_list += list(musicians.filter(Q(user__username=friendship.sender.username)))
                 friendship.seen = True
                 friendship.save()
-                result = True
 
     n_req = Friend.n_req_friendship(request.user)
     return render(request, 'portal/friendship_request.html', {'profile_list': profile_list,
-                                                              'result': result,
                                                               'n_req': n_req,
                                                               'n_mes': n_mes,
                                                               'n_comm': n_comm})

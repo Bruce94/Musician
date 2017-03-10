@@ -16,6 +16,7 @@ def portal_welcome(request):
     n_req = Friend.n_req_friendship(request.user)
     n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
     n_comm = Post.n_new_comments(request.user.musicianprofile)
+    n_first_neigh = len(Friend.get_user_friends(request.user))
 
     user_friends = Friend.get_user_friends(user)
     home_posts = []
@@ -41,7 +42,8 @@ def portal_welcome(request):
                                                 'home_posts': home_posts,
                                                 'n_req': n_req,
                                                 'n_mes': n_mes,
-                                                'n_comm': n_comm
+                                                'n_comm': n_comm,
+                                                'n_first_neigh': n_first_neigh
                                                 })
 
 

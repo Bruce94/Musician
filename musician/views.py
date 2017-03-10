@@ -14,6 +14,7 @@ def profile(request, user_id):
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
+    user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
 
     status_friend = 0
     reciver = None
@@ -54,7 +55,9 @@ def profile(request, user_id):
                                                      'status_friend': status_friend,
                                                      'n_req': n_req,
                                                      'n_mes': n_mes,
-                                                     'n_comm': n_comm})
+                                                     'n_comm': n_comm,
+                                                     'user_distance': user_distance
+                                                     })
 
 
 @login_required
@@ -64,6 +67,8 @@ def musician_info(request, user_id):
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
+    user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
+
 
     mpf = MusicianProfileForm(prefix='profile')
 
@@ -155,7 +160,8 @@ def musician_info(request, user_id):
                                                            'status_friend': status_friend,
                                                            'n_req': n_req,
                                                            'n_mes': n_mes,
-                                                           'n_comm': n_comm})
+                                                           'n_comm': n_comm,
+                                                           'user_distance': user_distance})
 
 
 @login_required
@@ -165,6 +171,7 @@ def musician_friends(request, user_id):
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
+    user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
 
     status_friend = 0
     reciver = None
@@ -174,7 +181,10 @@ def musician_friends(request, user_id):
         status_friend = fs.status
 
     friend_user = Friend.get_user_friends(user)
-
+    fu = {}
+    for f in friend_user:
+        fu[f] = f.get_n_common_friend(request.user)
+    fu = sorted(fu.items(), key=lambda x: x[1], reverse=True)
     if request.method == 'POST':
         if "add-friend" in request.POST:
             friend = Friend.create(sender=request.user, reciver=user)
@@ -190,11 +200,13 @@ def musician_friends(request, user_id):
 
     return render(request, 'musician/musician_friends.html', {'user': user,
                                                               'reciver': reciver,
-                                                              'friend_user': friend_user,
+                                                              'fu': fu,
                                                               'status_friend': status_friend,
                                                               'n_req': n_req,
                                                               'n_mes': n_mes,
-                                                              'n_comm': n_comm})
+                                                              'n_comm': n_comm,
+                                                              'user_distance': user_distance
+                                                              })
 
 
 @login_required

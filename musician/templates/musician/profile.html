@@ -61,7 +61,14 @@
                     {% endif %}
                 </div>
                 <div class="panel-body">
-                    <h1 class="profile">{{ user.first_name }} {{ user.last_name }} </h1>
+                    <h1 class="profile">
+                        {{ user.first_name }} {{ user.last_name }}
+                        <small>
+                            {% if user != request.user %}
+                                {% if user_distance > 3 %}+3{% else %}{{ user_distance }}{% endif %}°
+                            {% endif %}
+                        </small>
+                    </h1>
                     <p>
                         <small><font color="#696969">Biography:</font></small> {{ user.musicianprofile.bio }}
                     </p>
@@ -70,7 +77,8 @@
                     <ul class="nav nav-tabs">
                         <li role="presentation" class="active"><a href="/musician/{{ user.id }}">Post</a></li>
                         <li role="presentation"><a href="/musician/{{ user.id }}/info">Info</a></li>
-                        <li role="presentation"><a href="/musician/{{ user.id }}/friends">Friends</a></li>
+                        <li role="presentation"><a href="/musician/{{ user.id }}/friends">Friends
+                            <small style="color: #696969;">{{ user.musicianprofile.get_n_friend }}</small></a></li>
                     </ul>
                 {% endblock %}
             </div>

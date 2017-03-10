@@ -7,7 +7,8 @@
     <ul class="nav nav-tabs" xmlns="http://www.w3.org/1999/html">
         <li role="presentation"><a href="/musician/{{ user.id }}">Post</a></li>
         <li role="presentation" class="active"><a href="/musician/{{ user.id }}/info">Info</a></li>
-        <li role="presentation"><a href="/musician/{{ user.id }}/friends">Friends</a></li>
+        <li role="presentation"><a href="/musician/{{ user.id }}/friends">Friends
+            <small style="color: #696969;">{{ user.musicianprofile.get_n_friend }}</small></a></li>
     </ul>
 {% endblock %}
 

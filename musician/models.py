@@ -40,10 +40,67 @@ class MusicianProfile(models.Model):
     city = models.CharField(null=True, blank=True, max_length=50)
     country = CountryField(blank=True)
     skills = models.ManyToManyField(Skill, through='HasSkill')
-    #endorsement = models.ManyToManyField("HasSkill")
 
     def __unicode__(self):
         return unicode(self.user)
+
+    def musician_distance(self, musician):
+        i = 1
+        if musician in Friend.get_user_friends(self.user):
+            return i
+        else:
+            i += 1
+            for friend in Friend.get_user_friends(self.user):
+                if musician in Friend.get_user_friends(friend.user):
+                    return i
+            i += 1
+            for friend in Friend.get_user_friends(self.user):
+                for fof in Friend.get_user_friends(friend.user):
+                    if musician in Friend.get_user_friends(fof.user):
+                        return i
+            i += 1
+            return i
+
+    def get_n_second_neighbor(self):
+
+        neighbor = []
+        for friend in Friend.get_user_friends(self.user):
+            for fof in Friend.get_user_friends(friend.user):
+                if not (fof in Friend.get_user_friends(self.user)) and fof != self:
+                    neighbor += [fof]
+        print(set(neighbor))
+        return len(set(neighbor))
+
+    def get_n_friend(self):
+        return len(Friend.get_user_friends(self.user))
+
+    def get_n_common_friend(self, user):
+        c_friends = []
+        for friend in Friend.get_user_friends(self.user):
+            if friend in Friend.get_user_friends(user):
+                c_friends += [friend]
+
+        return len(set(c_friends))
+
+    def get_suggested_musicians(self):
+        data_set = set(MusicianProfile.objects.all())
+        ul_friends = set(Friend.get_user_friends(self.user))
+        rank = {}
+        for ux in (data_set - ul_friends - set([self])):
+            common_friends = len(ul_friends & set(Friend.get_user_friends(ux.user)))
+            rank[ux] = common_friends * 0.2
+        return sorted(rank.items(), key=lambda x: x[1], reverse=True)
+
+    def get_suggested_musicians_skill(self):
+
+        data_set = set(MusicianProfile.objects.all())
+        ul_friends = set(Friend.get_user_friends(self.user))
+        rank = {}
+        for ux in (data_set - ul_friends - set([self])):
+            common_friends = len(ul_friends & set(Friend.get_user_friends(ux.user)))
+            common_skills = len(set(ux.skills.all()) & set(self.skills.all()))
+            rank[ux] = common_friends * common_skills * 0.2
+        return sorted(rank.items(), key=lambda x: x[1], reverse=True)
 
     @staticmethod
     def get_musician(**kwargs):

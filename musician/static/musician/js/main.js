@@ -7,14 +7,20 @@ function showEditInfo(elemToHidden, elemToShow) {
 }
 
 function showCommentArea(elemToShow){
-    document.getElementById(elemToShow).style.display = "inherit";
+    if(document.getElementById(elemToShow).style.display == "inherit"){
+        document.getElementById(elemToShow).style.display = "none"
+    }
+    else{
+        document.getElementById(elemToShow).style.display = "inherit";
+    }
 }
 
 jQuery(function ($) {
     $('.datepick').each(function() {
         $(this).datepicker({dateFormat: 'yy-mm-dd'}).datepicker("option", {
-				changeMonth: true,
-				changeYear: true
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '1950:'+(new Date).getFullYear()
         });
     });
 

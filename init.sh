@@ -9,11 +9,17 @@ interrupt(){
 }
 
 echo
-echo "# Musician Scripting"
+echo "# Musician init script..."
+echo "please install these dependecies before init:"
+echo "  python2.7"
+echo "  python2.7-dev"
+echo "  mysql-server"
+echo "  libmysqlclient-dev"
+echo "  virtualenv"
 echo
 read -p "Enter to continue"
 
-echo "Database creation"
+echo "Database creation..."
 
 echo "DROP DATABASE IF EXISTS dbMusician; CREATE DATABASE dbMusician;
 \nGRANT USAGE ON *.* TO 'usermusician'@'localhost';
@@ -29,12 +35,16 @@ rm init.sql
 
 echo "Database Successfully created"
 echo "Database name: dbMusician;"
-†echo "Database user: usermusician, pwd: bd344mx"
+echo "Database user: usermusician, pwd: bd344mx"
 
-echo "install dependencies"
+echo "create virtualenv"
+virtualenv -p python2.7 env --system-site-packages
+echo "enter virtualenv"
+source env/bin/activate
+
+echo "install pip dependencies"
 pip install -U pip
 pip install -r requirements.txt
-pip install django-countries
 
 
 echo "make migrations"

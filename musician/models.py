@@ -30,7 +30,7 @@ class Skill(models.Model):
         Skill.objects.update_or_create(name_skill="Electric Guitar", image_skill="skill/guitar-icon.png")
         Skill.objects.update_or_create(name_skill="Bass Guitar", image_skill="skill/bass-guitar-icon.png")
         Skill.objects.update_or_create(name_skill="Percussion", image_skill="skill/conga-icon.png")
-        Skill.objects.update_or_create(name_skill="DJ", image_skill="sskill/dj-icon.png")
+        Skill.objects.update_or_create(name_skill="DJ", image_skill="skill/dj-icon.png")
         Skill.objects.update_or_create(name_skill="Drum", image_skill="skill/drum-set-icon.png")
         Skill.objects.update_or_create(name_skill="Harp", image_skill="skill/harp-icon.png")
         Skill.objects.update_or_create(name_skill="Voice", image_skill="skill/microphone-icon.png")
@@ -113,7 +113,7 @@ class MusicianProfile(models.Model):
         for ux in (data_set - ul_friends - set([self])):
             common_friends = len(ul_friends & set(Friend.get_user_friends(ux.user)))
             common_skills = len(set(ux.skills.all()) & set(self.skills.all()))
-            rank[ux] = common_friends * common_skills * 0.2
+            rank[ux] = (common_friends + common_skills) * 0.2
         return sorted(rank.items(), key=lambda x: x[1], reverse=True)
 
     @staticmethod

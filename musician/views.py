@@ -48,7 +48,8 @@ def profile(request, user_id):
                 print(request.POST['comment_' + str(post.id)])
 
                 post.comment_set.create(comment_text=request.POST['comment_' + str(post.id)],
-                                        musician_profile=request.user.musicianprofile)
+                                        musician_profile=request.user.musicianprofile,
+                                        seen=(True if post.musician_profile == request.user.musicianprofile else False))
 
     return render(request, 'musician/profile.html', {'user': user,
                                                      'reciver': reciver,
@@ -220,6 +221,7 @@ def messages(request):
     friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
 
     new_mes_user = Message.new_user_message(request.user)
+
     return render(request, 'musician/messages.html', {'n_req': n_req,
                                                       'n_mes': n_mes,
                                                       'n_comm': n_comm,

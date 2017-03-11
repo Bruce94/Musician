@@ -16,9 +16,20 @@
             {% if messages %}
                 {% for message in messages %}
                     {% if message.sender_message == user %}
-                        <div class="sent_message">{{ message.text }}</div>
+
+                        <div class="sent_message">
+                            {{ message.text }}
+                            <p class="sent_message_data">
+                                {{ message.data_request }}
+                            </p>
+                        </div>
                     {% else %}
-                        <div class="recived_message">{{ message.text }}</div>
+                        <div class="recived_message">
+                            {{ message.text }}
+                            <p class="recived_message_data">
+                                {{ message.data_request }}
+                            </p>
+                        </div>
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -44,13 +55,14 @@
                         <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item active">
                             <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
                             <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
-                            <p  class="list-group-item-text">Username: {{ friend.user.username }}</p>
+                            <p  class="list-group-item-text"> Username: {{ friend.user.username }}</p>
                         </a>
                     {% else %}
                         <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item">
                             <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
                             <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
-                            <p  class="list-group-item-text">Username: {{ friend.user.username }}</p><span class="badge">{{ var }}</span>
+                            <p  class="list-group-item-text"> Username: {{ friend.user.username }}
+                            </p>
                         </a>
                     {% endif %}
                 {% endfor %}

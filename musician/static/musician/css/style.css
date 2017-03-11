@@ -151,6 +151,15 @@ section.login{
     border: 1px solid #bbbbbb;
 }
 
+p.sent_message_data{
+    color: #9aab93;
+    font-size: 10px;
+}
+
+p.recived_message_data{
+    color: #839ea4;
+    font-size: 10px;
+}
 .sent_message{
     color: #3c763d;
     background-color: #dff0d8;
@@ -158,7 +167,10 @@ section.login{
     border-color: #d6e9c6;
     margin-left: 50vh;
     margin-right: 10px;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4px;
+    padding-top: 5px;
     margin-bottom: 10px;
     border-radius: 4px;
     display: block;
@@ -171,7 +183,10 @@ section.login{
     border: 1px solid transparent;
     border-color: #bce8f1;
     margin-right: 50vh;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 4px;
+    padding-top: 5px;
     margin-bottom: 10px;
     border-radius: 4px;
     display: block;
@@ -239,6 +254,7 @@ img.search-musician{
     height: 50px;
     width: 50px;
     float: left;
+    margin-right: 20px;
 }
 
 .ui-datepicker {
@@ -257,7 +273,7 @@ img.edit-icon{
     float: right;
 }
 
-img.varie-icon{
+.varie-icon{
     height: 17px;
     width: 17px;
     float: left;

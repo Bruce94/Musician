@@ -40,7 +40,7 @@
                 <li><a href="/musician/{{ request.user.id }}/">{{ request.user.last_name }}</a></li>
                 <li><a href="{% url 'portal:friendship_request'%}">
                     <img src="{% static 'musician/images/friend_icon.png' %}" alt="request of friend"
-                         title="Request of Friend" class="varie-icon">
+                         title="Request of Friend" class="varie-icon" >
                     {% if n_req != 0 %}
                         <span class="badge">{{ n_req }}</span>
                     {% endif %}

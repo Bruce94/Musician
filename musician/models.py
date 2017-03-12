@@ -20,7 +20,7 @@ class Skill(models.Model):
     image_skill = models.ImageField(null=True, blank=True, default=skill_image, upload_to=skill_url)
 
     def __unicode__(self):
-        return unicode(self.name_skill)
+        return "Skill: " + str(self.name_skill)
 
     @staticmethod
     def init_skills():
@@ -58,7 +58,8 @@ class MusicianProfile(models.Model):
     skills = models.ManyToManyField(Skill, through='HasSkill')
 
     def __unicode__(self):
-        return unicode(self.user)
+        return "MusicianProfile , user: " + str(self.user) + \
+               " id( " + str(self.user.id) + ")"
 
     def musician_distance(self, musician):
         i = 1
@@ -102,7 +103,7 @@ class MusicianProfile(models.Model):
         rank = {}
         for ux in (data_set - ul_friends - set([self])):
             common_friends = len(ul_friends & set(Friend.get_user_friends(ux.user)))
-            rank[ux] = common_friends * 0.2
+            rank[ux] = common_friends
         return sorted(rank.items(), key=lambda x: x[1], reverse=True)
 
     def get_suggested_musicians_skill(self):
@@ -112,8 +113,11 @@ class MusicianProfile(models.Model):
         rank = {}
         for ux in (data_set - ul_friends - set([self])):
             common_friends = len(ul_friends & set(Friend.get_user_friends(ux.user)))
-            common_skills = len(set(ux.skills.all()) & set(self.skills.all()))
-            rank[ux] = (common_friends + common_skills) * 0.2
+            common_skills = len(set(ux.skills.all()) & set(self.skills.all())) * 2
+            if common_friends > 0:
+                rank[ux] = common_friends * common_skills
+            else:
+                rank[ux] = common_skills
         return sorted(rank.items(), key=lambda x: x[1], reverse=True)
 
     @staticmethod
@@ -138,7 +142,8 @@ class Friend(models.Model):
     data_request = models.DateField(default=timezone.now)
 
     def __unicode__(self):
-        return unicode(self.sender)
+        return "Friend , sender: " + str(self.sender) + \
+               " reciver: " + str(self.reciver)
 
     @classmethod
     def create(self, sender, reciver):
@@ -193,7 +198,8 @@ class Message(models.Model):
     text = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return unicode(self.sender_message)
+        return "Message , sender: " + str(self.sender_message) + \
+               " reciver: " +str(self.reciver_message)
 
     @classmethod
     def create(self, sender, reciver, text):
@@ -232,7 +238,8 @@ class HasSkill(models.Model):
     endorse_user = models.ManyToManyField(MusicianProfile)
 
     def __unicode__(self):
-        return unicode(self.musicianprofile)
+        return "HasSkill , musician: " + str(self.musicianprofile) + \
+               " skill: " + str(self.skill)
 
     @classmethod
     def create(self, musicianprofile, skill):
@@ -249,7 +256,8 @@ class Post(models.Model):
     user_comments = models.ManyToManyField(MusicianProfile, through='Comment')
 
     def __unicode__(self):
-        return unicode(self.musician_profile)
+        return "Post , musician: " + str(self.musician_profile) + \
+               " Post id: " + str(self.id)
 
     @staticmethod
     def n_new_comments(musician_profile):
@@ -270,7 +278,8 @@ class Comment(models.Model):
     seen = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return unicode(self.musician_profile)
+        return "Comment , musician: " + str(self.musician_profile) + \
+               " Comment id: " + str(self.id)
 
     class Meta:
         ordering = ['pub_date']

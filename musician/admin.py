@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MusicianProfile, Friend, Message, Skill, Post
+from .models import MusicianProfile, Friend, Message, Skill, Post, HasSkill, Comment
 from django.db import models
 from django.forms import CheckboxSelectMultiple
 
@@ -37,11 +37,38 @@ class FriendAdmin(admin.ModelAdmin):
     ]
 
 
+class HasSkillAdmin(admin.ModelAdmin):
+    list_display = ('musicianprofile', 'skill')
+    ordering = ('musicianprofile', )
+    fieldsets = [
+        ('HasSkill Info: ', {'fields': ['musicianprofile', 'skill', 'endorse_user']})
+    ]
+
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('musician_profile', 'post_text')
+    ordering = ('-pub_date', )
+    list_filter = ('musician_profile', 'pub_date')
+    fieldsets = [
+        ('HasSkill Info: ', {'fields': ['musician_profile', 'post_text', 'pub_date']})
+    ]
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('musician_profile', 'post', 'comment_text')
+    ordering = ('-pub_date', )
+    list_filter = ('musician_profile', 'pub_date')
+    fieldsets = [
+        ('HasSkill Info: ', {'fields': ['musician_profile', 'post', 'pub_date', 'comment_text', 'seen']})
+    ]
+
 admin.site.register(MusicianProfile, MusicianProfileAdmin)
 admin.site.register(Friend, FriendAdmin)
 admin.site.register(Message, MessageAdmin)
+admin.site.register(HasSkill, HasSkillAdmin)
 admin.site.register(Skill)
-admin.site.register(Post)
+admin.site.register(Post, PostAdmin)
+admin.site.register(Comment, CommentAdmin)
 
 #admin.site.register(HasSkill, HasSkillAdmin)
 

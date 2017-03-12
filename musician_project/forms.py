@@ -20,7 +20,6 @@ class UserForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
-
         }
         fields = ['username', 'email', 'first_name', 'last_name']
 
@@ -50,7 +49,6 @@ class MusicianProfileForm(forms.ModelForm):
             'data': forms.DateInput(attrs={'class': 'datepick', 'style': 'width: 100%'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
-
         }
         fields = ['bio', 'gender', 'img', 'data', 'phone_number', 'country', 'city']
 

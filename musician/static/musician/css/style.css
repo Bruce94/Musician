@@ -278,6 +278,9 @@ img.edit-icon{
     width: 17px;
     float: left;
 }
+.varie-icon:hover{
+    filter:opacity(30%);
+}
 img.skill-icon{
     height: 35px;
     width: 35px;

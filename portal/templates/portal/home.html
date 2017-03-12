@@ -139,7 +139,10 @@
                 {% endfor %}
             </div>
             <div class="col-sm-2 well text-left">
-                <div class="col-sm-12"><h4>You may know:</h4></div>
+                <div class="col-sm-12">
+                    <h4>You may know:</h4>
+                    <p><small>Common fiends</small></p>
+                </div>
                 {% for r_user, r in request.user.musicianprofile.get_suggested_musicians|slice:":10" %}
                     {% if r > 0.0 %}
                         <img src="{{ r_user.img.url }}"
@@ -151,7 +154,10 @@
                     {% endif %}
                 {% endfor %}
                 <hr>
-                <div class="col-sm-12"><h4>Or you may know:</h4></div>
+                <div class="col-sm-12">
+                    <h4>You may know:</h4>
+                    <p><small>Common skills</small></p>
+                </div>
                 {% for r_user, r in request.user.musicianprofile.get_suggested_musicians_skill|slice:":10" %}
                     {% if r > 0.0 %}
                         <img src="{{ r_user.img.url }}"

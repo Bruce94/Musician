@@ -8,14 +8,14 @@ from musician.models import *
 
 class MusicianProfileViewTests(TestCase):
 
-    # test della view info su un utente  se l'utente non e' loggato
+    # test della view info su un utente non esistente se l'utente non e' loggato
     def test_view_profile_user_not_exist_no_log(self):
         client = Client()
         # mi aspetto un 302
         response = client.get("/musician/345/")
         self.assertEquals(response.status_code, 302)
 
-    # test della view info su un utente  se l'utente e' loggato
+    # test della view info su un utente non esistente se l'utente e' loggato
     def test_view_profile_user_not_exist_log(self):
         user = User.objects.create_user(username='test', password='test')
         MusicianProfile.objects.create(user=user)
@@ -24,6 +24,23 @@ class MusicianProfileViewTests(TestCase):
         # mi aspetto un 404 page not found
         response = client.get("/musician/234/")
         self.assertEquals(response.status_code, 404)
+
+    # test della view info su un utente esistente se l'utente non e' loggato
+    def test_view_profile_user_exist_no_log(self):
+        client = Client()
+        # mi aspetto un 302
+        response = client.get("/musician/345/")
+        self.assertEquals(response.status_code, 302)
+
+    # test della view info su un utente esistente se l'utente e' loggato
+    def test_view_profile_user_exist_log(self):
+        user = User.objects.create_user(username='test_log', password='test')
+        MusicianProfile.objects.create(user=user)
+        client = Client()
+        client.login(username='test_log', password='test')
+        # mi aspetto un 200 
+        response = client.get("/musician/"+str(user.id)+"/")
+        self.assertEquals(response.status_code, 200)
 
 
 class MusicianProfileModelTests(TestCase):

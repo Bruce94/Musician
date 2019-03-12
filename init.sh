@@ -11,8 +11,8 @@ interrupt(){
 echo
 echo "# Musician init script..."
 echo "please install these dependecies before init:"
-echo "  python2.7"
-echo "  python2.7-dev"
+echo "  python3.5"
+echo "  python3.5-dev"
 echo "  mysql-server"
 echo "  libmysqlclient-dev"
 echo "  virtualenv"
@@ -38,16 +38,16 @@ echo "Database name: dbMusician;"
 echo "Database user: usermusician, pwd: bd344mx"
 
 echo "create virtualenv"
-virtualenv -p python2.7 env --system-site-packages
+virtualenv -p python3.5 env --system-site-packages
 echo "enter virtualenv"
 source env/bin/activate
 
 echo "install pip dependencies"
-pip install -U pip
-pip install -r requirements.txt
+pip3 install -U pip
+pip3 install -r requirements.txt
 
 
 echo "make migrations"
-python manage.py makemigrations
+python3 manage.py makemigrations
 echo "migrate"
-python manage.py migrate 
+python3 manage.py migrate 

@@ -62,21 +62,38 @@ class MusicianProfile(models.Model):
                " id( " + str(self.user.id) + ")"
 
     def musician_distance(self, musician):
-        i = 1
-        if musician in Friend.get_user_friends(self.user):
-            return i
+        #i = 1
+
+        friends = Friend.get_user_friends(self.user)
+        if musician in friends:
+            return 1
         else:
-            i += 1
-            for friend in Friend.get_user_friends(self.user):
-                if musician in Friend.get_user_friends(friend.user):
-                    return i
-            i += 1
-            for friend in Friend.get_user_friends(self.user):
-                for fof in Friend.get_user_friends(friend.user):
-                    if musician in Friend.get_user_friends(fof.user):
-                        return i
-            i += 1
-            return i
+           # i += 1
+
+            friends_of_friends = []
+            for friend in friends:
+                friends_of_friends += Friend.get_user_friends(friend.user)
+
+#            for friend in friends:
+#                if musician in Friend.get_user_friends(friend.user):
+            if musician in friends_of_friends:
+                return 2
+
+            #i += 1
+
+            fofof = []
+            for friend in friends_of_friends:
+                fofof += Friend.get_user_friends(friend.user)
+
+            if musician in fofof:
+                return 3
+
+            #for friend in Friend.get_user_friends(self.user):
+            #    for fof in Friend.get_user_friends(friend.user):
+            #        if musician in Friend.get_user_friends(fof.user):
+            #            return i
+           # i += 1
+            return 4
 
     def get_n_second_neighbor(self):
 

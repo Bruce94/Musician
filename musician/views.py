@@ -87,7 +87,7 @@ def musician_info(request, user_id):
 
         mpf = MusicianProfileForm(request.POST, request.FILES, prefix='profile')
 
-        # Friendscip post
+        # Friendship post
         if "add-friend" in request.POST:
             friend = Friend.create(sender=request.user, reciver=user)
             friend.save()

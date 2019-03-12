@@ -14,7 +14,8 @@ from django.template import RequestContext
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
+    #n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
+    n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
     n_first_neigh = len(Friend.get_user_friends(request.user))
 
@@ -37,6 +38,7 @@ def portal_welcome(request):
         if request.POST.get('del_'+str(p.id)):
             p.delete()
             return HttpResponseRedirect('/portal/')
+
 
     return render(request, 'portal/home.html', {'user': user,
                                                 'home_posts': home_posts,
@@ -74,10 +76,17 @@ def search_musician(request):
         if request.GET.getlist('check_skill'):
             checked_skills = request.GET.getlist('check_skill')
             profiles = []
+            # piu scalabile
             for skill in checked_skills:
-                has_skills = HasSkill.objects.filter(skill__name_skill=skill)
-                for hs in has_skills:
-                    profiles += [hs.musicianprofile]
+                #has_skills = HasSkill.objects.filter(skill__name_skill=skill)
+                for single_profile in profile_list:
+                    has_skills = HasSkill.objects.filter(
+                                        skill__name_skill=skill, 
+                                        musicianprofile=single_profile )
+                    if has_skills:
+                        profiles += [single_profile]
+#                    for hs in has_skills:
+#                        profiles += [hs.musicianprofile]
             profiles = set(profiles)
             if profile_list:
                 profile_list = profiles.intersection(profile_list)

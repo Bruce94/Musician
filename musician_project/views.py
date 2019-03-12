@@ -43,11 +43,12 @@ def register(request):
     else:
         uf = UserForm(prefix='user')
         mpf = MusicianProfileForm(prefix='profile')
-    return render_to_response('registration/register.html',
-                              dict(userform=uf,
+    return render(request, 'registration/register.html',
+                                   dict(userform=uf,
                                    musicianprofileform=mpf,
-                                   skills=skills,),
-                              context_instance=RequestContext(request),)
+                                   skills=skills,)
+                                )
+#                              context_instance=RequestContext(request),)
 
 
 def register_ok(request):

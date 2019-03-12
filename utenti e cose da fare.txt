@@ -1,0 +1,29 @@
+SUPERUSER (x admin): lucabruno -> lucabruno (email betti.luca94@gmail.com)
+
+Utenti semplici (username -> password)
+Rock_n_roller -> esame
+thebigMamba   -> esame
+gigi_dag      -> esame
+essenzaRock   -> esame
+
+
+
+Cose da fare:
+
+    - Cambiare accettazione amicizia (usare 3 bottoni differenti anzichè menu tendina)
+
+    - Real time chat
+
+    - I filtri nella ricerca degli amici non devono ampliare la ricerca, ma restringerla.
+        Mi spiego con un esempio:
+        Luca usa sax, chitarra e dj
+        Bruno usa chitarra, batteria
+        Max sax, batteria
+
+        Se cerco senza filtri, tutti appaiono.
+        Se cerco con filtro chitarra appare solo Luca e Bruno
+        Se cerco con filtro chitarra e dj appare solo Luca (perchè Bruno non è un dj)
+
+    - Fare i tag (usiamo # ?)
+
+    - Diamo più colore?

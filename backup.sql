@@ -461,7 +461,7 @@ DROP TABLE IF EXISTS `musician_musicianprofile`;
 CREATE TABLE `musician_musicianprofile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bio` longtext,
-  `img` varchar(100),
+  `img` varchar(100) DEFAULT NULL,
   `data` date DEFAULT NULL,
   `gender` varchar(1) NOT NULL,
   `phone_number` varchar(15) DEFAULT NULL,
@@ -522,7 +522,7 @@ DROP TABLE IF EXISTS `musician_skill`;
 CREATE TABLE `musician_skill` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_skill` varchar(20) NOT NULL,
-  `image_skill` varchar(100),
+  `image_skill` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_skill` (`name_skill`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
@@ -547,4 +547,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-13 13:50:34
+-- Dump completed on 2019-03-13 14:20:21

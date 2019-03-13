@@ -12,7 +12,7 @@ Cose da fare:
 
     - Cambiare accettazione amicizia (usare 3 bottoni differenti anzichè menu tendina)
 
-    - Real time chat
+    - Real time chat e notifiche
 
     - I filtri nella ricerca degli amici non devono ampliare la ricerca, ma restringerla.
         Mi spiego con un esempio:
@@ -27,3 +27,16 @@ Cose da fare:
     - Fare i tag (usiamo # ?)
 
     - Diamo più colore?
+
+    - [post con immagini]
+
+    - tag cliccabili
+
+    - API
+
+    - applicazione
+
+    - scalabilità
+
+
+

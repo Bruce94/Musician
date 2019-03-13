@@ -86,6 +86,7 @@ fabric.properties
 # *.ipr
 
 .idea/
-
+env/
+venv/
 
 # End of https://www.gitignore.io/api/pycharm,intellij

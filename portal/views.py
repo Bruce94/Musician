@@ -185,5 +185,3 @@ def post(request, post_id):
                                                 'n_mes': n_mes,
                                                 'n_comm': n_comm,
                                                 'p': p})
-
-

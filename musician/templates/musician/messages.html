@@ -42,6 +42,7 @@
                 {% if new_mes_user %}
                     <h4 class="title-users-message">New Messages</h4>
                     {% for usr in new_mes_user %}
+                        <!-- <a href="/musician/messages/{{ usr.user.id }}" class="list-group-item "> -->
                         <a href="/musician/messages/{{ usr.user.id }}" class="list-group-item ">
                             <img class="search-musician" src="{{ usr.img.url }}" alt = "{{ usr.user.username }}"/>
                             <h3 class="list-group-item-heading">{{ usr.user.last_name }} {{ usr.user.first_name }}</h3>
@@ -52,6 +53,7 @@
                 <h4 class="title-users-message">Friends</h4>
                 {% for friend in friend_user %}
                     {% if selected_user.id == friend.user.id %}
+                        <!--  <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item active"> -->
                         <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item active">
                             <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
                             <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>

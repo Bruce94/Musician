@@ -261,3 +261,4 @@ def chat(request, user_id):
                                                   'n_mes': n_mes,
                                                   'new_mes_user': new_mes_user,
                                                   'n_comm': n_comm})
+

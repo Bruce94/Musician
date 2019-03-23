@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 text-left">
-                                <p style="font-size: 25px;">{{ post.post_text }}</p>
+                                <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
                                 <button type="button" class="btn btn-default btn-sm"
@@ -118,7 +118,7 @@
                                                 </a>
                                                 <small style="font-size: 10px">{{ comment.pub_date }}</small>
                                             </div>
-                                            <div class="col-sm-12">{{ comment.comment_text }}</div>
+                                            <div class="col-sm-12 enteredText">{{ comment.comment_text }}</div>
                                         </div>
                                     {% endfor %}
                                 </div>

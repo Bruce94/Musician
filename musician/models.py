@@ -62,24 +62,18 @@ class MusicianProfile(models.Model):
                " id( " + str(self.user.id) + ")"
 
     def musician_distance(self, musician):
-        #i = 1
 
         friends = Friend.get_user_friends(self.user)
         if musician in friends:
             return 1
         else:
-           # i += 1
 
             friends_of_friends = []
             for friend in friends:
                 friends_of_friends += Friend.get_user_friends(friend.user)
 
-#            for friend in friends:
-#                if musician in Friend.get_user_friends(friend.user):
             if musician in friends_of_friends:
                 return 2
-
-            #i += 1
 
             fofof = []
             for friend in friends_of_friends:
@@ -88,11 +82,6 @@ class MusicianProfile(models.Model):
             if musician in fofof:
                 return 3
 
-            #for friend in Friend.get_user_friends(self.user):
-            #    for fof in Friend.get_user_friends(friend.user):
-            #        if musician in Friend.get_user_friends(fof.user):
-            #            return i
-           # i += 1
             return 4
 
     def get_n_second_neighbor(self):
@@ -283,6 +272,19 @@ class Post(models.Model):
             n += post.comment_set.filter(seen=False).count()
         return n
 
+    def checkForTagsInPost(self):
+        print(self.post_text)
+        if '#' in self.post_text:
+            for word in self.post_text.split():
+                if word.startswith('#'):
+                    if not Tag.objects.filter(tag_text=word):
+                        Tag.create(obj=self, text=word)
+                    else:
+                        tag = Tag.objects.filter(tag_text=word)[0]
+                        tag.post.add(self)
+                        tag.save()
+
+
     class Meta:
         ordering = ['-pub_date']
 
@@ -300,3 +302,60 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['pub_date']
+
+
+    def checkForTagsInComment(self):
+        print(self.comment_text)
+        if '#' in self.comment_text:
+            for word in self.comment_text.split():
+                if word.startswith('#'):
+                    if not Tag.objects.filter(tag_text=word):
+                        Tag.create(obj=self, text=word)
+                    else:
+                        tag = Tag.objects.filter(tag_text=word)[0]
+                        tag.comment.add(self)
+                        tag.save()
+
+
+class Tag(models.Model):
+    post = models.ManyToManyField(Post, blank=True)
+    comment = models.ManyToManyField(Comment, blank=True)
+    tag_text = models.CharField(max_length=50, unique=True)
+    pub_date = models.DateTimeField(default=timezone.now)
+
+    def __unicode__(self):
+        return "Tag , text: " + str(self.tag_text) + \
+               " Tag id: " + str(self.id)
+
+    class Meta:
+        ordering = ['-pub_date']
+
+    @classmethod
+    def create(self, obj, text):
+
+        if type(obj) == Post:
+            if not Tag.objects.filter(post=obj, tag_text=text):
+                tag = self(tag_text=text)
+                tag.save()
+                tag.post.add(obj)
+                tag.save()
+        elif type(obj) == Comment:
+            if not Tag.objects.filter(comment=obj, tag_text=text):
+                tag = self(tag_text=text)
+                tag.save()
+                tag.comment.add(obj)
+                tag.save()
+
+    @staticmethod
+    def users_for_tag(text):
+        users_tag = Tag.objects.filter(tag_text=text).post.musician_profile
+        users_tag = set(users_tag)
+        users_tag.union(Tag.objects.filter(tag_text=text).comment.musician_profile)
+        return users_tag
+
+    @staticmethod
+    def posts_and_comments_with_tag(text):
+        if Tag.objects.filter(tag_text=text):
+            posts = Tag.objects.filter(tag_text=text).post
+            comments = Tag.objects.filter(tag_text=text).comment
+            return posts, comments

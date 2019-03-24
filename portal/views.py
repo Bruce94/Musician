@@ -4,17 +4,15 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
-from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Comment
+from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Comment, Tag
 from musician_project.forms import UserForm, MusicianProfileForm
 from itertools import chain
 from django.template import RequestContext
-
 
 @login_required
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
     n_req = Friend.n_req_friendship(request.user)
-    #n_mes = len(Message.objects.all().filter(Q(reciver_message__username=request.user.username) & Q(seen=False)))
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
     n_first_neigh = len(Friend.get_user_friends(request.user))
@@ -31,8 +29,15 @@ def portal_welcome(request):
                                  musician_profile=request.user.musicianprofile,
                                  seen=(True if p.musician_profile == request.user.musicianprofile else False))
 
+            comment = p.comment_set.filter(comment_text=request.POST['comment_' + str(p.id)],
+                                           musician_profile=request.user.musicianprofile)[0]
+            comment.checkForTagsInComment()
+
     if request.POST.get('post'):
         user.musicianprofile.user_post.create(post_text=request.POST['post'])
+        post = user.musicianprofile.user_post.filter(post_text=request.POST['post'])[0]
+
+        post.checkForTagsInPost()
 
     for p in user.musicianprofile.user_post.all():
         if request.POST.get('del_'+str(p.id)):
@@ -78,15 +83,13 @@ def search_musician(request):
             profiles = []
             # piu scalabile
             for skill in checked_skills:
-                #has_skills = HasSkill.objects.filter(skill__name_skill=skill)
                 for single_profile in profile_list:
                     has_skills = HasSkill.objects.filter(
                                         skill__name_skill=skill, 
                                         musicianprofile=single_profile )
                     if has_skills:
                         profiles += [single_profile]
-#                    for hs in has_skills:
-#                        profiles += [hs.musicianprofile]
+
             profiles = set(profiles)
             if profile_list:
                 profile_list = profiles.intersection(profile_list)
@@ -174,6 +177,9 @@ def post(request, post_id):
         p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
                              musician_profile=request.user.musicianprofile,
                              seen=(True if p.musician_profile == request.user.musicianprofile else False))
+
+        comment = p.comment_set.filter(comment_text=request.POST['comment_' + str(p.id)], musician_profile=request.user.musicianprofile)[0]
+        comment.checkForTagsInComment()
 
     return render(request, 'portal/post.html', {'n_req': n_req,
                                                 'n_mes': n_mes,

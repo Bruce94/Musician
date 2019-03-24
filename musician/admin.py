@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MusicianProfile, Friend, Message, Skill, Post, HasSkill, Comment
+from .models import MusicianProfile, Friend, Message, Skill, Post, HasSkill, Comment, Tag
 from django.db import models
 from django.forms import CheckboxSelectMultiple
 
@@ -62,6 +62,14 @@ class CommentAdmin(admin.ModelAdmin):
         ('HasSkill Info: ', {'fields': ['musician_profile', 'post', 'pub_date', 'comment_text', 'seen']})
     ]
 
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('tag_text',)
+    ordering = ('-pub_date', )
+    list_filter = ('post','comment')
+    fieldsets = [
+        ('HasSkill Info: ', {'fields': ['tag_text', 'post', 'comment']})
+    ]
+
 admin.site.register(MusicianProfile, MusicianProfileAdmin)
 admin.site.register(Friend, FriendAdmin)
 admin.site.register(Message, MessageAdmin)
@@ -69,6 +77,7 @@ admin.site.register(HasSkill, HasSkillAdmin)
 admin.site.register(Skill)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Tag, TagAdmin)
 
 #admin.site.register(HasSkill, HasSkillAdmin)
 

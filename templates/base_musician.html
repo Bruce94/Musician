@@ -7,13 +7,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Musician.com">
         <meta name="author" content="Bruno Ghion">
-
         <link rel="shortcut icon" type="image/x-icon" href="{% static 'musician/images/vm.jpg' %}">
         <link href="{% static 'musician/css/bootstrap.css'%}" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{% static 'musician/css/style.css' %}">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
         <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="{% static 'musician/js/bootstrap.min.js' %}"></script>
@@ -22,10 +20,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="http://localhost:8008/socket.io/socket.io.js"></script>
+        <script type="text/javascript">var socket = io.connect('http://localhost:8008');</script>
         <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-
-
-
 
         {% block head %}{% endblock %}
     </head>

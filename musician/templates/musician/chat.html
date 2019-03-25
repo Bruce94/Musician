@@ -4,10 +4,11 @@
 {% block chat_title %}<h4 style="margin-left: 20px">{{ selected_user.first_name }} {{ selected_user.last_name }}</h4>{% endblock %}
 
 {% block message-form %}
-    <form action="/musician/messages/{{ selected_user.id }}/" method="post" class="message_form" autocomplete="off">
+    <form action="/musician/messages/{{ selected_user.id }}/post/" method="post"
+          id="message_form" class="message_form" autocomplete="off">
         {% csrf_token %}
-        <input type="text" class="write-messanger" name="message">
-        <input type="submit" class="button-messanger", value="Send">
+        <input type="text" class="write-messanger" name="message" id="chat-msg">
+        <input type="submit" class="button-messanger" id="send" value="Send">
     </form>
 {% endblock %}
 

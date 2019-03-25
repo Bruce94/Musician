@@ -12,6 +12,7 @@ echo
 echo "# Musician init script..."
 echo "please install these dependecies before init:"
 echo "  python3.5"
+echo "  nodejs"
 echo "  python3.5-dev"
 echo "  mysql-server"
 echo "  libmysqlclient-dev"

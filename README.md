@@ -7,7 +7,7 @@ execute the script "init.sh" or follow the coming steps
 ##### Dependencies
 Check your mysql DBMS, then install dependencies; on Debian:
 ~~~bash
-apt install python2.7 python2.7-dev python-pip mysql-server libmysqlclient-dev virtualenv
+apt install python3.5 python3.5-dev python-pip mysql-server libmysqlclient-dev virtualenv
 ~~~
 
 ##### Prepare DBMS
@@ -24,16 +24,16 @@ GRANT ALL PRIVILEGES ON test_dbMusician.* TO 'usermusician'@'localhost' WITH GRA
 ##### Virtualenv
 For avoid version errors is recommended to use virtualenv
 ~~~bash
-virtualenv -p python2.7 env --system-site-packages
+virtualenv -p python3.5 env --system-site-packages
 source env/bin/activate
 ~~~
 
 ##### Requirements
 Install python requirements for the project
 ~~~bash
-pip install -U pip
-pip install -r requirements.txt
-pip install django-countries
+pip3 install -U pip
+pip3 install -r requirements.txt
+pip3 install django-countries
 ~~~
 
 ##### To upload data
@@ -44,19 +44,25 @@ mysql -u usermusician -p --database=dbdjango < tabelle_backup.sql	(password:bd34
 
 ##### To build database
 ~~~bash
-python manage.py makemigrations
-python manage.py migrate
+python3 manage.py makemigrations
+python3 manage.py migrate
 ~~~
 
 
 ##### To init skills
 ~~~bash
-python manage.py shell
+python3 manage.py shell
 >>> from musician.models import Skill
 >>> Skill.init_skills()
 ~~~
 
 ##### Start server
 ~~~bash
-python manage.py runserver 8000
+python3 manage.py runserver 8000
+~~~
+
+#### Start nodejs server
+~~~bash
+cd nodejs
+node app.js
 ~~~

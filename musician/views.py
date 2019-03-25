@@ -5,6 +5,9 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from musician_project.forms import UserForm, MusicianProfileForm
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
+from django.http import JsonResponse
+import json
+
 
 
 @login_required
@@ -262,3 +265,48 @@ def chat(request, user_id):
                                                   'new_mes_user': new_mes_user,
                                                   'n_comm': n_comm})
 
+
+@login_required
+def chat_post(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    if request.POST.get('message'):
+        message = Message.create(sender=request.user, reciver=user, text=request.POST['message'])
+        message.save()
+
+    return JsonResponse({'usr_id': request.user.id})
+
+
+@login_required
+def chat_get(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    messages_of_chat = Message.messages_of_chat(request.user, user)
+    messages = []
+    for moc in messages_of_chat:
+        if not moc.seen and moc.reciver_message == request.user:
+            moc.seen = True
+            moc.save()
+        mes = {}
+        mes['sender'] = moc.sender_message.id
+        mes['text'] = moc.text
+        mes['data_request'] = str(moc.data_request.strftime("%Y-%m-%d %H:%M"))
+        messages.append(mes)
+    response = {'messages': messages}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)
+
+
+@login_required
+def new_msg(request):
+    nm_users = []
+    for usr in Message.new_user_message(request.user):
+        data = {}
+        data['id'] = usr.user.id
+        data['img_url'] = usr.img.url
+        data['first_name'] = usr.user.first_name
+        data['last_name'] = usr.user.last_name
+        data['username'] = usr.user.username
+        nm_users.append(data)
+    response = {'nm_users': nm_users}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)

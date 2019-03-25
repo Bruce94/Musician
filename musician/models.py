@@ -277,6 +277,7 @@ class Post(models.Model):
         if '#' in self.post_text:
             for word in self.post_text.split():
                 if word.startswith('#'):
+                    word = word[1:len(word)]
                     if not Tag.objects.filter(tag_text=word):
                         Tag.create(obj=self, text=word)
                     else:
@@ -309,6 +310,7 @@ class Comment(models.Model):
         if '#' in self.comment_text:
             for word in self.comment_text.split():
                 if word.startswith('#'):
+                    word = word[1:len(word)]
                     if not Tag.objects.filter(tag_text=word):
                         Tag.create(obj=self, text=word)
                     else:
@@ -356,6 +358,14 @@ class Tag(models.Model):
     @staticmethod
     def posts_and_comments_with_tag(text):
         if Tag.objects.filter(tag_text=text):
-            posts = Tag.objects.filter(tag_text=text).post
-            comments = Tag.objects.filter(tag_text=text).comment
-            return posts, comments
+            tag = Tag.objects.filter(tag_text=text)[0]
+            posts = tag.post.all()
+            posts = set(posts)
+
+            comments = tag.comment.all()
+            posts_commented = set()
+            for comment in comments:
+                posts_commented.add(comment.post)
+            posts = posts.union(posts_commented)
+
+            return posts

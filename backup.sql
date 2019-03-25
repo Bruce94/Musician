@@ -125,7 +125,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
-INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$36000$yWVRCjpTtUCa$S88Rqtoab8iwRDH5FFVwLri3CrCJFhAW1t1igCA5Woo=','2019-03-23 09:55:22.808125',0,'Rocker_n_roller','Luca','Betti','betti.luca94@gmail.com',0,1,'2019-03-10 13:17:44.783314'),(2,'pbkdf2_sha256$36000$U9sa1xviKy5q$Swrt+Gw6m+ypdscFGI6qm0Xj9Ftn8agbUZo8/VbdUCo=','2019-03-18 16:02:15.804518',0,'thebigMamba','Kuwa','Uwawei','svnjrpv@gmail.com',0,1,'2019-03-10 13:32:46.942739'),(4,'pbkdf2_sha256$36000$VrI8nw9yOpgv$frf4R62e6/xXq8HZi9gwg9ccT25o8ahZ6TCW6wDz7jc=','2019-03-21 18:59:28.390958',1,'lucabruno','lucabru','BettiGhion','betti.luca94@gmail.com',1,1,'2019-03-11 08:10:24.000000'),(6,'pbkdf2_sha256$36000$lvhrsZESA5aq$E+Z88MV/pyPkk3MZtMFMpwTYu4D/tXfJ6/YQCXXWmAI=','2019-03-12 11:10:27.067021',0,'Gigi_dag','Gigi','D\'Agostino','emailprova@gmail.com',0,1,'2019-03-11 10:09:45.869977'),(8,'pbkdf2_sha256$36000$2ErNdWSqqJbZ$CwO/gP4EzV8qSeE24Ses33nVLYhbukmgQ4ifv/sbmcM=','2019-03-14 08:50:04.565761',0,'essenzaRock','Riget','Swagertinwer','provaemail@gmail.com',0,1,'2019-03-11 10:17:45.205680');
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$36000$yWVRCjpTtUCa$S88Rqtoab8iwRDH5FFVwLri3CrCJFhAW1t1igCA5Woo=','2019-03-25 00:59:13.482624',0,'Rocker_n_roller','Luca','Betti','betti.luca94@gmail.com',0,1,'2019-03-10 13:17:44.783314'),(2,'pbkdf2_sha256$36000$U9sa1xviKy5q$Swrt+Gw6m+ypdscFGI6qm0Xj9Ftn8agbUZo8/VbdUCo=','2019-03-25 00:58:50.715782',0,'thebigMamba','Kuwa','Uwawei','svnjrpv@gmail.com',0,1,'2019-03-10 13:32:46.942739'),(4,'pbkdf2_sha256$36000$VrI8nw9yOpgv$frf4R62e6/xXq8HZi9gwg9ccT25o8ahZ6TCW6wDz7jc=','2019-03-25 00:41:51.834414',1,'lucabruno','lucabru','BettiGhion','betti.luca94@gmail.com',1,1,'2019-03-11 08:10:24.000000'),(6,'pbkdf2_sha256$36000$lvhrsZESA5aq$E+Z88MV/pyPkk3MZtMFMpwTYu4D/tXfJ6/YQCXXWmAI=','2019-03-12 11:10:27.067021',0,'Gigi_dag','Gigi','D\'Agostino','emailprova@gmail.com',0,1,'2019-03-11 10:09:45.869977'),(8,'pbkdf2_sha256$36000$2ErNdWSqqJbZ$CwO/gP4EzV8qSeE24Ses33nVLYhbukmgQ4ifv/sbmcM=','2019-03-14 08:50:04.565761',0,'essenzaRock','Riget','Swagertinwer','provaemail@gmail.com',0,1,'2019-03-11 10:17:45.205680');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +206,7 @@ CREATE TABLE `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk_auth_user_id` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +215,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
-INSERT INTO `django_admin_log` VALUES (5,'2019-03-11 10:14:49.740405','7','essenzaRock',3,'',3,4),(6,'2019-03-21 18:28:35.445469','13','Post object',3,'',12,4),(7,'2019-03-21 18:28:35.454959','12','Post object',3,'',12,4),(8,'2019-03-21 18:28:35.459897','11','Post object',3,'',12,4),(9,'2019-03-21 18:28:35.464511','10','Post object',3,'',12,4),(10,'2019-03-21 18:28:35.467621','9','Post object',3,'',12,4),(11,'2019-03-21 18:28:35.472057','8','Post object',3,'',12,4),(12,'2019-03-21 18:28:35.475460','7','Post object',3,'',12,4),(13,'2019-03-21 18:28:35.478409','6','Post object',3,'',12,4),(14,'2019-03-21 18:28:35.481533','5','Post object',3,'',12,4),(15,'2019-03-21 18:28:35.483775','4','Post object',3,'',12,4),(16,'2019-03-21 18:28:35.486498','3','Post object',3,'',12,4),(17,'2019-03-21 18:28:35.489426','2','Post object',3,'',12,4),(18,'2019-03-21 18:35:24.513506','15','Post object',3,'',12,4),(19,'2019-03-21 18:55:16.986816','18','Post object',3,'',12,4),(20,'2019-03-21 18:55:16.990388','17','Post object',3,'',12,4),(21,'2019-03-21 18:55:16.996087','16','Post object',3,'',12,4),(22,'2019-03-21 18:55:42.494586','4','Comment object',3,'',13,4);
+INSERT INTO `django_admin_log` VALUES (5,'2019-03-11 10:14:49.740405','7','essenzaRock',3,'',3,4),(6,'2019-03-21 18:28:35.445469','13','Post object',3,'',12,4),(7,'2019-03-21 18:28:35.454959','12','Post object',3,'',12,4),(8,'2019-03-21 18:28:35.459897','11','Post object',3,'',12,4),(9,'2019-03-21 18:28:35.464511','10','Post object',3,'',12,4),(10,'2019-03-21 18:28:35.467621','9','Post object',3,'',12,4),(11,'2019-03-21 18:28:35.472057','8','Post object',3,'',12,4),(12,'2019-03-21 18:28:35.475460','7','Post object',3,'',12,4),(13,'2019-03-21 18:28:35.478409','6','Post object',3,'',12,4),(14,'2019-03-21 18:28:35.481533','5','Post object',3,'',12,4),(15,'2019-03-21 18:28:35.483775','4','Post object',3,'',12,4),(16,'2019-03-21 18:28:35.486498','3','Post object',3,'',12,4),(17,'2019-03-21 18:28:35.489426','2','Post object',3,'',12,4),(18,'2019-03-21 18:35:24.513506','15','Post object',3,'',12,4),(19,'2019-03-21 18:55:16.986816','18','Post object',3,'',12,4),(20,'2019-03-21 18:55:16.990388','17','Post object',3,'',12,4),(21,'2019-03-21 18:55:16.996087','16','Post object',3,'',12,4),(22,'2019-03-21 18:55:42.494586','4','Comment object',3,'',13,4),(23,'2019-03-24 12:15:23.706028','7','Tag object',3,'',14,4),(24,'2019-03-24 12:15:23.716694','6','Tag object',3,'',14,4),(25,'2019-03-24 12:15:23.720432','5','Tag object',3,'',14,4),(26,'2019-03-24 12:15:23.727537','4','Tag object',3,'',14,4),(27,'2019-03-24 12:15:23.731428','3','Tag object',3,'',14,4),(28,'2019-03-24 12:15:23.734992','2','Tag object',3,'',14,4),(29,'2019-03-24 12:15:23.738186','1','Tag object',3,'',14,4),(30,'2019-03-24 12:15:39.321503','10','Tag object',2,'[{\"changed\": {\"fields\": [\"tag_text\"]}}]',14,4),(31,'2019-03-24 12:15:45.764934','9','Tag object',2,'[{\"changed\": {\"fields\": [\"tag_text\"]}}]',14,4),(32,'2019-03-24 12:15:51.250219','8','Tag object',2,'[{\"changed\": {\"fields\": [\"tag_text\"]}}]',14,4),(33,'2019-03-25 00:36:09.247253','21','Post object',3,'',12,4),(34,'2019-03-25 00:36:09.254999','20','Post object',3,'',12,4),(35,'2019-03-25 00:36:09.258765','19','Post object',3,'',12,4),(36,'2019-03-25 00:36:09.261891','14','Post object',3,'',12,4),(37,'2019-03-25 00:40:05.133048','14','Tag object',3,'',14,4),(38,'2019-03-25 00:40:10.074942','13','Tag object',3,'',14,4),(39,'2019-03-25 00:40:15.126076','12','Tag object',3,'',14,4),(40,'2019-03-25 00:40:19.522571','11','Tag object',3,'',14,4),(41,'2019-03-25 00:40:33.075180','9','Tag object',3,'',14,4),(42,'2019-03-25 00:40:37.206184','8','Tag object',3,'',14,4);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +293,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('gpx40sbgxyvq8bpdapmn573npco5k5vn','NTE5YzY0ZWE0YjNlY2M4NDYyY2I4YjE5ZDY0NDliNGFkNWQ0NWMxZDp7Il9hdXRoX3VzZXJfaGFzaCI6ImZiNjk5ZDdjMzk0ZTFhZjQ5YTc4ZTUxYmZkM2E2ODU5NTkxODEyNWEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2019-04-01 16:09:31.160977'),('uv3vo2763gh2oxyvu0j5htyqeq6i5mbs','NTQ5ODlkZmQ5YzkxNmM2ZTdmYjBlNjY1YWY4ZTEzNDQzNTNjYmE0NTp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6IjEiLCJfYXV0aF91c2VyX2hhc2giOiJmYjY5OWQ3YzM5NGUxYWY0OWE3OGU1MWJmZDNhNjg1OTU5MTgxMjVhIn0=','2019-04-06 09:55:22.812965');
+INSERT INTO `django_session` VALUES ('5egao2zgpq979cm1sivdevww2wz3gpqj','NWU2NDdhOGI2MjMyMzJlNjJlMDkyZGY1NzZmYjdlMGFhNTE5YjA1MDp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJmYjY5OWQ3YzM5NGUxYWY0OWE3OGU1MWJmZDNhNjg1OTU5MTgxMjVhIn0=','2019-04-08 00:59:13.488840'),('gpx40sbgxyvq8bpdapmn573npco5k5vn','NTE5YzY0ZWE0YjNlY2M4NDYyY2I4YjE5ZDY0NDliNGFkNWQ0NWMxZDp7Il9hdXRoX3VzZXJfaGFzaCI6ImZiNjk5ZDdjMzk0ZTFhZjQ5YTc4ZTUxYmZkM2E2ODU5NTkxODEyNWEiLCJfYXV0aF91c2VyX2lkIjoiMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2019-04-01 16:09:31.160977');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +316,7 @@ CREATE TABLE `musician_comment` (
   KEY `musician_comment_post_id_286f4d19_fk_musician_post_id` (`post_id`),
   CONSTRAINT `musician_comment_musician_profile_id_e60ed1ef_fk_musician_` FOREIGN KEY (`musician_profile_id`) REFERENCES `musician_musicianprofile` (`id`),
   CONSTRAINT `musician_comment_post_id_286f4d19_fk_musician_post_id` FOREIGN KEY (`post_id`) REFERENCES `musician_post` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,7 +325,7 @@ CREATE TABLE `musician_comment` (
 
 LOCK TABLES `musician_comment` WRITE;
 /*!40000 ALTER TABLE `musician_comment` DISABLE KEYS */;
-INSERT INTO `musician_comment` VALUES (1,'2019-03-10 14:03:28.728850','And open bar was an awesome idea !',1,2,1),(3,'2019-03-21 18:53:54.718798','ho esagerato penso @incredibile',1,1,19),(5,'2019-03-21 18:57:29.594512','weee bellawaioone @happytobeyourfriend',0,1,1),(6,'2019-03-23 11:16:06.378926','un tag sbagliato @@eccolo oppure un\'altro è @sapevo@goloso fatto!',1,1,19),(7,'2019-03-23 11:24:40.898822','e #',1,1,20),(8,'2019-03-23 11:24:49.719678','e ##',1,1,20),(9,'2019-03-23 11:24:55.057703','e##',1,1,20),(10,'2019-03-23 11:25:06.833986','ok tutto bene :)',1,1,20),(11,'2019-03-23 11:25:44.293500','non asterisco.... aschtag',1,1,20);
+INSERT INTO `musician_comment` VALUES (1,'2019-03-10 14:03:28.728850','And open bar was an awesome idea !',1,2,1),(5,'2019-03-21 18:57:29.594512','weee bellawaioone @happytobeyourfriend',1,1,1),(12,'2019-03-24 12:11:36.237720','nuovo asctaaagg #AWM',1,1,1),(13,'2019-03-25 00:58:58.091203','bravissimo!',1,2,23);
 /*!40000 ALTER TABLE `musician_comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -499,7 +499,7 @@ CREATE TABLE `musician_post` (
   PRIMARY KEY (`id`),
   KEY `musician_post_musician_profile_id_6479917a_fk_musician_` (`musician_profile_id`),
   CONSTRAINT `musician_post_musician_profile_id_6479917a_fk_musician_` FOREIGN KEY (`musician_profile_id`) REFERENCES `musician_musicianprofile` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -508,7 +508,7 @@ CREATE TABLE `musician_post` (
 
 LOCK TABLES `musician_post` WRITE;
 /*!40000 ALTER TABLE `musician_post` DISABLE KEYS */;
-INSERT INTO `musician_post` VALUES (1,'I\'m surprised about what happened last night in \"Coconut & milk\" club, wonderful technical music team organization and Sublime\'s frontman prove his musician knowledge!','2019-03-10 13:52:42.825830',2),(14,' I\'m glad to be your friend, Kuwa!\r\n@sunset @happytobeyourfriend','2019-03-21 18:25:46.458905',1),(19,' Emozionante @incredibile @sunset','2019-03-21 18:51:14.782253',1),(20,' D\'ora in poi useremo asterisco per fare tags #nonmolliamo #nodejsnontitemiamo #AWM','2019-03-23 11:24:31.081205',1);
+INSERT INTO `musician_post` VALUES (1,'I\'m surprised about what happened last night in \"Coconut & milk\" club, wonderful technical music team organization and Sublime\'s frontman prove his musician knowledge!','2019-03-10 13:52:42.825830',2),(22,' Oggi è un giorno speciale #maimollare #AWM','2019-03-25 00:41:17.000288',1),(23,' Penso','2019-03-25 00:58:39.843909',1);
 /*!40000 ALTER TABLE `musician_post` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -551,7 +551,7 @@ CREATE TABLE `musician_tag` (
   `pub_date` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag_text` (`tag_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -560,7 +560,7 @@ CREATE TABLE `musician_tag` (
 
 LOCK TABLES `musician_tag` WRITE;
 /*!40000 ALTER TABLE `musician_tag` DISABLE KEYS */;
-INSERT INTO `musician_tag` VALUES (1,'@sunset','2019-03-21 18:34:48.926805'),(2,'@happytobeyourfriend','2019-03-21 18:34:48.926805'),(3,'@sunset4ever','2019-03-21 18:35:39.696266'),(4,'@happy','2019-03-21 18:35:39.713487'),(5,'@incredibile','2019-03-21 18:44:59.192851'),(6,'@@eccolo','2019-03-23 11:16:06.397343'),(7,'@sapevo@goloso','2019-03-23 11:16:06.419547'),(8,'#nonmolliamo','2019-03-23 11:24:31.097644'),(9,'#nodejsnontitemiamo','2019-03-23 11:24:31.124055'),(10,'#AWM','2019-03-23 11:24:31.143379'),(11,'#','2019-03-23 11:24:40.917476'),(12,'##','2019-03-23 11:24:49.733907');
+INSERT INTO `musician_tag` VALUES (10,'AWM','2019-03-23 11:24:31.143379'),(15,'maimollare','2019-03-25 00:41:17.018306');
 /*!40000 ALTER TABLE `musician_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -580,7 +580,7 @@ CREATE TABLE `musician_tag_comment` (
   KEY `musician_tag_comment_comment_id_2327b175_fk_musician_comment_id` (`comment_id`),
   CONSTRAINT `musician_tag_comment_comment_id_2327b175_fk_musician_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `musician_comment` (`id`),
   CONSTRAINT `musician_tag_comment_tag_id_344353ec_fk_musician_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `musician_tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -589,7 +589,7 @@ CREATE TABLE `musician_tag_comment` (
 
 LOCK TABLES `musician_tag_comment` WRITE;
 /*!40000 ALTER TABLE `musician_tag_comment` DISABLE KEYS */;
-INSERT INTO `musician_tag_comment` VALUES (2,2,5),(1,5,3),(3,6,6),(4,7,6),(5,11,7),(6,12,8);
+INSERT INTO `musician_tag_comment` VALUES (7,10,12);
 /*!40000 ALTER TABLE `musician_tag_comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -609,7 +609,7 @@ CREATE TABLE `musician_tag_post` (
   KEY `musician_tag_post_post_id_407fc706_fk_musician_post_id` (`post_id`),
   CONSTRAINT `musician_tag_post_post_id_407fc706_fk_musician_post_id` FOREIGN KEY (`post_id`) REFERENCES `musician_post` (`id`),
   CONSTRAINT `musician_tag_post_tag_id_5e3a1ad8_fk_musician_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `musician_tag` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -618,7 +618,7 @@ CREATE TABLE `musician_tag_post` (
 
 LOCK TABLES `musician_tag_post` WRITE;
 /*!40000 ALTER TABLE `musician_tag_post` DISABLE KEYS */;
-INSERT INTO `musician_tag_post` VALUES (1,1,14),(7,1,19),(2,2,14),(6,5,19),(8,8,20),(9,9,20),(10,10,20);
+INSERT INTO `musician_tag_post` VALUES (14,10,22),(13,15,22);
 /*!40000 ALTER TABLE `musician_tag_post` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -631,4 +631,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-23 12:41:49
+-- Dump completed on 2019-03-25  2:01:39

@@ -19,10 +19,11 @@ def portal_welcome(request):
 
     user_friends = Friend.get_user_friends(user)
     home_posts = []
-    for p in Post.objects.all():
-        if (p.musician_profile in user_friends) or p.musician_profile == user.musicianprofile:
-            home_posts += [p]
-
+    home_posts = Post.objects.filter(Q(musician_profile__in=user_friends) | Q(musician_profile=user.musicianprofile))
+    #for p in Post.objects.all():
+        #if (p.musician_profile in user_friends) or p.musician_profile == user.musicianprofile:
+            #home_posts += [p]
+    for p in home_posts:
         if request.POST.get('comment_'+str(p.id)):
             print(request.POST['comment_'+str(p.id)])
             p.comment_set.create(comment_text=request.POST['comment_'+str(p.id)],
@@ -43,7 +44,6 @@ def portal_welcome(request):
         if request.POST.get('del_'+str(p.id)):
             p.delete()
             return HttpResponseRedirect('/portal/')
-
 
     return render(request, 'portal/home.html', {'user': user,
                                                 'home_posts': home_posts,
@@ -185,3 +185,36 @@ def post(request, post_id):
                                                 'n_mes': n_mes,
                                                 'n_comm': n_comm,
                                                 'p': p})
+
+@login_required
+def tag_post(request, tag_text):
+    posts = Tag.posts_and_comments_with_tag(tag_text)
+    print(posts)
+    print(type(posts))
+    user = get_object_or_404(User, pk=request.user.id)
+    n_req = Friend.n_req_friendship(request.user)
+    n_mes = Message.n_new_messages(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
+    n_first_neigh = len(Friend.get_user_friends(request.user))
+
+    user_friends = Friend.get_user_friends(user)
+    #home_posts = posts.objects.filter(Q(musician_profile__in=user_friends) | Q(musician_profile=user.musicianprofile))
+    for p in posts:
+        if request.POST.get('comment_' + str(p.id)):
+            print(request.POST['comment_' + str(p.id)])
+            p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
+                                 musician_profile=request.user.musicianprofile,
+                                 seen=(True if p.musician_profile == request.user.musicianprofile else False))
+
+            comment = p.comment_set.filter(comment_text=request.POST['comment_' + str(p.id)],
+                                           musician_profile=request.user.musicianprofile)[0]
+            comment.checkForTagsInComment()
+
+    return render(request, 'portal/tagged_post.html', {'user': user,
+                                                       'home_posts': posts,
+                                                       'n_req': n_req,
+                                                       'n_mes': n_mes,
+                                                       'n_comm': n_comm,
+                                                       'n_first_neigh': n_first_neigh,
+                                                       'tag_text': tag_text
+                                                       })

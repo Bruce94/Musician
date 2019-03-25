@@ -14,7 +14,9 @@ $(document).ready(function(){
             {
               if(parole[i].startsWith("#") && parole[i].match(/^(?!(#.*#))/)){
                   var p = parole[i].match(/#.+$/);
-                  tfinale += "<a href='" +p[0]+"'>" +p[0]+ "</a>";
+                  parole[i] = parole[i].slice(1,parole[i].length);
+                  tfinale += "<a href='/portal/tag/" +parole[i]+"/'>#" +parole[i]+ "</a>";
+                   //tfinale += "<a href='/portal/tag/" +p[0]+"/'>" +p[0]+ "</a>";
               }
               else
                   tfinale += parole[i];

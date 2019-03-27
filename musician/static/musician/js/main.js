@@ -44,6 +44,7 @@ $(function() {
                 for(var i = 0; i < url_elem.length; i++) {
                     if (!isNaN(url_elem[i]) && url_elem[i] != '') {
                         //mess = '['+data.usr_id+','+url_elem[i]+']';
+                        console.log(url_elem[i])
                         mess.push(url_elem[i]);
                     }
                 }

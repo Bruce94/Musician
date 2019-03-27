@@ -21,11 +21,11 @@
             <div class="list-group">
                 <script>
                     socket.on('message notification', function (data) {
-                        if(data[1]=={{ user.id }}){
-                            refNewMessages();
-                        }
+                        //refNewMessages({{ selected_user.id }})
+                        refNewMessages()
                     });
-                    refNewMessages();
+                    //refNewMessages({{ selected_user.id }})
+                    refNewMessages()
                 </script>
                 <div id="new_user_messages">
 
@@ -33,7 +33,6 @@
                 <h4 class="title-users-message">Friends</h4>
                 {% for friend in friend_user %}
                     {% if selected_user.id == friend.user.id %}
-                        <!--  <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item active"> -->
                         <a href="/musician/messages/{{ friend.user.id }}" class="list-group-item active">
                             <img class="search-musician" src="{{ friend.img.url }}" alt = "{{ friend.user.username }}"/>
                             <h3 class="list-group-item-heading">{{ friend.user.last_name }} {{ friend.user.first_name }}</h3>
@@ -54,6 +53,7 @@
 </div>
 <script>
     refMessages({{ selected_user.id }});
+    //refMessages();
     $(document).ready(function() {
         $('#messages_container').on('scroll', function(){
             scrolling = true;
@@ -64,14 +64,14 @@
         if(data[0]=={{ user.id }}) {
             if (data[1] == {{ selected_user.id }}) {
                 refMessages({{ selected_user.id }});
-                setTimeout(function() {
-                    socket.emit('message not seen', data);
-                }, 500);
             }
         }
         else if(data[1] == {{ user.id }}){
             if (data[0] == {{ selected_user.id }}) {
                 refMessages({{ selected_user.id }});
+            }
+            else{
+                socket.emit('message not seen', data);
             }
         }
     });

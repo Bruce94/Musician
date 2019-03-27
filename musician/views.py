@@ -253,10 +253,6 @@ def chat(request, user_id):
     friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
     new_mes_user = Message.new_user_message(request.user)
 
-    if request.POST.get('message'):
-        message = Message.create(sender=request.user, reciver=user, text=request.POST['message'])
-        message.save()
-
     return render(request, 'musician/chat.html', {'n_req': n_req,
                                                   'friend_user': friend_user,
                                                   'selected_user': user,

@@ -7,6 +7,8 @@ from django.http import HttpResponseRedirect
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Comment, Tag
 from musician_project.forms import UserForm, MusicianProfileForm
 from itertools import chain
+from django.http import JsonResponse
+import json
 from django.template import RequestContext
 
 @login_required

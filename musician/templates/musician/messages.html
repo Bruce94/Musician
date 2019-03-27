@@ -21,9 +21,11 @@
             <div class="list-group">
                 <script>
                     socket.on('message notification', function (data) {
-                        refNewMessages({{ selected_user.id }})
+                        if(data[1]=={{ user.id }}){
+                            refNewMessages();
+                        }
                     });
-                    refNewMessages({{ selected_user.id }})
+                    refNewMessages();
                 </script>
                 <div id="new_user_messages">
 
@@ -62,14 +64,14 @@
         if(data[0]=={{ user.id }}) {
             if (data[1] == {{ selected_user.id }}) {
                 refMessages({{ selected_user.id }});
+                setTimeout(function() {
+                    socket.emit('message not seen', data);
+                }, 500);
             }
         }
         else if(data[1] == {{ user.id }}){
             if (data[0] == {{ selected_user.id }}) {
                 refMessages({{ selected_user.id }});
-            }
-            else{
-                socket.emit('message not seen', data);
             }
         }
     });

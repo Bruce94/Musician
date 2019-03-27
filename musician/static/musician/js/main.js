@@ -175,6 +175,27 @@ function refNewMessages(usr){
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         },
-    });
 
+    });
+};
+
+function checkMsgNotif(){
+    $.ajax({
+        type: "GET",
+        url: "/musician/messages/get_num_new_msg/",
+        async: true,
+        cache: false,
+        timeout: 50000,
+        dataType: 'json',
+        success: function (data) {
+            var elem = $.parseJSON(data);
+            var n_mes = elem.n_mes;
+            if (n_mes> 0) {
+                document.getElementById("num_msg").innerHTML = n_mes;
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+
+    });
 };

@@ -45,11 +45,17 @@
                         <span class="badge">{{ n_req }}</span>
                     {% endif %}
                 </a></li>
-                <li><a href="{% url 'musician:messages'%}">
+                <li><a href="{% url 'musician:messages'%}" >
                     <span class="glyphicon glyphicon-comment" aria-hidden="true" title="Messages"></span>
-                    {% if n_mes != 0 %}
-                        <span class="badge">{{ n_mes }}</span>
-                    {% endif %}
+                    <span class="badge" id = "num_msg"></span>
+                    <script>
+                        socket.on('message notification', function (data) {
+                            if(data[1]=={{ user.id }}) {
+                                checkMsgNotif();
+                            }
+                        });
+                        checkMsgNotif();
+                    </script>
                 </a></li>
                 <li><a href="{% url 'portal:comment_notifications'%}">
                     <span class="glyphicon glyphicon-globe" aria-hidden="true" title="Notifications"></span>

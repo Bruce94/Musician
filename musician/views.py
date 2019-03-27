@@ -288,6 +288,7 @@ def chat_get(request, user_id):
             moc.save()
         mes = {}
         mes['sender'] = moc.sender_message.id
+        mes['receiver'] = moc.reciver_message.id
         mes['text'] = moc.text
         mes['data_request'] = str(moc.data_request.strftime("%Y-%m-%d %H:%M"))
         messages.append(mes)
@@ -308,5 +309,13 @@ def new_msg(request):
         data['username'] = usr.user.username
         nm_users.append(data)
     response = {'nm_users': nm_users}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)
+
+
+@login_required
+def num_new_msg(request):
+    n_mes = Message.n_new_messages(request.user)
+    response = {'n_mes': n_mes}
     r = json.dumps(response, False)
     return JsonResponse(r, safe=False)

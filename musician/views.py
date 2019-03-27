@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from musician_project.forms import UserForm, MusicianProfileForm
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
 from django.http import JsonResponse
+import socketio
 import json
 
 

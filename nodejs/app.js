@@ -11,4 +11,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('message not seen', function (data) {
         io.sockets.emit('message notification', data);
     });
+    socket.on('friendship request', function (data) {
+        console.log('friendship request ['+data+']');
+        io.sockets.emit('friendship notification', data);
+    })
 });

@@ -27,6 +27,7 @@ jQuery(function ($) {
 });
 
 
+
 $(function() {
     $("#message_form").submit(function(event) {
         // Stop form from submitting normally
@@ -43,7 +44,6 @@ $(function() {
                 mess.push(''+data.usr_id+'');
                 for(var i = 0; i < url_elem.length; i++) {
                     if (!isNaN(url_elem[i]) && url_elem[i] != '') {
-                        //mess = '['+data.usr_id+','+url_elem[i]+']';
                         mess.push(url_elem[i]);
                     }
                 }
@@ -199,3 +199,29 @@ function checkMsgNotif(){
 
     });
 };
+
+function checkFrienshipNotif(){
+    $.ajax({
+        type: "GET",
+        url: "/musician/get_fs_request/",
+        async: true,
+        cache: false,
+        timeout: 50000,
+        dataType: 'json',
+        success: function (data) {
+            var elem = $.parseJSON(data);
+            var n_fs = elem.n_fs;
+            if (n_fs> 0) {
+                document.getElementById("num_fs").innerHTML = n_fs;
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+
+    });
+};
+
+
+function send_friendship_request(data){
+    socket.emit('friendship request', data);
+}

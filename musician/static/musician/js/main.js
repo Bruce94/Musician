@@ -47,6 +47,9 @@ $(function() {
                         mess.push(url_elem[i]);
                     }
                 }
+                mess.push($('#chat-msg').val());
+                mess.push(data.sender);
+                mess.push(data.icon);
                 $('#chat-msg').val('');
                 var chatlist = document.getElementById('messages_container');
                 chatlist.scrollTop = chatlist.scrollHeight;
@@ -113,7 +116,6 @@ function refMessages(usr){
         timeout: 50000,
         dataType: 'json',
         success: function (data) {
-
             var elem = $.parseJSON(data);
             var messages = elem.messages;
             var dati = "";
@@ -224,4 +226,23 @@ function checkFrienshipNotif(){
 
 function send_friendship_request(data){
     socket.emit('friendship request', data);
+}
+
+function spawnNotification(body,icon,title) {
+    Notification.requestPermission().then(function(result) {
+        if (result === 'denied') {
+            console.log('Permission wasn\'t granted. Allow a retry.');
+            return;
+        }
+        if (result === 'default') {
+            console.log('The permission request was dismissed.');
+            return;
+        }
+    });
+    var options = {
+      body: body,
+      icon: icon
+    }
+    var n = new Notification(title,options);
+    n.image;
 }

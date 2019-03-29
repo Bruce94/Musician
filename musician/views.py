@@ -273,8 +273,9 @@ def chat_post(request, user_id):
     if request.POST.get('message'):
         message = Message.create(sender=request.user, reciver=user, text=request.POST['message'])
         message.save()
-
-    return JsonResponse({'usr_id': request.user.id})
+    sender = '{} {}'.format(request.user.first_name, request.user.last_name)
+    icon = request.user.musicianprofile.img.url
+    return JsonResponse({'usr_id': request.user.id, 'sender': sender, 'icon': icon})
 
 
 @login_required

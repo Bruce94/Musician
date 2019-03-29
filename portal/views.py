@@ -72,6 +72,7 @@ def search_musician(request):
         mpf = MusicianProfileForm(request.GET, request.FILES, prefix='profile')
 
         query = request.GET.get('search_musician')
+
         if query:
             for q in query.split():
                 profile_list = set(chain(MusicianProfile.get_musician(user__username__icontains=q),
@@ -82,14 +83,19 @@ def search_musician(request):
             checked_skills = request.GET.getlist('check_skill')
             profiles = []
             # piu scalabile
-            for skill in checked_skills:
-                for single_profile in profile_list:
-                    has_skills = HasSkill.objects.filter(
-                                        skill__name_skill=skill, 
-                                        musicianprofile=single_profile )
-                    if has_skills:
-                        profiles += [single_profile]
-
+            if query:
+                for skill in checked_skills:
+                    for single_profile in profile_list:
+                        has_skills = HasSkill.objects.filter(
+                                            skill__name_skill=skill,
+                                            musicianprofile=single_profile)
+                        if has_skills:
+                            profiles += [single_profile]
+            else:
+                for skill in checked_skills:
+                    has_skills = HasSkill.objects.filter(skill__name_skill=skill)
+                    for hs in has_skills:
+                        profiles += [hs.musicianprofile]
             profiles = set(profiles)
             if profile_list:
                 profile_list = profiles.intersection(profile_list)

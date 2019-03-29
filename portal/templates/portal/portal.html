@@ -50,6 +50,7 @@
                         socket.on('message notification', function (data) {
                             if(data[1]=={{ user.id }}) {
                                 checkMsgNotif();
+                                spawnNotification(data[2],data[4],data[3]);
                             }
                         });
                         checkMsgNotif();

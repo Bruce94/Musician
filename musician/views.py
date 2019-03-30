@@ -6,9 +6,7 @@ from django.core.urlresolvers import reverse
 from musician_project.forms import UserForm, MusicianProfileForm
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
 from django.http import JsonResponse
-import socketio
 import json
-
 
 
 @login_required
@@ -33,6 +31,7 @@ def profile(request, user_id):
             friend = Friend.create(sender=request.user, reciver=user)
             friend.save()
             status_friend = 1
+            reciver = user
         elif "cancel-request" in request.POST:
             fs.delete()
             status_friend = 0
@@ -270,8 +269,9 @@ def chat_post(request, user_id):
     if request.POST.get('message'):
         message = Message.create(sender=request.user, reciver=user, text=request.POST['message'])
         message.save()
-
-    return JsonResponse({'usr_id': request.user.id})
+    sender = '{} {}'.format(request.user.first_name, request.user.last_name)
+    icon = request.user.musicianprofile.img.url
+    return JsonResponse({'usr_id': request.user.id, 'sender': sender, 'icon': icon})
 
 
 @login_required
@@ -314,5 +314,13 @@ def new_msg(request):
 def num_new_msg(request):
     n_mes = Message.n_new_messages(request.user)
     response = {'n_mes': n_mes}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)
+
+
+@login_required
+def fs_request(request):
+    n_fs = Friend.n_req_friendship(request.user)
+    response = {'n_fs': n_fs}
     r = json.dumps(response, False)
     return JsonResponse(r, safe=False)

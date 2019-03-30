@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^messages/(?P<user_id>[0-9]+)/get/$', views.chat_get, name='chat_get'),
     url(r'^messages/get_newmsg/$', views.new_msg, name='new_msg'),
     url(r'^messages/get_num_new_msg/$', views.num_new_msg, name='num_new_msg'),
+    url(r'^get_fs_request/$', views.fs_request, name='fs_request'),
 ]

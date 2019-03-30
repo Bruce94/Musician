@@ -41,9 +41,7 @@
                 <li><a href="{% url 'portal:friendship_request'%}">
                     <img src="{% static 'musician/images/friend_icon.png' %}" alt="request of friend"
                          title="Request of Friend" class="varie-icon" >
-                    {% if n_req != 0 %}
-                        <span class="badge">{{ n_req }}</span>
-                    {% endif %}
+                    <span class="badge" id = "num_fs"></span>
                 </a></li>
                 <li><a href="{% url 'musician:messages'%}" >
                     <span class="glyphicon glyphicon-comment" aria-hidden="true" title="Messages"></span>
@@ -52,9 +50,19 @@
                         socket.on('message notification', function (data) {
                             if(data[1]=={{ user.id }}) {
                                 checkMsgNotif();
+                                spawnNotification(data[2],data[4],data[3]);
                             }
                         });
                         checkMsgNotif();
+                        
+                        socket.on('friendship notification', function (data) {
+                            if(data == {{ user.id }}) {
+                                setTimeout(function() {
+                                    checkFrienshipNotif();
+                                }, 500);
+                            }
+                        });
+                        checkFrienshipNotif();
                     </script>
                 </a></li>
                 <li><a href="{% url 'portal:comment_notifications'%}">

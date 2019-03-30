@@ -1,7 +1,7 @@
 SUPERUSER (x admin): lucabruno -> lucabruno (email betti.luca94@gmail.com)
 
 Utenti semplici (username -> password)
-Rock_n_roller -> esame
+Rocker_n_roller -> esame
 thebigMamba   -> esame
 gigi_dag      -> esame
 essenzaRock   -> esame

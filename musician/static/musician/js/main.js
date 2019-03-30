@@ -27,6 +27,7 @@ jQuery(function ($) {
 });
 
 
+
 $(function() {
     $("#message_form").submit(function(event) {
         // Stop form from submitting normally
@@ -43,11 +44,12 @@ $(function() {
                 mess.push(''+data.usr_id+'');
                 for(var i = 0; i < url_elem.length; i++) {
                     if (!isNaN(url_elem[i]) && url_elem[i] != '') {
-                        //mess = '['+data.usr_id+','+url_elem[i]+']';
-                        console.log(url_elem[i])
                         mess.push(url_elem[i]);
                     }
                 }
+                mess.push($('#chat-msg').val());
+                mess.push(data.sender);
+                mess.push(data.icon);
                 $('#chat-msg').val('');
                 var chatlist = document.getElementById('messages_container');
                 chatlist.scrollTop = chatlist.scrollHeight;
@@ -114,7 +116,6 @@ function refMessages(usr){
         timeout: 50000,
         dataType: 'json',
         success: function (data) {
-
             var elem = $.parseJSON(data);
             var messages = elem.messages;
             var dati = "";
@@ -200,3 +201,48 @@ function checkMsgNotif(){
 
     });
 };
+
+function checkFrienshipNotif(){
+    $.ajax({
+        type: "GET",
+        url: "/musician/get_fs_request/",
+        async: true,
+        cache: false,
+        timeout: 50000,
+        dataType: 'json',
+        success: function (data) {
+            var elem = $.parseJSON(data);
+            var n_fs = elem.n_fs;
+            if (n_fs> 0) {
+                document.getElementById("num_fs").innerHTML = n_fs;
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+
+    });
+};
+
+
+function send_friendship_request(data){
+    socket.emit('friendship request', data);
+}
+
+function spawnNotification(body,icon,title) {
+    Notification.requestPermission().then(function(result) {
+        if (result === 'denied') {
+            console.log('Permission wasn\'t granted. Allow a retry.');
+            return;
+        }
+        if (result === 'default') {
+            console.log('The permission request was dismissed.');
+            return;
+        }
+    });
+    var options = {
+      body: body,
+      icon: icon
+    }
+    var n = new Notification(title,options);
+    n.image;
+}

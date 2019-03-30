@@ -12,10 +12,11 @@
                     <img class="profile" src="{{ user.musicianprofile.img.url }}" alt = "{{ user.username }}"/>
                     <br>
                     {% if user.id != request.user.id %}
-                        <form action="/musician/{{ user.id }}/" method="post">
+                        <form action="/musician/{{ user.id }}/" method="post" id="friendship_form">
                             {% csrf_token %}
                             {% if  status_friend == 0 %}
-                                <button type="submit" class="add-friend" name="add-friend">
+                                <button type="submit" class="add-friend" name="add-friend" id="btn_add_friend"
+                                        onclick="send_friendship_request({{ user.id }})">
                                     Add friend
                                 </button>
                             {% elif status_friend == 1 and reciver.id == user.id %}

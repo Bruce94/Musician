@@ -34,15 +34,15 @@ $(function() {
         event.preventDefault();
 
         $.ajax({
-            url:$(this).attr('action'),
-            type:'POST',
+            url: $(this).attr('action'),
+            type: 'POST',
             data: {message: $('#chat-msg').val()},
             success: function (data) {
                 var url = $("#message_form").attr('action');
                 url_elem = url.split("/");
                 var mess = [];
-                mess.push(''+data.usr_id+'');
-                for(var i = 0; i < url_elem.length; i++) {
+                mess.push('' + data.usr_id + '');
+                for (var i = 0; i < url_elem.length; i++) {
                     if (!isNaN(url_elem[i]) && url_elem[i] != '') {
                         mess.push(url_elem[i]);
                     }
@@ -58,14 +58,42 @@ $(function() {
         });
     });
 
-    $(document).ready(function() {
-        $('#send').attr('disabled','disabled');
-        $('#chat-msg').keyup(function() {
-            if($(this).val() != '') {
-                $('#send').removeAttr('disabled');
+    $("#post_form").submit(function (event) {
+        // Stop form from submitting normally
+        event.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: {message: $('#newpost').val()},
+            success: function (data) {
+                var url = $("#post_form").attr('action');
+                url_elem = url.split("/");
+                console.log(url);
+                var mess = [];
+                mess.push('' + data.usr_id + '');
+                for (var i = 0; i < url_elem.length; i++) {
+                    //    if (!isNaN(url_elem[i]) && url_elem[i] != '') {
+                    //mess = '['+data.usr_id+','+url_elem[i]+']';
+                    //console.log(url_elem[i])
+                    mess.push(url_elem[i]);
+                    //    }
+                }
+                $('#newpost').val('');
+                //var chatlist = document.getElementById('messages_container');
+                //chatlist.scrollTop = chatlist.scrollHeight;
+                socket.emit('post sent', mess);
             }
-            else {
-                $('#send').attr('disabled','disabled');
+        });
+    });
+
+    $(document).ready(function () {
+        $('#send').attr('disabled', 'disabled');
+        $('#chat-msg').keyup(function () {
+            if ($(this).val() != '') {
+                $('#send').removeAttr('disabled');
+            } else {
+                $('#send').attr('disabled', 'disabled');
             }
         });
     });
@@ -101,10 +129,127 @@ $(function() {
             }
         }
     });
-
-
 });
 
+function cercaTag (){
+    //$("#posts_container").on('change', function() {
+        var label = document.getElementsByClassName("enteredText");
+
+        for (var j = 0; j < label.length; j++) {
+            var href = label[j].innerHTML;
+
+            var tfinale = "";
+
+            if (href.match(/#[a-z,A-Z]+/)) {
+                var parole = href.split(/[\s,]+/);
+                for (var i = 0; i < parole.length; i++) {
+                    if (parole[i].startsWith("#") && parole[i].match(/^(?!(#.*#))/)) {
+                        var p = parole[i].match(/#.+$/);
+                        parole[i] = parole[i].slice(1, parole[i].length);
+                        tfinale += "<a href='/portal/tag/" + parole[i] + "/'>#" + parole[i] + "</a>";
+                    } else
+                        tfinale += parole[i];
+
+                    if (i != parole.length - 1)
+                        tfinale += " ";
+
+                }
+                label[j].innerHTML = tfinale;
+            } else
+                label[j].innerHTML = href;
+        }
+    //});
+};
+
+function refPosts(usr_id){
+
+    var token = $('#token').attr('value');
+    $.ajax({
+        type: "GET",
+        url: "/portal/new_post/get/",
+        async: true,
+        cache: false,
+        timeout: 50000,
+        dataType: 'json',
+        success: function (data) {
+
+            var elem = $.parseJSON(data);
+            var home_posts = elem.home_posts;
+            var dati = "";
+
+                dati += `<div class="row">
+                    <div class="col-sm-12">
+                        <div class="well text-left col-sm-12">
+                            <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                     <img src=" ${home_posts.user_image_url}"
+                                         class="img-circle align-right" height="60" width="60" alt="Musician_image">
+                                </div><div class="col-sm-9">
+                                    <a href="/musician/${home_posts.user_post_id}"
+                                       style="font-size: 20px;">${home_posts.user_firstname} ${home_posts.user_lastname}</a>
+                                    <p style="font-size: 13px;">${home_posts.pub_date}</p>
+                                </div>`;
+                if (home_posts.user_post_id == usr_id){
+
+                    dati += `<div class="col-sm-1">
+
+                                    <form action="/portal/" method="post" id="message_form" autocomplete="off">
+                                      ${token} 
+                                            <button type="button" class="btn btn-default dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <input type="submit" class="list-options" name="del_${home_posts.post_id}"
+                                                           value="Delete Post">
+                                                </li>
+                                            </ul>
+                                    </form>
+                             </div>`;
+                    }
+                    dati += `</div> 
+                             <div class="col-sm-12 text-left">
+                                <p class="enteredText" style="font-size: 25px;">${home_posts.text}</p>
+                            </div>
+                            <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
+                                <button type="button" class="btn btn-default btn-sm"
+                                        onclick="showCommentArea('comment_div_${home_posts.post_id}')">
+                                    <span class="glyphicon glyphicon-comment" ></span> Comment
+                                </button>
+                            </div>
+                            <div class="panel-footer col-sm-12 text-left" hidden="true" id="comment_div_${home_posts.post_id}">
+                                <div class="col-sm-12" style="margin-bottom: 20px">
+                            </div>
+                                <form form action="/portal/" method="post" class="message_form" autocomplete="off">
+                                      ${token} 
+                                    <div class="col-sm-1">
+                                         <img src="${home_posts.request_user_img_url}"
+                                             class="img-circle align-right" height="35" width="35" alt="Musician_image">
+                                    </div>
+                                    <div class="col-sm-11">
+                                         <input type="text" class="form-control"  name="comment_${home_posts.post_id}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+            dati += document.getElementById("posts_container").innerHTML;
+            document.getElementById("posts_container").innerHTML = dati;
+            var postlist = document.getElementById('posts_container');
+            postlist.scrollTop = postlist.scrollHeight;
+            scrolling = false;
+            cercaTag();
+        },
+        //complete: function(data){cercaTag()},
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+    });
+    //}
+    //scrolling = false;
+};
 
 function refMessages(usr){
     //if (!scrolling) {
@@ -152,7 +297,7 @@ function refMessages(usr){
 
 var scrolling = false;
 
-function refNewMessages(usr){
+function refNewMessages(){
     $.ajax({
         type: "GET",
         url: "/musician/messages/get_newmsg/",

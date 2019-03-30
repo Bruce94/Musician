@@ -16,6 +16,7 @@
 {% endblock %}
 
 {% block container %}
+    <input id="token" type="hidden" value="{%  csrf_token %}"></input>
     <div class="container text-center">
         <div class="row">
             <div class="col-sm-3 well">
@@ -42,17 +43,27 @@
                     <div class="col-sm-12">
                         <div class="panel panel-default text-left">
                             <div class="panel-body">
-                                <form action="/portal/" method="post" class="message_form" autocomplete="off">
+                                <form action="/portal/new_post/{{ request.user.id }}/post/" method="post"
+                                      id="post_form" class="post_form" autocomplete="off">
                                     {% csrf_token %}
                                     <p>What do you think:</p>
-                                    <textarea class="form-control" rows="2" name="post"> </textarea><br>
+                                    <textarea class="form-control" rows="2" name="newp" id="newpost"> </textarea><br>
                                     <input type="submit" class="btn btn-primary btn-sm" value="Post">
                                 </form>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                {% for post in home_posts %}
+           <script>
+               socket.on('post arrived', function (data) {
+                   refPosts({{ request.user.id }});
+                });
+           </script>
+                <div class="Middle-poster" id="posts_container">
+
+                </div>
+                 {% for post in home_posts %}
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="well text-left col-sm-12">
@@ -71,9 +82,9 @@
                                 </div>
                                 <div class="col-sm-1">
 
-                                    <form action="/portal/" method="post" id="message_form" autocomplete="off">
+                                    <form action="/portal/" method="post" id="delete_form" autocomplete="off">
                                         {% csrf_token %}
-                                        {% if post.musician_profile == request.user.musicianprofile %}
+                                        {% if post.musician_profile.user.id == request.user.id%}
                                             <button type="button" class="btn btn-default dropdown-toggle"
                                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span class="glyphicon glyphicon-chevron-down"></span>
@@ -171,4 +182,15 @@
             </div>
         </div>
     </div>
+    <script>
+        //refPosts({{request.user.musician_profile.id}});
+        $(document).ready(function() {
+            $('#posts_container').on('scroll', function(){
+                scrolling = true;
+            });
+            $('#posts_container').on('change', cercaTag());
+        });
+        // controllo che si aggiornino solo le chat dei rispettivi utenti che hanno la chat aperta
+
+    </script>
 {% endblock %}

@@ -21,10 +21,10 @@
             <div class="list-group">
                 <script>
                     socket.on('message notification', function (data) {
-                        //refNewMessages({{ selected_user.id }})
-                        refNewMessages()
+                        if(data[1]=={{ user.id }}){
+                            refNewMessages();
+                        }
                     });
-                    //refNewMessages({{ selected_user.id }})
                     refNewMessages()
                 </script>
                 <div id="new_user_messages">
@@ -52,8 +52,8 @@
     </div>
 </div>
 <script>
-    refMessages({{ selected_user.id }});
-    //refMessages();
+    refPosts();
+    refMessages({{ selected_user.id }})
     $(document).ready(function() {
         $('#messages_container').on('scroll', function(){
             scrolling = true;
@@ -64,15 +64,15 @@
         if(data[0]=={{ user.id }}) {
             if (data[1] == {{ selected_user.id }}) {
                 refMessages({{ selected_user.id }});
+                setTimeout(function() {
+                    socket.emit('message not seen', data);
+                }, 500);
             }
         }
         //commento a caso
         else if(data[1] == {{ user.id }}){
             if (data[0] == {{ selected_user.id }}) {
                 refMessages({{ selected_user.id }});
-            }
-            else{
-                socket.emit('message not seen', data);
             }
         }
     });

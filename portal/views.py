@@ -5,11 +5,11 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Comment, Tag
-from musician_project.forms import UserForm, MusicianProfileForm
+from musician_project.forms import MusicianProfileForm
 from itertools import chain
 from django.http import JsonResponse
 import json
-from django.template import RequestContext
+
 
 @login_required
 def portal_welcome(request):
@@ -20,15 +20,12 @@ def portal_welcome(request):
     n_first_neigh = len(Friend.get_user_friends(request.user))
 
     user_friends = Friend.get_user_friends(user)
-    home_posts = []
     home_posts = Post.objects.filter(Q(musician_profile__in=user_friends) | Q(musician_profile=user.musicianprofile))
-    #for p in Post.objects.all():
-        #if (p.musician_profile in user_friends) or p.musician_profile == user.musicianprofile:
-            #home_posts += [p]
+
     for p in home_posts:
-        if request.POST.get('comment_'+str(p.id)):
-            print(request.POST['comment_'+str(p.id)])
-            p.comment_set.create(comment_text=request.POST['comment_'+str(p.id)],
+        if request.POST.get('comment_' + str(p.id)):
+            print(request.POST['comment_' + str(p.id)])
+            p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
                                  musician_profile=request.user.musicianprofile,
                                  seen=(True if p.musician_profile == request.user.musicianprofile else False))
 
@@ -36,14 +33,8 @@ def portal_welcome(request):
                                            musician_profile=request.user.musicianprofile)[0]
             comment.checkForTagsInComment()
 
-    if request.POST.get('post'):
-        user.musicianprofile.user_post.create(post_text=request.POST['post'])
-        post = user.musicianprofile.user_post.filter(post_text=request.POST['post'])[0]
-
-        post.checkForTagsInPost()
-
     for p in user.musicianprofile.user_post.all():
-        if request.POST.get('del_'+str(p.id)):
+        if request.POST.get('del_' + str(p.id)):
             p.delete()
             return HttpResponseRedirect('/portal/')
 
@@ -58,10 +49,9 @@ def portal_welcome(request):
 
 @login_required
 def search_musician(request):
-
     profile_list = []
     checked_skills = []
-
+    query = ""
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
@@ -89,8 +79,8 @@ def search_musician(request):
                 for skill in checked_skills:
                     for single_profile in profile_list:
                         has_skills = HasSkill.objects.filter(
-                                            skill__name_skill=skill,
-                                            musicianprofile=single_profile)
+                            skill__name_skill=skill,
+                            musicianprofile=single_profile)
                         if has_skills:
                             profiles += [single_profile]
             else:
@@ -131,7 +121,6 @@ def search_musician(request):
 
 @login_required
 def friendship_request(request):
-
     friendships = Friend.get_pending_request(request.user)
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
@@ -186,13 +175,61 @@ def post(request, post_id):
                              musician_profile=request.user.musicianprofile,
                              seen=(True if p.musician_profile == request.user.musicianprofile else False))
 
-        comment = p.comment_set.filter(comment_text=request.POST['comment_' + str(p.id)], musician_profile=request.user.musicianprofile)[0]
+        comment = p.comment_set.filter(comment_text=request.POST['comment_' + str(p.id)],
+                                       musician_profile=request.user.musicianprofile)[0]
         comment.checkForTagsInComment()
 
     return render(request, 'portal/post.html', {'n_req': n_req,
                                                 'n_mes': n_mes,
                                                 'n_comm': n_comm,
                                                 'p': p})
+
+
+@login_required
+def newpost_post(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    if request.POST.get('message'):
+        user.musicianprofile.user_post.create(post_text=request.POST['message'])
+        post = user.musicianprofile.user_post.filter(post_text=request.POST['message'])[0]
+
+        post.checkForTagsInPost()
+
+    return JsonResponse({'usr_id': user.id})
+
+
+@login_required
+def newpost_get(request):
+    user_friends = Friend.get_user_friends(request.user)
+    home_post = Post.objects.filter(
+        Q(musician_profile__in=user_friends) | Q(musician_profile=request.user.musicianprofile)).__getitem__(0)
+
+    post_data = {}
+
+    post_data['request_user_img_url'] = request.user.musicianprofile.img.url
+    post_data['user_image_url'] = home_post.musician_profile.img.url
+    post_data['user_firstname'] = home_post.musician_profile.user.first_name
+    post_data['user_lastname'] = home_post.musician_profile.user.last_name
+    post_data['user_post_id'] = home_post.musician_profile.user.id
+    post_data['post_id'] = home_post.id
+    post_data['text'] = home_post.post_text
+    post_data['pub_date'] = str(home_post.pub_date.strftime("%Y-%m-%d %H:%M"))
+    post_data['comm'] = []
+
+    for comm in home_post.comment_set.all():
+        comment_data = {}
+        comment_data['user_id'] = comm.musician_profile.user.id
+        comment_data['user_firstname'] = comm.musician_profile.user.first_name
+        comment_data['user_lastname'] = comm.musician_profile.user.last_name
+        comment_data['user_image_url'] = comm.musician_profile.img.url
+        comment_data['pub_date'] = str(comm.pub_date.strftime("%Y-%m-%d %H:%M"))
+        comment_data['text'] = comm.comment_text
+        post_data['comm'].append(comment_data)
+
+    response = {'home_posts': post_data}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)
+
 
 @login_required
 def tag_post(request, tag_text):
@@ -206,7 +243,7 @@ def tag_post(request, tag_text):
     n_first_neigh = len(Friend.get_user_friends(request.user))
 
     user_friends = Friend.get_user_friends(user)
-    #home_posts = posts.objects.filter(Q(musician_profile__in=user_friends) | Q(musician_profile=user.musicianprofile))
+
     for p in posts:
         if request.POST.get('comment_' + str(p.id)):
             print(request.POST['comment_' + str(p.id)])

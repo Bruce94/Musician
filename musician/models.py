@@ -273,7 +273,6 @@ class Post(models.Model):
         return n
 
     def checkForTagsInPost(self):
-        print(self.post_text)
         if '#' in self.post_text:
             for word in self.post_text.split():
                 if word.startswith('#'):
@@ -306,7 +305,6 @@ class Comment(models.Model):
 
 
     def checkForTagsInComment(self):
-        print(self.comment_text)
         if '#' in self.comment_text:
             for word in self.comment_text.split():
                 if word.startswith('#'):

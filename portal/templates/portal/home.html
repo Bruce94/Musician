@@ -34,7 +34,7 @@
                 <p style="font-size: 25px">{{ n_first_neigh }}</p>
                 <p style="font-size: 15px; color:#696969">1° degree neighbor</p>
                 <hr>
-                <p style="font-size: 25px">{{ request.user.musicianprofile.get_n_second_neighbor }}</p>
+                <p style="font-size: 25px">{{ request.user.musicianprofile.get_n_second_neighbor_len }}</p>
                 <p style="font-size: 15px; color:#696969">2° degree neighbor</p>
 
             </div>
@@ -156,15 +156,13 @@
                     <h4>You may know:</h4>
                     <p><small>Common friends</small></p>
                 </div>
-                {% for r_user, r in request.user.musicianprofile.get_suggested_musicians|slice:":10" %}
-                    {% if r > 0.0 %}
-                        <img src="{{ r_user.img.url }}"
-                             class="img-circle align-right" height="20" width="20" alt="Musician_image">
-                        <a href="/musician/{{ r_user.user.id }}">
-                            {{ r_user.user.username }}
-                        </a>
-                        <br>
-                    {% endif %}
+                {% for r_user in request.user.musicianprofile.get_suggested_musicians %}
+                    <img src="{{ r_user.img.url }}"
+                         class="img-circle align-right" height="20" width="20" alt="Musician_image">
+                    <a href="/musician/{{ r_user.user.id }}">
+                        {{ r_user.user.username }}
+                    </a>
+                    <br>
                 {% endfor %}
                 <hr>
                 <div class="col-sm-12">

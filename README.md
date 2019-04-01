@@ -38,7 +38,12 @@ pip3 install django-countries
 
 ##### To upload data
 ~~~bash
-mysql -u usermusician -p --database=dbdjango < tabelle_backup.sql	(password:bd344mx)
+mysql -u usermusician -p --database=dbMusician < backup.sql	(password:bd344mx)
+~~~
+
+##### To dump database
+~~~bash
+sudo mysqldump -u root -p dbMusician > backup.sql
 ~~~
 
 

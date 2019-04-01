@@ -56,7 +56,7 @@
                         checkMsgNotif();
                         
                         socket.on('friendship notification', function (data) {
-                            if(data == {{ user.id }}) {
+                            if(data == {{ request.user.id }}) {
                                 setTimeout(function() {
                                     checkFrienshipNotif();
                                 }, 500);

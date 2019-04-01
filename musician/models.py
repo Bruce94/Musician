@@ -56,6 +56,7 @@ class MusicianProfile(models.Model):
     city = models.CharField(null=True, blank=True, max_length=50)
     country = CountryField(blank=True)
     skills = models.ManyToManyField(Skill, through='HasSkill')
+    suggested_friend = models.CharField(null=True, blank=True, max_length=200)
 
     def __unicode__(self):
         return "MusicianProfile , user: " + str(self.user) + \
@@ -91,7 +92,10 @@ class MusicianProfile(models.Model):
             for fof in Friend.get_user_friends(friend.user):
                 if not (fof in Friend.get_user_friends(self.user)) and fof != self:
                     neighbor += [fof]
-        return len(set(neighbor))
+        return set(neighbor)
+
+    def get_n_second_neighbor_len(self):
+        return len(self.get_n_second_neighbor())
 
     def get_n_friend(self):
         return len(Friend.get_user_friends(self.user))
@@ -103,17 +107,31 @@ class MusicianProfile(models.Model):
                 c_friends += [friend]
         return len(set(c_friends))
 
-    def get_suggested_musicians(self):
-        data_set = set(MusicianProfile.objects.all())
+    def update_suggested_musician(self):
+        second_neighbor = self.get_n_second_neighbor()
         ul_friends = set(Friend.get_user_friends(self.user))
         rank = {}
-        for ux in (data_set - ul_friends - set([self])):
+        for ux in second_neighbor:
             common_friends = len(ul_friends & set(Friend.get_user_friends(ux.user)))
             rank[ux] = common_friends
-        return sorted(rank.items(), key=lambda x: x[1], reverse=True)
+        suggested = sorted(rank.items(), key=lambda x: x[1], reverse=True)
+        s_user = ''
+        for s in suggested[:10]:
+            s_user = s_user+'{},'.format(s[0].user.id)
+        self.suggested_friend = s_user[:-1]
+        self.save()
+        print('{}: [{}]'.format(self.user.id, self.suggested_friend))
+
+    def get_suggested_musicians(self):
+        suggested_musician = []
+        if self.suggested_friend:
+            suggested_musician_ids = self.suggested_friend.split(',')
+            for smi in suggested_musician_ids:
+                usr = MusicianProfile.objects.all().filter(Q(user__id=smi))
+                suggested_musician.append(usr[0])
+        return suggested_musician
 
     def get_suggested_musicians_skill(self):
-
         data_set = set(MusicianProfile.objects.all())
         ul_friends = set(Friend.get_user_friends(self.user))
         rank = {}

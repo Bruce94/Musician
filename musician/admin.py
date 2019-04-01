@@ -14,7 +14,7 @@ class MusicianProfileAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Musician profile data:', {'fields': ['user', 'bio', 'img']}),
         ('Personal Information:', {'fields': ['data', 'gender', 'country', 'city']}),
-        ('General Information:', {'fields': ['phone_number']}),
+        ('General Information:', {'fields': ['phone_number', 'suggested_friend']}),
     ]
 
 

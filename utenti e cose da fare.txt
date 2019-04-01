@@ -1,10 +1,24 @@
 SUPERUSER (x admin): lucabruno -> lucabruno (email betti.luca94@gmail.com)
 
 Utenti semplici (username -> password)
-Rocker_n_roller -> esame
-thebigMamba   -> esame
-gigi_dag      -> esame
-essenzaRock   -> esame
+Rocker_n_roller     -> esame
+thebigMamba         -> esame
+gigi_dag            -> esame
+essenzaRock         -> esame
+DaveGrohl           -> esame
+JacoPastorius       -> esame
+fleaBass            -> esame
+slash               -> esame
+BennyGolson         -> esame
+sting               -> esame
+robertTrujillo      -> esame
+AxlRose             -> esame
+BrianMay            -> esame
+Caparezza           -> esame
+BillieJoe           -> esame
+MarkTremonti        -> esame
+OzzyOsbourne        -> esame
+brion               -> esame
 
 
 

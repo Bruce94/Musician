@@ -32,7 +32,7 @@
                                   <ul class="dropdown-menu">
                                       <li>
                                           <input type="submit" class="list-options" name="accept-friend"
-                                                 value="Accept Friend">
+                                                 value="Accept Friend" onclick="update_suggestion({{ user.id }})">
                                       </li>
                                       <li>
                                           <input type="submit" class="list-options" name="cancel-request"
@@ -53,7 +53,7 @@
                                       </li>
                                       <li>
                                           <input type="submit" class="list-options" name="cancel-request"
-                                                 value="Remove Friend">
+                                                 value="Remove Friend" onclick="update_suggestion({{ user.id }})">
                                       </li>
                                   </ul>
                                 </div>

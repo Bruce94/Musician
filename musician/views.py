@@ -7,7 +7,7 @@ from musician_project.forms import UserForm, MusicianProfileForm
 from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
 from django.http import JsonResponse
 import json
-
+import _thread
 
 
 @login_required
@@ -36,10 +36,12 @@ def profile(request, user_id):
         elif "cancel-request" in request.POST:
             fs.delete()
             status_friend = 0
+            _thread.start_new_thread(update_suggestions, (request, user_id))
         elif "accept-friend" in request.POST:
             fs.status = 2
             fs.save()
             status_friend = 2
+            _thread.start_new_thread(update_suggestions, (request, user_id))
         elif "send-message" in request.POST:
             return HttpResponseRedirect('/musician/messages/'+str(user.id))
 
@@ -90,19 +92,6 @@ def musician_info(request, user_id):
     if request.method == 'POST':
 
         mpf = MusicianProfileForm(request.POST, request.FILES, prefix='profile')
-
-        # Friendship post
-        if "add-friend" in request.POST:
-            friend = Friend.create(sender=request.user, reciver=user)
-            friend.save()
-            status_friend = 1
-        elif "cancel-request" in request.POST:
-            fs.delete()
-            status_friend = 0
-        elif "accept-friend" in request.POST:
-            fs.status = 2
-            fs.save()
-            status_friend = 2
 
         # Personal Info edit post
         if "first_name" in request.POST:
@@ -190,19 +179,6 @@ def musician_friends(request, user_id):
     for f in friend_user:
         fu[f] = f.get_n_common_friend(request.user)
     fu = sorted(fu.items(), key=lambda x: x[1], reverse=True)
-    if request.method == 'POST':
-        if "add-friend" in request.POST:
-            friend = Friend.create(sender=request.user, reciver=user)
-            friend.save()
-            status_friend = 1
-        elif "cancel-request" in request.POST:
-            fs.delete()
-            status_friend = 0
-        elif "accept-friend" in request.POST:
-            fs.status = 2
-            fs.save()
-            status_friend = 2
-
     return render(request, 'musician/musician_friends.html', {'user': user,
                                                               'reciver': reciver,
                                                               'fu': fu,
@@ -325,3 +301,27 @@ def fs_request(request):
     response = {'n_fs': n_fs}
     r = json.dumps(response, False)
     return JsonResponse(r, safe=False)
+
+
+def remove_friend_from_suggested(us1, us2id):
+    strid2 = '{}'.format(us2id)
+
+    suggested = us1.suggested_friend.split(',')
+    if strid2 in suggested:
+        suggested.remove(strid2)
+        str_suggested = ''
+        for s in suggested:
+            str_suggested = str_suggested+'{},'.format(s)
+        us1.suggested_friend = str_suggested[:-1]
+        us1.save()
+
+
+def update_suggestions(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    remove_friend_from_suggested(request.user.musicianprofile, user.id)
+    remove_friend_from_suggested(user.musicianprofile, request.user.id)
+    ul_friends = set(Friend.get_user_friends(request.user))
+    us_friends = set(Friend.get_user_friends(user))
+    users = ul_friends | us_friends | set([user.musicianprofile]) | set([request.user.musicianprofile])
+    for u in users:
+        u.update_suggested_musician()

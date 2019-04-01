@@ -2,6 +2,8 @@ var io = require('socket.io').listen(8008);
 var querystring = require('querystring');
 var http = require('http');
 
+var requestify = require('requestify');
+
 io.sockets.on('connection', function (socket) {
     console.log('Connesso');
     socket.on('message sent', function (data) {
@@ -19,5 +21,5 @@ io.sockets.on('connection', function (socket) {
     socket.on('friendship request', function (data) {
         console.log('friendship request ['+data+']');
         io.sockets.emit('friendship notification', data);
-    })
+    });
 });

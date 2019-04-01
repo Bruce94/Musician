@@ -104,6 +104,8 @@
                                 <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
+                            <i id="polliceSu" class="fa fa-thumbs-o-up" style="font-size:48px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 1)"></i>
+                            <i id="polliceGiu" class="fa fa-thumbs-o-down" style="font-size:48px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 2)"></i>
                                 <button type="button" class="btn btn-default btn-sm"
                                         onclick="showCommentArea('comment_div_{{ post.id }}')">
                                     <span class="glyphicon glyphicon-comment" ></span> Comment

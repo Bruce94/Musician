@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^new_post/(?P<user_id>[0-9]+)/post/$', views.newpost_post, name='newpost_post'),
     url(r'^new_post/get/$', views.newpost_get, name='newpost_get'),
     url(r'^tag/(?P<tag_text>.*)/$', views.tag_post, name='tag_post'),
+    url(r'^like/(?P<vote>[0-9]+)/(?P<post_id>[0-9]+)/get/$', views.like_post_get, name='like_post_get'),
 ]

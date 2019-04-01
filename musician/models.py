@@ -265,6 +265,9 @@ class Post(models.Model):
         return "Post , musician: " + str(self.musician_profile) + \
                " Post id: " + str(self.id)
 
+    def postText(self):
+        return self.post_text
+
     @staticmethod
     def n_new_comments(musician_profile):
         n = 0
@@ -290,8 +293,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    musician_profile = models.ForeignKey(MusicianProfile)
-    post = models.ForeignKey(Post)
+    musician_profile = models.ForeignKey(MusicianProfile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(default=timezone.now)
     comment_text = models.CharField(max_length=255, blank=False)
     seen = models.BooleanField(default=False)
@@ -316,6 +319,44 @@ class Comment(models.Model):
                         tag.comment.add(self)
                         tag.save()
 
+
+class Preference(models.Model):
+
+    STATUS_CHOICES = (
+        (0, 'unrated'),
+        (1, 'Liked'),
+        (2, 'Disliked'),
+    )
+
+    class Meta:
+        ordering = ['-pub_date']
+
+    musician_profile = models.ForeignKey(MusicianProfile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    vote = models.IntegerField(choices=STATUS_CHOICES, default=0)
+    pub_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return str(self.musician_profile.user.username) + ':' + str(self.post) + ':' + str(self.vote)
+
+    @classmethod
+    def create(self, user, post, vote):
+        preference = self(musician_profile=user.musicianprofile, post=post, vote=vote)
+        preference.save()
+
+    @staticmethod
+    def get_liked_post(user):
+        return Preference.objects.all().filter(Q(vote=1) & Q(musician_profile__user=user))
+
+    @staticmethod
+    def exist(user, post):
+        if Preference.objects.filter(musician_profile=user.musicianprofile, post=post):
+            return True
+        return False
+
+    @staticmethod
+    def get_preference(post, user):
+        return Preference.objects.filter(post=post, musician_profile=user.musicianprofile)
 
 class Tag(models.Model):
     post = models.ManyToManyField(Post, blank=True)

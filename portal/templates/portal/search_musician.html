@@ -42,9 +42,12 @@
                 <form>
                     <h5>Skills:</h5>
                     {% for skill in skills %}
-                        <input type="checkbox" name="check_skill"
+                        <label class="switch">
+                            <input type="checkbox" name="check_skill"
                                value="{{ skill.name_skill }}" style="margin-right: 10px"
                                {% if skill.name_skill in checked_skills %} checked {% endif %}>
+                            <span class="slider round"></span>
+                        </label>
                         {{ skill.name_skill }} <br>
                     {% endfor %}
                     <hr>

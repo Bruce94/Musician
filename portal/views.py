@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
-from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Comment, Tag
+from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Comment, Tag, Preference
 from musician_project.forms import MusicianProfileForm
 from itertools import chain
 from django.http import JsonResponse
@@ -234,8 +234,7 @@ def newpost_get(request):
 @login_required
 def tag_post(request, tag_text):
     posts = Tag.posts_and_comments_with_tag(tag_text)
-    print(posts)
-    print(type(posts))
+
     user = get_object_or_404(User, pk=request.user.id)
     n_req = Friend.n_req_friendship(request.user)
     n_mes = Message.n_new_messages(request.user)
@@ -246,7 +245,7 @@ def tag_post(request, tag_text):
 
     for p in posts:
         if request.POST.get('comment_' + str(p.id)):
-            print(request.POST['comment_' + str(p.id)])
+            #print(request.POST['comment_' + str(p.id)])
             p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
                                  musician_profile=request.user.musicianprofile,
                                  seen=(True if p.musician_profile == request.user.musicianprofile else False))
@@ -263,3 +262,31 @@ def tag_post(request, tag_text):
                                                        'n_first_neigh': n_first_neigh,
                                                        'tag_text': tag_text
                                                        })
+
+@login_required
+def like_post_get(request, vote, post_id):
+    #post = Post.objects.get(pk=post_id)
+    print("1 print")
+    post = get_object_or_404(Post, pk=post_id)
+    print("2 print")
+    response = {}
+    if not Preference.exist(request.user, post):
+        print("entro 1 if")
+        Preference.create(user=request.user, post=post, vote=vote)
+        response = {'actual_vote': vote}
+    else:
+        preference = Preference.get_preference(post, request.user).__getitem__(0)
+        print("Preference.vote PRIMA e':  ")
+        print(preference.vote)
+        if preference.vote == int(vote):
+            preference.vote = 0
+        else:
+            preference.vote = int(vote)
+        preference.save()
+        print("Preference.vote DOPO e':  ")
+        print(preference.vote)
+        response = {'actual_vote': preference.vote}
+
+    #response = {'actual_vote': preference.vote}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)

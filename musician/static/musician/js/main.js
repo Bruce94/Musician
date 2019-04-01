@@ -391,3 +391,34 @@ function spawnNotification(body,icon,title) {
     var n = new Notification(title,options);
     n.image;
 }
+
+function likedPost(user_id, post_id, vote){
+    //if (!scrolling) {
+    $.ajax({
+        type: "GET",
+        url: "/portal/like/"+vote+"/"+post_id+"/get/",
+        async: true,
+        cache: false,
+        timeout: 50000,
+        dataType: 'json',
+        success: function (data) {
+            var elem = $.parseJSON(data);
+            var actual_vote = elem.actual_vote;
+
+            if(actual_vote == 1){
+                document.getElementById("polliceSu").style.color="lightskyblue";
+                document.getElementById("polliceGiu").style.color="gray";
+            }
+            if(actual_vote == 2) {
+                document.getElementById("polliceSu").style.color = "gray";
+                document.getElementById("polliceGiu").style.color = "red";
+            }
+            if(actual_vote == 0) {
+                document.getElementById("polliceSu").style.color = "gray";
+                document.getElementById("polliceGiu").style.color = "gray";
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+    });
+};

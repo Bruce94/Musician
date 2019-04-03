@@ -4,8 +4,9 @@
     <title> Musician | {{ user.username }}</title>
 {% endblock%}
 
+{% load static %}
+
 {% block container%}
-    {% load static %}
         <section class="profile">
             <div class="panel panel-default">
                 <div class="panel-profile-img">
@@ -122,9 +123,23 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 text-left">
-                                <p style="font-size: 25px;">{{ post.post_text }}</p>
+                                <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
+                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 1)"></i>
+                                <span id="nlikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_like }}</span>
+                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 2)"></i>
+                                <span id="ndislikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_dislike }}</span>
+                                {% for vote in voted_posts %}
+                                    {% if vote.post.id == post.id %}
+                                        {% if vote.vote == 1 %}
+                                                <script>document.getElementById("polliceSu{{ post.id }}").style.color = "blue";</script>
+                                        {% elif vote.vote == 2 %}
+                                                <script>document.getElementById("polliceGiu{{ post.id }}").style.color = "red";</script>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
                                 <button type="button" class="btn btn-default btn-sm"
                                         onclick="showCommentArea('comment_div_{{ post.id }}')">
                                     <span class="glyphicon glyphicon-comment" ></span> Comment
@@ -150,7 +165,7 @@
                                                 </a>
                                                 <small style="font-size: 10px">{{ comment.pub_date }}</small>
                                             </div>
-                                            <div class="col-sm-12">{{ comment.comment_text }}</div>
+                                            <div class="col-sm-12 enteredText">{{ comment.comment_text }}</div>
                                         </div>
                                     {% endfor %}
                                 </div>

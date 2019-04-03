@@ -399,7 +399,6 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-
 body{
     background-color: rgba(104, 64, 51, 0.15);
 }

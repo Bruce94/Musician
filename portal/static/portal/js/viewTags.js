@@ -1,12 +1,10 @@
 $(document).ready(cercaTag());
 
 function cercaTag (){
-    //$("#posts_container").on('change', function() {
         var label = document.getElementsByClassName("enteredText");
 
         for (var j = 0; j < label.length; j++) {
             var href = label[j].innerHTML;
-
             var tfinale = "";
 
             if (href.match(/#[a-z,A-Z]+/)) {
@@ -28,5 +26,4 @@ function cercaTag (){
             } else
                 label[j].innerHTML = href;
         }
-    //});
-};
+}

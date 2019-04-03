@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from musician_project.forms import UserForm, MusicianProfileForm
-from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post
+from musician.models import MusicianProfile, Friend, Message, Skill, HasSkill, Post, Preference
 from django.http import JsonResponse
 import json
 import _thread
@@ -18,6 +18,8 @@ def profile(request, user_id):
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
     user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
+
+    voted_posts = Preference.objects.filter(musician_profile=request.user.musicianprofile)
 
     status_friend = 0
     reciver = None
@@ -51,11 +53,13 @@ def profile(request, user_id):
                 return HttpResponseRedirect('/musician/'+str(user.id))
 
             if request.POST.get('comment_' + str(post.id)):
-                print(request.POST['comment_' + str(post.id)])
 
                 post.comment_set.create(comment_text=request.POST['comment_' + str(post.id)],
                                         musician_profile=request.user.musicianprofile,
                                         seen=(True if post.musician_profile == request.user.musicianprofile else False))
+                comment = post.comment_set.filter(comment_text=request.POST['comment_' + str(post.id)],
+                                               musician_profile=request.user.musicianprofile)[0]
+                comment.checkForTagsInComment()
 
     return render(request, 'musician/profile.html', {'user': user,
                                                      'reciver': reciver,
@@ -63,7 +67,8 @@ def profile(request, user_id):
                                                      'n_req': n_req,
                                                      'n_mes': n_mes,
                                                      'n_comm': n_comm,
-                                                     'user_distance': user_distance
+                                                     'user_distance': user_distance,
+                                                     'voted_posts': voted_posts
                                                      })
 
 
@@ -75,7 +80,6 @@ def musician_info(request, user_id):
     n_mes = Message.n_new_messages(request.user)
     n_comm = Post.n_new_comments(request.user.musicianprofile)
     user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
-
 
     mpf = MusicianProfileForm(prefix='profile')
 

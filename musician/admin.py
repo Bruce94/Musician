@@ -60,7 +60,7 @@ class SkillAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('musician_profile_name', 'post_text')
+    list_display = ('musician_profile_name', 'post_text', 'n_like', 'n_dislike')
     ordering = ('-pub_date', )
     list_filter = ('musician_profile', 'pub_date')
     fieldsets = [
@@ -69,6 +69,7 @@ class PostAdmin(admin.ModelAdmin):
 
     def musician_profile_name(self, obj):
         return obj.musician_profile.user
+
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('musician_profile_name', 'post_text', 'comment_text')
@@ -105,6 +106,7 @@ class PreferenceAdmin(admin.ModelAdmin):
 
     def post_text(self, obj):
         return obj.post.post_text
+
 
 admin.site.register(MusicianProfile, MusicianProfileAdmin)
 admin.site.register(Friend, FriendAdmin)

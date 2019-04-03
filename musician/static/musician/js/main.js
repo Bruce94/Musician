@@ -1,6 +1,7 @@
 /**
  * Created by bruce on 23/03/19.
  */
+
 function showEditInfo(elemToHidden, elemToShow) {
     document.getElementById(elemToHidden).style.display = "none";
     document.getElementById(elemToShow).style.display = "inherit";
@@ -25,8 +26,6 @@ jQuery(function ($) {
     });
 
 });
-
-
 
 $(function() {
     $("#message_form").submit(function(event) {
@@ -73,15 +72,9 @@ $(function() {
                 var mess = [];
                 mess.push('' + data.usr_id + '');
                 for (var i = 0; i < url_elem.length; i++) {
-                    //    if (!isNaN(url_elem[i]) && url_elem[i] != '') {
-                    //mess = '['+data.usr_id+','+url_elem[i]+']';
-                    //console.log(url_elem[i])
                     mess.push(url_elem[i]);
-                    //    }
                 }
                 $('#newpost').val('');
-                //var chatlist = document.getElementById('messages_container');
-                //chatlist.scrollTop = chatlist.scrollHeight;
                 socket.emit('post sent', mess);
             }
         });
@@ -96,6 +89,8 @@ $(function() {
                 $('#send').attr('disabled', 'disabled');
             }
         });
+
+        cercaTag();
     });
 
     // using jQuery
@@ -132,7 +127,6 @@ $(function() {
 });
 
 function cercaTag (){
-    //$("#posts_container").on('change', function() {
         var label = document.getElementsByClassName("enteredText");
 
         for (var j = 0; j < label.length; j++) {
@@ -158,8 +152,7 @@ function cercaTag (){
             } else
                 label[j].innerHTML = href;
         }
-    //});
-};
+}
 
 function refPosts(usr_id){
 
@@ -213,7 +206,12 @@ function refPosts(usr_id){
                                 <p class="enteredText" style="font-size: 25px;">${home_posts.text}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                                <button type="button" class="btn btn-default btn-sm"
+                                <i id="polliceSu${home_posts.post_id}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost(${home_posts.user_post_id}, ${home_posts.post_id}, 1);" title="Like"></i>
+                                <span id="nlikes${home_posts.post_id}" class="badge" data-toggle="modal" >${home_posts.post_n_like}</span>
+                                <i id="polliceGiu${home_posts.post_id}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost(${home_posts.user_post_id}, ${home_posts.post_id}, 2);" title="Dislike"></i>
+                                <span id="ndislikes${home_posts.post_id}" class="badge" data-toggle="modal" >${home_posts.post_n_dislike}</span>`;
+
+                    dati += ` <button type="button" class="btn btn-default btn-sm"
                                         onclick="showCommentArea('comment_div_${home_posts.post_id}')">
                                     <span class="glyphicon glyphicon-comment" ></span> Comment
                                 </button>
@@ -247,9 +245,7 @@ function refPosts(usr_id){
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         },
     });
-    //}
-    //scrolling = false;
-};
+}
 
 function refMessages(usr){
     //if (!scrolling) {
@@ -293,7 +289,7 @@ function refMessages(usr){
     });
     //}
     //scrolling = false;
-};
+}
 
 var scrolling = false;
 
@@ -324,7 +320,7 @@ function refNewMessages(){
         },
 
     });
-};
+}
 
 function checkMsgNotif(){
     $.ajax({
@@ -345,7 +341,7 @@ function checkMsgNotif(){
         },
 
     });
-};
+}
 
 function checkFrienshipNotif(){
     $.ajax({
@@ -366,8 +362,7 @@ function checkFrienshipNotif(){
         },
 
     });
-};
-
+}
 
 function send_friendship_request(data){
     socket.emit('friendship request', data);
@@ -393,7 +388,6 @@ function spawnNotification(body,icon,title) {
 }
 
 function likedPost(user_id, post_id, vote){
-    //if (!scrolling) {
     $.ajax({
         type: "GET",
         url: "/portal/like/"+vote+"/"+post_id+"/get/",
@@ -404,21 +398,27 @@ function likedPost(user_id, post_id, vote){
         success: function (data) {
             var elem = $.parseJSON(data);
             var actual_vote = elem.actual_vote;
+            var like = elem.nlike;
+            var dislike = elem.ndislike;
 
             if(actual_vote == 1){
-                document.getElementById("polliceSu").style.color="lightskyblue";
-                document.getElementById("polliceGiu").style.color="gray";
+                document.getElementById("polliceSu".concat(post_id)).style.color="blue";
+                document.getElementById("polliceGiu".concat(post_id)).style.color="gray";
             }
             if(actual_vote == 2) {
-                document.getElementById("polliceSu").style.color = "gray";
-                document.getElementById("polliceGiu").style.color = "red";
+                document.getElementById("polliceSu".concat(post_id)).style.color = "gray";
+                document.getElementById("polliceGiu".concat(post_id)).style.color = "red";
             }
             if(actual_vote == 0) {
-                document.getElementById("polliceSu").style.color = "gray";
-                document.getElementById("polliceGiu").style.color = "gray";
+                document.getElementById("polliceSu".concat(post_id)).style.color = "gray";
+                document.getElementById("polliceGiu".concat(post_id)).style.color = "gray";
             }
-        },
+
+            document.getElementById("nlikes".concat(post_id)).textContent = elem.nlike;
+            document.getElementById("ndislikes".concat(post_id)).textContent = elem.ndislike;
+
+            },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         },
     });
-};
+}

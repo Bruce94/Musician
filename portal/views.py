@@ -22,9 +22,10 @@ def portal_welcome(request):
     user_friends = Friend.get_user_friends(user)
     home_posts = Post.objects.filter(Q(musician_profile__in=user_friends) | Q(musician_profile=user.musicianprofile))
 
+    voted_posts = Preference.objects.filter(musician_profile=request.user.musicianprofile)
+
     for p in home_posts:
         if request.POST.get('comment_' + str(p.id)):
-            print(request.POST['comment_' + str(p.id)])
             p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
                                  musician_profile=request.user.musicianprofile,
                                  seen=(True if p.musician_profile == request.user.musicianprofile else False))
@@ -43,7 +44,8 @@ def portal_welcome(request):
                                                 'n_req': n_req,
                                                 'n_mes': n_mes,
                                                 'n_comm': n_comm,
-                                                'n_first_neigh': n_first_neigh
+                                                'n_first_neigh': n_first_neigh,
+                                                'voted_posts': voted_posts,
                                                 })
 
 
@@ -212,6 +214,8 @@ def newpost_get(request):
     post_data['user_lastname'] = home_post.musician_profile.user.last_name
     post_data['user_post_id'] = home_post.musician_profile.user.id
     post_data['post_id'] = home_post.id
+    post_data['post_n_like'] = home_post.n_like
+    post_data['post_n_dislike'] = home_post.n_dislike
     post_data['text'] = home_post.post_text
     post_data['pub_date'] = str(home_post.pub_date.strftime("%Y-%m-%d %H:%M"))
     post_data['comm'] = []
@@ -245,7 +249,6 @@ def tag_post(request, tag_text):
 
     for p in posts:
         if request.POST.get('comment_' + str(p.id)):
-            #print(request.POST['comment_' + str(p.id)])
             p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
                                  musician_profile=request.user.musicianprofile,
                                  seen=(True if p.musician_profile == request.user.musicianprofile else False))
@@ -263,30 +266,59 @@ def tag_post(request, tag_text):
                                                        'tag_text': tag_text
                                                        })
 
+
+def set_vote(vote, past_vote, post_id):
+    vote = int(vote)
+    post = Post.objects.get(pk=post_id)
+    # unrated-like / unrated-dislike
+    if past_vote == 0 and vote == 1:
+        post.n_like += 1
+    elif past_vote == 0 and vote == 2:
+        post.n_dislike += 1
+
+    # like-like / dislike-dislike
+    if past_vote == 1 and vote == 1:
+        post.n_like -= 1
+    elif past_vote == 2 and vote == 2:
+        post.n_dislike -= 1
+
+    # dislike-like / like-dislike
+    if past_vote == 2 and vote == 1:
+        post.n_like += 1
+        post.n_dislike -= 1
+    elif past_vote == 1 and vote == 2:
+        post.n_like -= 1
+        post.n_dislike += 1
+
+    post.save()
+
+
 @login_required
 def like_post_get(request, vote, post_id):
-    #post = Post.objects.get(pk=post_id)
-    print("1 print")
     post = get_object_or_404(Post, pk=post_id)
-    print("2 print")
-    response = {}
+
     if not Preference.exist(request.user, post):
-        print("entro 1 if")
         Preference.create(user=request.user, post=post, vote=vote)
-        response = {'actual_vote': vote}
+        set_vote(vote, 0, post_id)
+
+        response = {'actual_vote': vote,
+                    'nlike': post.get_nlikes(post_id),
+                    'ndislike': post.get_ndislikes(post_id)
+                    }
     else:
         preference = Preference.get_preference(post, request.user).__getitem__(0)
-        print("Preference.vote PRIMA e':  ")
-        print(preference.vote)
+        set_vote(vote, int(preference.vote), post_id)
+
         if preference.vote == int(vote):
             preference.vote = 0
         else:
             preference.vote = int(vote)
-        preference.save()
-        print("Preference.vote DOPO e':  ")
-        print(preference.vote)
-        response = {'actual_vote': preference.vote}
 
-    #response = {'actual_vote': preference.vote}
+        preference.save()
+        response = {'actual_vote': preference.vote,
+                    'nlike': post.get_nlikes(post_id),
+                    'ndislike': post.get_ndislikes(post_id)
+                    }
+
     r = json.dumps(response, False)
     return JsonResponse(r, safe=False)

@@ -104,8 +104,20 @@
                                 <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                            <i id="polliceSu" class="fa fa-thumbs-o-up" style="font-size:48px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 1)"></i>
-                            <i id="polliceGiu" class="fa fa-thumbs-o-down" style="font-size:48px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 2)"></i>
+                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 1);" title="Like"></i>
+                                <span id="nlikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_like }}</span>
+                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 2);" title="Dislike"></i>
+                                <span id="ndislikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_dislike }}</span>
+                                {% for vote in voted_posts %}
+                                    {% if vote.post.id == post.id %}
+                                        {% if vote.vote == 1 %}
+                                                <script>document.getElementById("polliceSu{{ post.id }}").style.color = "blue";</script>
+                                        {% elif vote.vote == 2 %}
+                                                <script>document.getElementById("polliceGiu{{ post.id }}").style.color = "red";</script>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
                                 <button type="button" class="btn btn-default btn-sm"
                                         onclick="showCommentArea('comment_div_{{ post.id }}')">
                                     <span class="glyphicon glyphicon-comment" ></span> Comment
@@ -135,7 +147,7 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <form form action="/portal/" method="post" class="message_form" autocomplete="off">
+                                <form action="/portal/" method="post" class="message_form" autocomplete="off">
                                     {% csrf_token %}
                                     <div class="col-sm-1">
                                          <img src="{{ request.user.musicianprofile.img.url }}"
@@ -183,6 +195,11 @@
         </div>
     </div>
     <script>
+        function changeColor(color, element){
+	        var x = document.getElementById(element);
+            x.style.color = color;
+        }
+
         //refPosts({{request.user.musician_profile.id}});
         $(document).ready(function() {
             $('#posts_container').on('scroll', function(){

@@ -497,6 +497,8 @@ CREATE TABLE `musician_post` (
   `post_text` varchar(255) NOT NULL,
   `pub_date` datetime(6) NOT NULL,
   `musician_profile_id` int(11) NOT NULL,
+  `n_like` int(11) NOT NULL,
+  `n_dislike` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `musician_post_musician_profile_id_6479917a_fk_musician_` (`musician_profile_id`),
   CONSTRAINT `musician_post_musician_profile_id_6479917a_fk_musician_` FOREIGN KEY (`musician_profile_id`) REFERENCES `musician_musicianprofile` (`id`)
@@ -509,7 +511,7 @@ CREATE TABLE `musician_post` (
 
 LOCK TABLES `musician_post` WRITE;
 /*!40000 ALTER TABLE `musician_post` DISABLE KEYS */;
-INSERT INTO `musician_post` VALUES (1,'I\'m surprised about what happened last night in \"Coconut & milk\" club, wonderful technical music team organization and Sublime\'s frontman prove his musician knowledge!','2019-03-10 13:52:42.825830',2),(22,' Oggi è un giorno speciale #maimollare #AWM','2019-03-25 00:41:17.000288',1),(158,' ciao a tutt, #belli e #brutti ! #OK','2019-03-29 17:02:40.303656',1),(164,' sos','2019-03-30 09:19:38.025929',4),(181,' #bella frate #rivoluzione','2019-03-30 10:06:30.304265',1),(206,'Bello sto social #soddisfatto ','2019-03-31 12:58:59.104527',7);
+INSERT INTO `musician_post` VALUES (1,'I\'m surprised about what happened last night in \"Coconut & milk\" club, wonderful technical music team organization and Sublime\'s frontman prove his musician knowledge!','2019-03-10 13:52:42.825830',2,0,0),(22,' Oggi è un giorno speciale #maimollare #AWM','2019-03-25 00:41:17.000288',1,0,0),(158,' ciao a tutt, #belli e #brutti ! #OK','2019-03-29 17:02:40.303656',1,0,0),(164,' sos','2019-03-30 09:19:38.025929',4,0,0),(181,' #bella frate #rivoluzione','2019-03-30 10:06:30.304265',1,0,0),(206,'Bello sto social #soddisfatto ','2019-03-31 12:58:59.104527',7,0,0);
 /*!40000 ALTER TABLE `musician_post` ENABLE KEYS */;
 UNLOCK TABLES;
 

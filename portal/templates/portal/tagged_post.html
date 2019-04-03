@@ -138,15 +138,13 @@
                     <h4>You may know:</h4>
                     <p><small>Common friends</small></p>
                 </div>
-                {% for r_user, r in request.user.musicianprofile.get_suggested_musicians|slice:":10" %}
-                    {% if r > 0.0 %}
-                        <img src="{{ r_user.img.url }}"
-                             class="img-circle align-right" height="20" width="20" alt="Musician_image">
-                        <a href="/musician/{{ r_user.user.id }}">
-                            {{ r_user.user.username }}
-                        </a>
-                        <br>
-                    {% endif %}
+                {% for r_user in request.user.musicianprofile.get_suggested_musicians %}
+                    <img src="{{ r_user.img.url }}"
+                         class="img-circle align-right" height="20" width="20" alt="Musician_image">
+                    <a href="/musician/{{ r_user.user.id }}">
+                        {{ r_user.user.username }}
+                    </a>
+                    <br>
                 {% endfor %}
                 <hr>
                 <div class="col-sm-12">

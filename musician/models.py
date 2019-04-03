@@ -278,6 +278,8 @@ class Post(models.Model):
     post_text = models.CharField(max_length=255, blank=False)
     pub_date = models.DateTimeField(default=timezone.now)
     user_comments = models.ManyToManyField(MusicianProfile, through='Comment')
+    n_like = models.PositiveIntegerField(default=0)
+    n_dislike = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return "Post , musician: " + str(self.musician_profile) + \
@@ -286,10 +288,19 @@ class Post(models.Model):
     def postText(self):
         return self.post_text
 
+    def get_nlikes(self, post_id):
+        post = Post.objects.get(pk=post_id)
+        return post.n_like
+
+    def get_ndislikes(self, post_id):
+        post = Post.objects.get(pk=post_id)
+        return post.n_dislike
+
     @staticmethod
     def n_new_comments(musician_profile):
         n = 0
-        for post in Post.objects.filter(musician_profile=musician_profile):
+        posts = Post.objects.filter(musician_profile=musician_profile)
+        for post in posts:
             n += post.comment_set.filter(seen=False).count()
         return n
 
@@ -304,7 +315,6 @@ class Post(models.Model):
                         tag = Tag.objects.filter(tag_text=word)[0]
                         tag.post.add(self)
                         tag.save()
-
 
     class Meta:
         ordering = ['-pub_date']
@@ -364,7 +374,7 @@ class Preference(models.Model):
 
     @staticmethod
     def get_liked_post(user):
-        return Preference.objects.all().filter(Q(vote=1) & Q(musician_profile__user=user))
+        return Preference.objects.filter(Q(vote=1) & Q(musician_profile__user=user))
 
     @staticmethod
     def exist(user, post):
@@ -375,6 +385,7 @@ class Preference(models.Model):
     @staticmethod
     def get_preference(post, user):
         return Preference.objects.filter(post=post, musician_profile=user.musicianprofile)
+
 
 class Tag(models.Model):
     post = models.ManyToManyField(Post, blank=True)

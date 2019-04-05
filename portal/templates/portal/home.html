@@ -104,9 +104,9 @@
                                 <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 1);" title="Like"></i>
+                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ post.musician_profile.user.id }},{{ request.user.id }}, {{ post.id }}, 1);" title="Like"></i>
                                 <span id="nlikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_like }}</span>
-                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 2);" title="Dislike"></i>
+                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ post.musician_profile.user.id }},{{ request.user.id }}, {{ post.id }}, 2);" title="Dislike"></i>
                                 <span id="ndislikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_dislike }}</span>
                                 {% for vote in voted_posts %}
                                     {% if vote.post.id == post.id %}
@@ -147,14 +147,14 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <form action="/portal/" method="post" class="message_form" autocomplete="off">
+                                <form action="/portal/" method="post" class="message_form" autocomplete="off" id="comment_form">
                                     {% csrf_token %}
                                     <div class="col-sm-1">
                                          <img src="{{ request.user.musicianprofile.img.url }}"
                                              class="img-circle align-right" height="35" width="35" alt="Musician_image">
                                     </div>
                                     <div class="col-sm-11">
-                                         <input type="text" class="form-control"  name="comment_{{ post.id }}">
+                                         <input type="text" id="comment_onthefly" class="form-control"  name="comment_{{ post.id }}" onkeyup="refreshNotification(event, {{ post.musician_profile.user.id }})">
                                     </div>
                                 </form>
                             </div>
@@ -195,19 +195,27 @@
         </div>
     </div>
     <script>
-        function changeColor(color, element){
-	        var x = document.getElementById(element);
-            x.style.color = color;
+        socket.on('message notification', function (data) {
+            if(data[1]=={{ user.id }}) {
+                  checkMsgNotif();
+                  spawnNotification(data[2],data[4],data[3]);
+             }
+           });
+
+
+        function refreshNotification(e, user_post_id){
+            var mess = [];
+            mess.push('' + user_post_id + '');
+            socket.emit("new general notification",mess);
         }
 
-        //refPosts({{request.user.musician_profile.id}});
         $(document).ready(function() {
             $('#posts_container').on('scroll', function(){
                 scrolling = true;
             });
             $('#posts_container').on('change', cercaTag());
+
         });
-        // controllo che si aggiornino solo le chat dei rispettivi utenti che hanno la chat aperta
 
     </script>
 {% endblock %}

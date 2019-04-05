@@ -22,4 +22,7 @@ io.sockets.on('connection', function (socket) {
         console.log('friendship request ['+data+']');
         io.sockets.emit('friendship notification', data);
     });
+    socket.on('new general notification', function (data){
+        io.sockets.emit('like notification', data);
+    });
 });

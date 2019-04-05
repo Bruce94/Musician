@@ -9,7 +9,7 @@
         {% if new_comments %}
             <div class="list-group col-sm-12">
                 {% for comments in new_comments %}
-                    <a href="/portal/post/{{ comments.post.id }}" class="list-group-item col-sm-12">
+                    <a href="/portal/view_post_notificated/{{ comments.post.id }}" class="list-group-item col-sm-12">
                         <div class="col-sm-1">
                              <img class="img-circle" height="45" width="45"
                                   src="{{ comments.musician_profile.img.url }}"
@@ -28,6 +28,31 @@
                         </div>
                     </a>
                 {% endfor %}
+
+            </div>
+        {% elif new_votes %}
+            <div class="list-group col-sm-12">
+                {% for vote in new_votes %}
+                    <a href="/portal/view_post_notificated/{{ vote.post.id }}" class="list-group-item col-sm-12">
+                        <div class="col-sm-1">
+                             <img class="img-circle" height="45" width="45"
+                                  src="{{ vote.musician_profile.img.url }}"
+                                  alt = "{{ vote.musician_profile.user.username }}"/>
+                        </div>
+                        <div class="col-sm-11">
+                            <h5 class="list-group-item-heading col-sm-12">
+                                <b>{{ vote.musician_profile.user.last_name }}
+                                {{ vote.musician_profile.user.first_name }}</b>
+                                has voted your post.
+                            </h5>
+                            <p  class="list-group-item-text col-sm-12">
+                                <span class="glyphicon glyphicon-comment" aria-hidden="true" ></span>
+                                {{ vote.post.pub_date }}
+                            </p>
+                        </div>
+                    </a>
+                {% endfor %}
+
             </div>
         {% else%}
             <div class="alert alert-warning" role="alert">There aren't new Notifications</div>

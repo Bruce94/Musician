@@ -126,9 +126,9 @@
                                 <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 1)"></i>
+                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ post.musician_profile.user.id }},{{ request.user.id }}, {{ post.id }}, 1);" title="Like"></i>
                                 <span id="nlikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_like }}</span>
-                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ request.user.id }}, {{ post.id }}, 2)"></i>
+                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ post.musician_profile.user.id }},{{ request.user.id }}, {{ post.id }}, 2);" title="Dislike"></i>
                                 <span id="ndislikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_dislike }}</span>
                                 {% for vote in voted_posts %}
                                     {% if vote.post.id == post.id %}

@@ -54,7 +54,14 @@
                             }
                         });
                         checkMsgNotif();
-                        
+
+                        socket.on('like notification', function(data){
+                            if(parseInt(data[0])=={{ user.id }}){
+                                checkNotif();
+                            }
+                        });
+                        checkNotif();
+
                         socket.on('friendship notification', function (data) {
                             if(data == {{ request.user.id }}) {
                                 setTimeout(function() {
@@ -67,9 +74,9 @@
                 </a></li>
                 <li><a href="{% url 'portal:comment_notifications'%}">
                     <span class="glyphicon glyphicon-globe" aria-hidden="true" title="Notifications"></span>
-                    {% if n_comm != 0 %}
-                        <span class="badge">{{ n_comm }}</span>
-                    {% endif %}
+
+                    <span id="countNotifications" class="badge"></span>
+
                 </a></li>
                 <li class="portal"><a href="{% url 'logout_view' %}">Logout</a></li>
             </ul>

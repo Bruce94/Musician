@@ -15,8 +15,6 @@ import json
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
     n_first_neigh = len(Friend.get_user_friends(request.user))
 
     user_friends = Friend.get_user_friends(user)
@@ -42,8 +40,6 @@ def portal_welcome(request):
     return render(request, 'portal/home.html', {'user': user,
                                                 'home_posts': home_posts,
                                                 'n_req': n_req,
-                                                'n_mes': n_mes,
-                                                'n_comm': n_comm,
                                                 'n_first_neigh': n_first_neigh,
                                                 'voted_posts': voted_posts,
                                                 })
@@ -55,8 +51,6 @@ def search_musician(request):
     checked_skills = []
     query = ""
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     mpf = MusicianProfileForm(prefix='profile')
 
@@ -117,15 +111,14 @@ def search_musician(request):
                                                            'checked_skills': checked_skills,
                                                            'musicianprofileform': mpf,
                                                            'n_req': n_req,
-                                                           'n_mes': n_mes,
-                                                           'n_comm': n_comm})
+                                                           #'n_mes': n_mes,
+                                                           #'n_comm': n_comm
+                                                            })
 
 
 @login_required
 def friendship_request(request):
     friendships = Friend.get_pending_request(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     musicians = MusicianProfile.objects.all()
     profile_list = []
@@ -140,51 +133,42 @@ def friendship_request(request):
     n_req = Friend.n_req_friendship(request.user)
     return render(request, 'portal/friendship_request.html', {'profile_list': profile_list,
                                                               'n_req': n_req,
-                                                              'n_mes': n_mes,
-                                                              'n_comm': n_comm})
+                                                              #'n_mes': n_mes,
+                                                              #'n_comm': n_comm
+                                                            })
 
 
 @login_required
 def comment_notifications(request):
-    n_mes = Message.n_new_messages(request.user)
     n_req = Friend.n_req_friendship(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     new_comments = Comment.objects.filter(post__musician_profile=request.user.musicianprofile, seen=False)
+    new_votes = Preference.objects.filter(post__musician_profile=request.user.musicianprofile, seen=False)
 
     return render(request, 'portal/comment_notifications.html', {'n_req': n_req,
-                                                                 'n_mes': n_mes,
-                                                                 'n_comm': n_comm,
+                                                                 #'n_mes': n_mes,
+                                                                 #'n_comm': n_comm,
+                                                                 'new_votes': new_votes,
                                                                  'new_comments': new_comments})
 
 
 @login_required
-def post(request, post_id):
+def view_post_notificated(request, post_id):
     p = get_object_or_404(Post, pk=post_id)
-
-    n_mes = Message.n_new_messages(request.user)
     n_req = Friend.n_req_friendship(request.user)
 
     for comment in p.comment_set.all():
         comment.seen = True
         comment.save()
 
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
-
-    if request.POST.get('comment_' + str(p.id)):
-        print(request.POST['comment_' + str(p.id)])
-        p.comment_set.create(comment_text=request.POST['comment_' + str(p.id)],
-                             musician_profile=request.user.musicianprofile,
-                             seen=(True if p.musician_profile == request.user.musicianprofile else False))
-
-        comment = p.comment_set.filter(comment_text=request.POST['comment_' + str(p.id)],
-                                       musician_profile=request.user.musicianprofile)[0]
-        comment.checkForTagsInComment()
+    for vote in p.preference_set.all():
+        vote.seen = True
+        vote.save()
 
     return render(request, 'portal/post.html', {'n_req': n_req,
-                                                'n_mes': n_mes,
-                                                'n_comm': n_comm,
-                                                'p': p})
+                                                #'n_mes': n_mes,
+                                                #'n_comm': n_comm,
+                                                'post': p})
 
 
 @login_required
@@ -241,8 +225,8 @@ def tag_post(request, tag_text):
 
     user = get_object_or_404(User, pk=request.user.id)
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
+    #n_mes = Message.n_new_messages(request.user)
+    #n_comm = Post.n_new_comments(request.user.musicianprofile)
     n_first_neigh = len(Friend.get_user_friends(request.user))
 
     user_friends = Friend.get_user_friends(user)
@@ -260,8 +244,8 @@ def tag_post(request, tag_text):
     return render(request, 'portal/tagged_post.html', {'user': user,
                                                        'home_posts': posts,
                                                        'n_req': n_req,
-                                                       'n_mes': n_mes,
-                                                       'n_comm': n_comm,
+                                                       #'n_mes': n_mes,
+                                                       #'n_comm': n_comm,
                                                        'n_first_neigh': n_first_neigh,
                                                        'tag_text': tag_text
                                                        })
@@ -296,9 +280,12 @@ def set_vote(vote, past_vote, post_id):
 @login_required
 def like_post_get(request, vote, post_id):
     post = get_object_or_404(Post, pk=post_id)
+    himself = False
+    if request.user == post.musician_profile.user:
+        himself = True
 
     if not Preference.exist(request.user, post):
-        Preference.create(user=request.user, post=post, vote=vote)
+        Preference.create(user=request.user, post=post, vote=vote, seen=himself)
         set_vote(vote, 0, post_id)
 
         response = {'actual_vote': vote,
@@ -313,6 +300,9 @@ def like_post_get(request, vote, post_id):
             preference.vote = 0
         else:
             preference.vote = int(vote)
+
+        if not himself:
+            preference.seen =False
 
         preference.save()
         response = {'actual_vote': preference.vote,

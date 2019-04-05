@@ -85,6 +85,7 @@ class CommentAdmin(admin.ModelAdmin):
     def post_text(self, obj):
         return obj.post.post_text
 
+
 class TagAdmin(admin.ModelAdmin):
     list_display = ('tag_text',)
     ordering = ('-pub_date', )
@@ -93,12 +94,13 @@ class TagAdmin(admin.ModelAdmin):
         ('Tag Info: ', {'fields': ['tag_text', 'post', 'comment']})
     ]
 
+
 class PreferenceAdmin(admin.ModelAdmin):
-    list_display = ('musician_profile_name', 'vote', 'post_text',)
+    list_display = ('musician_profile_name', 'vote', 'post_text', 'seen')
     ordering = ('-pub_date', )
     list_filter = ('vote','musician_profile')
     fieldsets = [
-        ('Preference Info: ', {'fields': ['vote', 'post']})
+        ('Preference Info: ', {'fields': ['vote', 'post', 'seen']})
     ]
 
     def musician_profile_name(self, obj):

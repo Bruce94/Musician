@@ -15,8 +15,6 @@ def profile(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
     user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
 
     voted_posts = Preference.objects.filter(musician_profile=request.user.musicianprofile)
@@ -65,8 +63,6 @@ def profile(request, user_id):
                                                      'reciver': reciver,
                                                      'status_friend': status_friend,
                                                      'n_req': n_req,
-                                                     'n_mes': n_mes,
-                                                     'n_comm': n_comm,
                                                      'user_distance': user_distance,
                                                      'voted_posts': voted_posts
                                                      })
@@ -77,8 +73,6 @@ def musician_info(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
     user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
 
     mpf = MusicianProfileForm(prefix='profile')
@@ -157,8 +151,6 @@ def musician_info(request, user_id):
                                                            'skills': skills,
                                                            'status_friend': status_friend,
                                                            'n_req': n_req,
-                                                           'n_mes': n_mes,
-                                                           'n_comm': n_comm,
                                                            'user_distance': user_distance})
 
 
@@ -167,8 +159,6 @@ def musician_friends(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
     user_distance = request.user.musicianprofile.musician_distance(user.musicianprofile)
 
     status_friend = 0
@@ -188,18 +178,13 @@ def musician_friends(request, user_id):
                                                               'fu': fu,
                                                               'status_friend': status_friend,
                                                               'n_req': n_req,
-                                                              'n_mes': n_mes,
-                                                              'n_comm': n_comm,
                                                               'user_distance': user_distance
                                                               })
 
 
 @login_required
 def messages(request):
-
     n_req = Friend.n_req_friendship(request.user)
-    n_mes = Message.n_new_messages(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
 
     friend_user = Friend.get_user_friends(request.user)
     friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
@@ -207,8 +192,6 @@ def messages(request):
     new_mes_user = Message.new_user_message(request.user)
 
     return render(request, 'musician/messages.html', {'n_req': n_req,
-                                                      'n_mes': n_mes,
-                                                      'n_comm': n_comm,
                                                       'friend_user': friend_user,
                                                       'new_mes_user': new_mes_user
                                                       })
@@ -219,16 +202,12 @@ def chat(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     n_req = Friend.n_req_friendship(request.user)
-    n_comm = Post.n_new_comments(request.user.musicianprofile)
-
     messages_of_chat = Message.messages_of_chat(request.user, user)
 
     for message in messages_of_chat:
         if message.reciver_message.id == request.user.id:
             message.seen = True
             message.save()
-
-    n_mes = Message.n_new_messages(request.user)
 
     friend_user = Friend.get_user_friends(request.user)
     friend_user.sort(key=lambda x: x.user.first_name, reverse=False)
@@ -238,9 +217,8 @@ def chat(request, user_id):
                                                   'friend_user': friend_user,
                                                   'selected_user': user,
                                                   'messages': messages_of_chat,
-                                                  'n_mes': n_mes,
                                                   'new_mes_user': new_mes_user,
-                                                  'n_comm': n_comm})
+                                                })
 
 
 @login_required
@@ -295,6 +273,16 @@ def new_msg(request):
 def num_new_msg(request):
     n_mes = Message.n_new_messages(request.user)
     response = {'n_mes': n_mes}
+    r = json.dumps(response, False)
+    return JsonResponse(r, safe=False)
+
+
+@login_required
+def num_notif(request):
+    print("siamo dentro num_notif() con: " + str(request.user))
+    n_votes = Preference.n_new_votes(request.user)
+    n_comm = Post.n_new_comments(request.user.musicianprofile)
+    response = {'n_votes': n_votes,'n_comm': n_comm}
     r = json.dumps(response, False)
     return JsonResponse(r, safe=False)
 

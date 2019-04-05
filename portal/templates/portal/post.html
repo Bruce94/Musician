@@ -11,14 +11,14 @@
                 <div class="well text-left col-sm-12">
                     <div class="col-sm-12">
                         <div class="col-sm-2">
-                             <img src="{{ p.musician_profile.img.url }}"
+                             <img src="{{ post.musician_profile.img.url }}"
                                  class="img-circle align-right" height="60" width="60" alt="Musician_image">
                         </div>
                         <div class="col-sm-9">
-                            <a href="/musician/{{ p.musician_profile.user.id }}"
+                            <a href="/musician/{{ post.musician_profile.user.id }}"
                                style="font-size: 20px;">
-                                {{ p.musician_profile.user.first_name }}
-                                {{ p.musician_profile.user.last_name }}
+                                {{ post.musician_profile.user.first_name }}
+                                {{ post.musician_profile.user.last_name }}
                             </a>
                             <p style="font-size: 13px;">{{ post.pub_date }}</p>
                         </div>
@@ -26,14 +26,14 @@
 
                             <form action="/portal/" method="post" id="message_form" autocomplete="off">
                                 {% csrf_token %}
-                                {% if p.musician_profile == request.user.musicianprofile %}
+                                {% if post.musician_profile == request.user.musicianprofile %}
                                     <button type="button" class="btn btn-default dropdown-toggle"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="glyphicon glyphicon-chevron-down"></span>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <input type="submit" class="list-options" name="del_{{ p.id }}"
+                                            <input type="submit" class="list-options" name="del_{{ post.id }}"
                                                    value="Delete Post">
                                         </li>
                                     </ul>
@@ -43,22 +43,36 @@
                         </div>
                     </div>
                     <div class="col-sm-12 text-left">
-                        <p class="enteredText" style="font-size: 25px;">{{ p.post_text }}</p>
+                        <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
                     </div>
                     <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                        <button type="button" class="btn btn-default btn-sm"
-                                onclick="showCommentArea('comment_div_{{ p.id }}')">
-                            <span class="glyphicon glyphicon-comment" ></span> Comment
-                        </button>
-                        {% if p.comment_set.all.count %}
-                            <a style="float: right" onclick="showCommentArea('comment_div_{{ p.id }}')">
-                                {{ p.comment_set.all.count }} comments
-                            </a>
-                        {% endif %}
-                    </div>
-                    <div class="panel-footer col-sm-12 text-left" hidden="true" id="comment_div_{{ p.id }}">
+                                <i id="polliceSu{{ post.id }}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost({{ post.musician_profile.user.id }},{{ request.user.id }}, {{ post.id }}, 1);" title="Like"></i>
+                                <span id="nlikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_like }}</span>
+                                <i id="polliceGiu{{ post.id }}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost({{ post.musician_profile.user.id }},{{ request.user.id }}, {{ post.id }}, 2);" title="Dislike"></i>
+                                <span id="ndislikes{{ post.id }}" class="badge" data-toggle="modal" >{{ post.n_dislike }}</span>
+                                {% for vote in voted_posts %}
+                                    {% if vote.post.id == post.id %}
+                                        {% if vote.vote == 1 %}
+                                                <script>document.getElementById("polliceSu{{ post.id }}").style.color = "blue";</script>
+                                        {% elif vote.vote == 2 %}
+                                                <script>document.getElementById("polliceGiu{{ post.id }}").style.color = "red";</script>
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
+                                <button type="button" class="btn btn-default btn-sm"
+                                        onclick="showCommentArea('comment_div_{{ post.id }}')">
+                                    <span class="glyphicon glyphicon-comment" ></span> Comment
+                                </button>
+                                {% if post.comment_set.all.count %}
+                                    <a style="float: right" onclick="showCommentArea('comment_div_{{ post.id }}')">
+                                        {{ post.comment_set.all.count }} comments
+                                    </a>
+                                {% endif %}
+                            </div>
+                    <div class="panel-footer col-sm-12 text-left" hidden="true" id="comment_div_{{ post.id }}">
                         <div class="col-sm-12" style="margin-bottom: 20px">
-                            {% for comment in p.comment_set.all %}
+                            {% for comment in post.comment_set.all %}
                                 <div class="col-sm-1">
                                      <img src="{{ comment.musician_profile.img.url }}"
                                          class="img-circle align-right" height="35" width="35" alt="Musician_image">
@@ -75,7 +89,7 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        <form form action="/portal/post/{{ p.id }}/" method="post"
+                        <form action="/portal/post/{{ post.id }}/" method="post"
                               class="message_form" autocomplete="off">
                             {% csrf_token %}
                             <div class="col-sm-1">
@@ -83,7 +97,7 @@
                                      class="img-circle align-right" height="35" width="35" alt="Musician_image">
                             </div>
                             <div class="col-sm-11">
-                                 <input type="text" class="form-control"  name="comment_{{ p.id }}">
+                                 <input type="text" class="form-control"  name="comment_{{ post.id }}">
                             </div>
                         </form>
                     </div>

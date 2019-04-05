@@ -363,13 +363,14 @@ class Preference(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     vote = models.IntegerField(choices=STATUS_CHOICES, default=0)
     pub_date = models.DateTimeField(default=timezone.now)
+    seen = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.musician_profile.user.username) + ':' + str(self.post) + ':' + str(self.vote)
 
     @classmethod
-    def create(self, user, post, vote):
-        preference = self(musician_profile=user.musicianprofile, post=post, vote=vote)
+    def create(self, user, post, vote, seen):
+        preference = self(musician_profile=user.musicianprofile, post=post, vote=vote, seen=seen)
         preference.save()
 
     @staticmethod
@@ -381,6 +382,10 @@ class Preference(models.Model):
         if Preference.objects.filter(musician_profile=user.musicianprofile, post=post):
             return True
         return False
+
+    @staticmethod
+    def n_new_votes(user):
+        return Preference.objects.all().filter(Q(post__musician_profile=user.musicianprofile) & Q(seen=False) & ~Q(musician_profile=user.musicianprofile)).count()
 
     @staticmethod
     def get_preference(post, user):

@@ -201,17 +201,18 @@ function refPosts(usr_id){
                                     </form>
                              </div>`;
                     }
-                    dati += `</div> 
+
+                    dati += `</div>
                              <div class="col-sm-12 text-left">
                                 <p class="enteredText" style="font-size: 25px;">${home_posts.text}</p>
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
-                                <i id="polliceSu${home_posts.post_id}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost(${home_posts.user_post_id}, ${home_posts.post_id}, 1);" title="Like"></i>
+                                <i id="polliceSu${home_posts.post_id}" class="fa fa-thumbs-o-up" style="font-size:28px;color:gray" onclick="likedPost(${home_posts.user_post_id}, ${usr_id}, ${home_posts.post_id}, 1);" title="Like"></i>
                                 <span id="nlikes${home_posts.post_id}" class="badge" data-toggle="modal" >${home_posts.post_n_like}</span>
-                                <i id="polliceGiu${home_posts.post_id}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost(${home_posts.user_post_id}, ${home_posts.post_id}, 2);" title="Dislike"></i>
+                                <i id="polliceGiu${home_posts.post_id}" class="fa fa-thumbs-o-down" style="font-size:28px;color:gray" onclick="likedPost(${home_posts.user_post_id}, ${usr_id}, ${home_posts.post_id}, 2);" title="Dislike"></i>
                                 <span id="ndislikes${home_posts.post_id}" class="badge" data-toggle="modal" >${home_posts.post_n_dislike}</span>`;
 
-                    dati += ` <button type="button" class="btn btn-default btn-sm"
+                    dati += `<button type="button" class="btn btn-default btn-sm"
                                         onclick="showCommentArea('comment_div_${home_posts.post_id}')">
                                     <span class="glyphicon glyphicon-comment" ></span> Comment
                                 </button>
@@ -343,6 +344,28 @@ function checkMsgNotif(){
     });
 }
 
+function checkNotif(){ // checkVoteNotif
+    $.ajax({
+        type: "GET",
+        url: "/musician/messages/get_num_notif/", //get_num_votes/",
+        async: true,
+        cache: false,
+        timeout: 50000,
+        dataType: 'json',
+        success: function (data) {
+            var elem = $.parseJSON(data);
+            //var n_votes = elem.n_votes;
+            var n_notifiche = parseInt(elem.n_comm) + parseInt(elem.n_votes);
+            if (n_notifiche > 0)
+                document.getElementById("countNotifications").innerHTML = n_notifiche;
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        },
+
+    });
+}
+
 function checkFrienshipNotif(){
     $.ajax({
         type: "GET",
@@ -387,7 +410,7 @@ function spawnNotification(body,icon,title) {
     n.image;
 }
 
-function likedPost(user_id, post_id, vote){
+function likedPost(user_post_id, user_id, post_id, vote){
     $.ajax({
         type: "GET",
         url: "/portal/like/"+vote+"/"+post_id+"/get/",
@@ -398,8 +421,6 @@ function likedPost(user_id, post_id, vote){
         success: function (data) {
             var elem = $.parseJSON(data);
             var actual_vote = elem.actual_vote;
-            var like = elem.nlike;
-            var dislike = elem.ndislike;
 
             if(actual_vote == 1){
                 document.getElementById("polliceSu".concat(post_id)).style.color="blue";
@@ -417,6 +438,9 @@ function likedPost(user_id, post_id, vote){
             document.getElementById("nlikes".concat(post_id)).textContent = elem.nlike;
             document.getElementById("ndislikes".concat(post_id)).textContent = elem.ndislike;
 
+            var mess = [];
+            mess.push('' + user_post_id + '');
+            socket.emit("new general notification",mess);
             },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         },

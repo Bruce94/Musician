@@ -10,7 +10,6 @@ from itertools import chain
 from django.http import JsonResponse
 import json
 
-
 @login_required
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)

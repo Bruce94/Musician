@@ -354,7 +354,6 @@ function checkNotif(){ // checkVoteNotif
         dataType: 'json',
         success: function (data) {
             var elem = $.parseJSON(data);
-            //var n_votes = elem.n_votes;
             var n_notifiche = parseInt(elem.n_comm) + parseInt(elem.n_votes);
             if (n_notifiche > 0)
                 document.getElementById("countNotifications").innerHTML = n_notifiche;

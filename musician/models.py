@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Q
+from django.dispatch import receiver
 from django.core.validators import RegexValidator
 from django_countries.fields import CountryField
 
@@ -13,6 +14,7 @@ profile_image = os.path.join(settings.STATIC_URL, 'musician/images/vm.jpg')
 skill_image = os.path.join(settings.STATIC_URL, 'musician/images/question-mark-icon.png')
 profile_url = 'profile/'
 skill_url = 'skill/'
+post_url = 'post/'
 
 
 class Skill(models.Model):
@@ -280,6 +282,7 @@ class Post(models.Model):
     user_comments = models.ManyToManyField(MusicianProfile, through='Comment')
     n_like = models.PositiveIntegerField(default=0)
     n_dislike = models.PositiveIntegerField(default=0)
+    post_image = models.ImageField(null=True, blank=True, default=None, upload_to=post_url)
 
     def __unicode__(self):
         return "Post , musician: " + str(self.musician_profile) + \
@@ -318,6 +321,17 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
+
+
+@receiver(models.signals.post_delete, sender=Post)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.post_image:
+        if os.path.isfile(instance.post_image.path):
+            os.remove(instance.post_image.path)
 
 
 class Comment(models.Model):

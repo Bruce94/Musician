@@ -10,6 +10,7 @@ from itertools import chain
 from django.http import JsonResponse
 import json
 
+
 @login_required
 def portal_welcome(request):
     user = get_object_or_404(User, pk=request.user.id)
@@ -173,9 +174,12 @@ def view_post_notificated(request, post_id):
 @login_required
 def newpost_post(request, user_id):
     user = get_object_or_404(User, pk=user_id)
+    if request.POST.get('message') or request.FILES.get('image'):
+        if request.FILES.get('image'):
+            user.musicianprofile.user_post.create(post_text=request.POST['message'], post_image=request.FILES['image'])
+        else:
+            user.musicianprofile.user_post.create(post_text=request.POST['message'])
 
-    if request.POST.get('message'):
-        user.musicianprofile.user_post.create(post_text=request.POST['message'])
         post = user.musicianprofile.user_post.filter(post_text=request.POST['message'])[0]
 
         post.checkForTagsInPost()
@@ -200,6 +204,8 @@ def newpost_get(request):
     post_data['post_n_like'] = home_post.n_like
     post_data['post_n_dislike'] = home_post.n_dislike
     post_data['text'] = home_post.post_text
+    if home_post.post_image:
+        post_data['img_url'] = home_post.post_image.url
     post_data['pub_date'] = str(home_post.pub_date.strftime("%Y-%m-%d %H:%M"))
     post_data['comm'] = []
 
@@ -301,7 +307,7 @@ def like_post_get(request, vote, post_id):
             preference.vote = int(vote)
 
         if not himself:
-            preference.seen =False
+            preference.seen = True
 
         preference.save()
         response = {'actual_vote': preference.vote,

@@ -5,10 +5,11 @@
 {% endblock%}
 
 {% block container%}
-    <section class="search-musician">
+    <section class="notification">
         {% if new_comments %}
             <div class="list-group col-sm-12">
                 {% for comments in new_comments %}
+                    Comments:
                     <a href="/portal/view_post_notificated/{{ comments.post.id }}" class="list-group-item col-sm-12">
                         <div class="col-sm-1">
                              <img class="img-circle" height="45" width="45"
@@ -30,7 +31,9 @@
                 {% endfor %}
 
             </div>
-        {% elif new_votes %}
+        {% endif %}
+        {% if new_votes %}
+            Votes:
             <div class="list-group col-sm-12">
                 {% for vote in new_votes %}
                     <a href="/portal/view_post_notificated/{{ vote.post.id }}" class="list-group-item col-sm-12">
@@ -46,7 +49,11 @@
                                 has voted your post.
                             </h5>
                             <p  class="list-group-item-text col-sm-12">
-                                <span class="glyphicon glyphicon-comment" aria-hidden="true" ></span>
+                                {% if vote.vote == 1 %}
+                                    <span class="fa fa-thumbs-o-up" aria-hidden="true" ></span>
+                                {% elif vote.vote == 2%}
+                                    <span class="fa fa-thumbs-o-down" aria-hidden="true" ></span>
+                                {% endif %}
                                 {{ vote.post.pub_date }}
                             </p>
                         </div>

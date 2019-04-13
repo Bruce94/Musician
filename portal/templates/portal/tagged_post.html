@@ -86,6 +86,9 @@
                             </div>
                             <div class="col-sm-12 text-left">
                                 <p class="enteredText" style="font-size: 25px;">{{ post.post_text }}</p>
+                                {% if post.post_image%}
+                                    <img src="{{ post.post_image.url }}" class="img-thumbnail" id="image_selected" >
+                                {% endif %}
                             </div>
                             <div class="col-sm-12 text-left" style="margin-bottom: 20px;">
                                 <button type="button" class="btn btn-default btn-sm"

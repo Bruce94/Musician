@@ -64,7 +64,7 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ('-pub_date', )
     list_filter = ('musician_profile', 'pub_date')
     fieldsets = [
-        ('Post Info: ', {'fields': ['musician_profile', 'post_text', 'pub_date']})
+        ('Post Info: ', {'fields': ['musician_profile', 'post_text', 'pub_date', 'post_image']})
     ]
 
     def musician_profile_name(self, obj):

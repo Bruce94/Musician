@@ -244,6 +244,11 @@ section.registration{
     margin-right: 50vh;
 }
 
+section.notification{
+    margin-left: 5vh;
+    margin-right: 5vh;
+}
+
 img.profile{
     height: 200px;
     width: 200px;
